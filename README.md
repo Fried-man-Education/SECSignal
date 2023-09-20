@@ -55,3 +55,5 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
 The design should prioritize ease of use, with a clean and intuitive interface. Visual aids like charts, heatmaps, and icons can make the data more digestible. Tooltips and help sections can guide users unfamiliar with financial jargon.
 
 Security measures such as encryption and two-factor authentication should be implemented to protect user data and preferences.
+
+- [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
