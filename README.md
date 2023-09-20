@@ -59,3 +59,4 @@ The design should prioritize ease of use, with a clean and intuitive interface. 
 Security measures such as encryption and two-factor authentication should be implemented to protect user data and preferences.
 
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
+- Accent: #345078
