@@ -4,6 +4,8 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
 ## Homepage
 
 - **Search Bar**: Allows users to search for any publicly traded company by name or ticker symbol.
+  - https://www.sec.gov/Archives/edgar/cik-lookup-data.txt
+  - https://www.sec.gov/files/company_tickers.json
 - **Featured Companies**: Showcase trending companies, perhaps those with recent major filings or significant market news.
 - **Latest Filings**: Display the most recent 10-Q and 10-K filings across all companies.
 
