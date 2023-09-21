@@ -233,76 +233,84 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return PlatformScaffold(
-      appBar: PlatformAppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).cardColor,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            //
-            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-            // action in the IDE, or press "p" in the console), to see the
-            // wireframe for each widget.
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              Spacer(),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FloatingActionButton(
-                  onPressed: _incrementCounter,
-                  tooltip: 'Increment',
-                  child: const Icon(Icons.add),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: PlatformTextField(
+                    cupertino: (BuildContext context, PlatformTarget platformTarget) => CupertinoTextFieldData(
+                      placeholder: "Search by Name, CIK, or Ticker",
+                      padding: const EdgeInsets.all(12.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: borderColor),
+                      ),
+                      prefix: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Icon(
+                          CupertinoIcons.search,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    material: (BuildContext context, PlatformTarget platformTarget) => MaterialTextFieldData(
+                      decoration: InputDecoration(
+                        hintText: "Search by Name, CIK, or Ticker",
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: borderColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                        ),
+                        isDense: true,
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    onChanged: (value) {},
+                  ),
                 ),
-              )
-            ],
-          ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  child: Image.network(
+                    'https://drive.google.com/file/d/1qDuSjBhh0NU7hg0FHgs-YkIX_5YTM75y/view?usp=share_link',
+                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Center(
+                          child: PlatformCircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
