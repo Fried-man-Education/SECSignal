@@ -233,6 +233,46 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
+  List<Map<String, String>> fakeFavorites = [
+    {
+      "name" : "Apple",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Tech giant known for iPhones, Macs, and a sleek ecosystem. A favorite for many seeking both functionality and style."
+    },
+    {
+      "name" : "Mike-Is-Soft",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Software behemoth behind Windows, Office, and Azure. Continuously innovating and expanding its tech footprint."
+    },
+    {
+      "name" : "Sony",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Multinational conglomerate known for PlayStation, cameras, and entertainment. A leader in both tech and content."
+    },
+    {
+      "name" : "Netflix",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Streaming powerhouse with a vast library of shows and movies. Home to many binge-worthy series."
+    },
+    {
+      "name" : "Tesla",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Electric car and clean energy innovator. Pushing the boundaries of transportation and sustainability."
+    },
+    {
+      "name" : "TikTok",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Social media app focused on short, catchy videos. A cultural phenomenon among the younger generation."
+    },
+    {
+      "name" : "Spotify",
+      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+      "description" : "Music streaming service with millions of songs and playlists. Tailored listening experiences for every mood."
+    }
+  ];
+
+  final ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
@@ -290,26 +330,77 @@ class _MyHomePageState extends State<Home> {
                 )
               ],
             ),
-            Expanded(
-              child: Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  child: Image.network(
-                    'https://drive.google.com/file/d/1qDuSjBhh0NU7hg0FHgs-YkIX_5YTM75y/view?usp=share_link',
-                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Center(
-                          child: PlatformCircularProgressIndicator(),
-                        );
-                      }
-                    },
+            for (int i = 0; i < 2; i++) ...[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  i == 0 ? "Favorites" : "Hot",
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
+              SizedBox(
+                width: double.infinity,
+                height: 300,
+                child: GestureDetector(
+                  onHorizontalDragUpdate: (details) {
+                    _controller.jumpTo(_controller.offset - details.delta.dx);
+                  },
+                  child: ListView(
+                    controller: _controller,
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (Map<String, String> company in fakeFavorites)
+                        SizedBox(
+                          width: 300,
+                          child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  company["name"]!,
+                                  style: const TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  company["description"]!,
+                                  style: const TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.grey,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Expanded(
+                                  child: SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: Image.network(
+                                      company["logo"]!,
+                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: PlatformCircularProgressIndicator(),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ]
           ],
         ),
       ),
