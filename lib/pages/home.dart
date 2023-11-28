@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../classes/company.dart';
 import '../main.dart';
 
 class Home extends StatefulWidget {
@@ -54,6 +55,7 @@ class _MyHomePageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    //Company.fromTicker("IBM").then((value) => print(value));
     return PlatformScaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
