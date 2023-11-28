@@ -17,24 +17,34 @@ class Company {
     _companyDataCache = {};
     jsonData.forEach((key, value) {
       String ticker = value['ticker'];
+      int cikStr = value['cik_str'];
       _companyDataCache![ticker] = value;
+      _companyDataCache![cikStr.toString()] = value;
     });
   }
 
   static Future<Company> fromTicker(String ticker) async {
+    return fromKey(ticker);
+  }
+
+  static Future<Company> fromCikStr(String cikStr) async {
+    return fromKey(int.parse(cikStr).toString());
+  }
+
+  static Future<Company> fromKey(String key) async {
     if (_companyDataCache == null) {
       await _fetchCompanyData();
     }
 
-    if (_companyDataCache!.containsKey(ticker)) {
-      final data = _companyDataCache![ticker];
+    if (_companyDataCache!.containsKey(key)) {
+      final data = _companyDataCache![key];
       return Company(
         cikStr: data['cik_str'],
-        ticker: ticker,
+        ticker: data['ticker'],
         title: data['title'],
       );
     } else {
-      throw Exception('Company with ticker $ticker not found');
+      throw Exception('Company with key $key not found');
     }
   }
 

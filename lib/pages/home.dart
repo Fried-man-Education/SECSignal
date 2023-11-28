@@ -55,7 +55,7 @@ class _MyHomePageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //Company.fromTicker("IBM").then((value) => print(value));
+    //Company.fromCikStr("000051143").then((value) => print(value));
     return PlatformScaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
