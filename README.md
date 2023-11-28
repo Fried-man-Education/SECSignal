@@ -60,3 +60,16 @@ Security measures such as encryption and two-factor authentication should be imp
 
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
 - Accent: #345078
+## Schedule
+| Date  | Milestone                               | Meta-skill Highlight |
+|-------|-----------------------------------------|----------------------|
+| 09/25 | Setup with Flutter & Firebase           | Perishable Process   |
+| 10/05 | Design UI/UX in Flutter                 | Trend Recognition    |
+| 10/15 | Integrate Firebase backend              | Perishable Process   |
+| 10/25 | Search Bar & Company Profile            | Trend Recognition    |
+| 11/05 | Detailed Filing View setup              | Perishable Process   |
+| 11/15 | User Profile & Settings                 | Trend Recognition    |
+| 11/25 | Optimize & Initial Tests                | Perishable Process   |
+| 12/01 | Finalize & Prep for Deployment          | Fact vs. Fiction     |
+| 12/07 | Review & Deploy SECSignal               | Comprehensive Review |
+
