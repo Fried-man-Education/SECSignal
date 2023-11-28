@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:secsignal/pages/home.dart';
 
 void main() {
-  runApp(SecSignal());
+  runApp(const SecSignal());
 }
 
 late Color borderColor;
@@ -90,15 +91,17 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
     return ValueListenableBuilder(
         valueListenable: brightnessNotifier,
         builder: (context, Brightness brightness, child) {
-          primaryColor = brightness == Brightness.light ? const Color(0xff345078) : lighten(const Color(0xff345078));
-          borderColor = brightness == Brightness.light ? Colors.black : Colors.white;
+          bool isLight = false; // brightness == Brightness.light
+
+          primaryColor = isLight ? const Color(0xff345078) : lighten(const Color(0xff345078));
+          borderColor = isLight ? Colors.black : Colors.white;
 
           return PlatformProvider(
             settings: PlatformSettingsData(
               iosUsesMaterialWidgets: true,
             ),
             builder: (context) => PlatformTheme(
-              themeMode: brightness == Brightness.light ? ThemeMode.light : ThemeMode.dark,
+              themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
               materialLightTheme: ThemeData(
                   primarySwatch: buildMaterialColor(primaryColor),
                   textTheme: textTheme,
@@ -117,42 +120,8 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                     color: Colors.black54,
                   )
               ),
-              materialDarkTheme: ThemeData(
+              materialDarkTheme: ThemeData.dark().copyWith(
                 primaryColor: primaryColor,
-                canvasColor: const Color(0xFF121212),
-                cardColor: const Color(0xFF222222),
-                dialogBackgroundColor: const Color(0xFF272727),
-                colorScheme: ColorScheme.fromSwatch(
-                    primarySwatch: buildMaterialColor(primaryColor)
-                ).copyWith(
-                  secondary: primaryColor,
-                  brightness: Brightness.dark,
-                ),
-                elevatedButtonTheme: ElevatedButtonThemeData(
-                    style: ElevatedButton.styleFrom(
-                        primary: buildMaterialColor(const Color(0xFF222222))
-                    )
-                ),
-                buttonTheme: const ButtonThemeData(
-                    buttonColor: Color(0xFF222222)
-                ),
-                iconTheme: IconThemeData(
-                  color: Colors.white.withOpacity(.6),
-                ),
-                textTheme: textTheme,
-                tabBarTheme: const TabBarTheme(
-                  unselectedLabelColor: Colors.grey,
-                ),
-                appBarTheme: const AppBarTheme(
-                  backgroundColor: Color(0xFF121212),
-                ),
-                bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                    selectedItemColor: primaryColor,
-                    unselectedItemColor: Colors.grey,
-                    showSelectedLabels: true,
-                    showUnselectedLabels: true,
-                    type: BottomNavigationBarType.fixed
-                ),
               ),
               cupertinoLightTheme: CupertinoThemeData(
                 brightness: Brightness.light,
@@ -211,199 +180,5 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
       );
     }
     return MaterialColor(color.value, swatch);
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<Home> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<Home> {
-  List<Map<String, String>> fakeFavorites = [
-    {
-      "name" : "Apple",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Tech giant known for iPhones, Macs, and a sleek ecosystem. A favorite for many seeking both functionality and style."
-    },
-    {
-      "name" : "Mike-Is-Soft",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Software behemoth behind Windows, Office, and Azure. Continuously innovating and expanding its tech footprint."
-    },
-    {
-      "name" : "Sony",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Multinational conglomerate known for PlayStation, cameras, and entertainment. A leader in both tech and content."
-    },
-    {
-      "name" : "Netflix",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Streaming powerhouse with a vast library of shows and movies. Home to many binge-worthy series."
-    },
-    {
-      "name" : "Tesla",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Electric car and clean energy innovator. Pushing the boundaries of transportation and sustainability."
-    },
-    {
-      "name" : "TikTok",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Social media app focused on short, catchy videos. A cultural phenomenon among the younger generation."
-    },
-    {
-      "name" : "Spotify",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Music streaming service with millions of songs and playlists. Tailored listening experiences for every mood."
-    }
-  ];
-
-  final ScrollController _controller = ScrollController();
-
-  @override
-  Widget build(BuildContext context) {
-    return PlatformScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: PlatformTextField(
-                    cupertino: (BuildContext context, PlatformTarget platformTarget) => CupertinoTextFieldData(
-                      placeholder: "Search by Name, CIK, or Ticker",
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColor),
-                      ),
-                      prefix: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          CupertinoIcons.search,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    material: (BuildContext context, PlatformTarget platformTarget) => MaterialTextFieldData(
-                      decoration: InputDecoration(
-                        hintText: "Search by Name, CIK, or Ticker",
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                        ),
-                        isDense: true,
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    onChanged: (value) {},
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            for (int i = 0; i < 2; i++) ...[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  i == 0 ? "Favorites" : "Hot",
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 300,
-                child: GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    _controller.jumpTo(_controller.offset - details.delta.dx);
-                  },
-                  child: ListView(
-                    controller: _controller,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      for (Map<String, String> company in fakeFavorites)
-                        SizedBox(
-                          width: 300,
-                          child: Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  company["name"]!,
-                                  style: const TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  company["description"]!,
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                    color: Colors.grey,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Expanded(
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Image.network(
-                                      company["logo"]!,
-                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: PlatformCircularProgressIndicator(),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ]
-          ],
-        ),
-      ),
-    );
   }
 }
