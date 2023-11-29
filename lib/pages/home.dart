@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
 import '../main.dart';
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<Home> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  i == 0 ? "Favorites" : "Hot",
+                  i == 0 ? "Your Companies" : "Hot",
                   style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<Home> {
                 ),
               ),
               FutureBuilder<List<Company>>(
-                future: _fetchRandomCompanies(10),
+                future: _fetchRandomCompanies(i == 0 ? 6 : 200),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: PlatformCircularProgressIndicator());
@@ -127,7 +128,7 @@ class CompanySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 300,
+      height: 500,
       child: GestureDetector(
         onHorizontalDragUpdate: (details) {
           _controller.jumpTo(_controller.offset - details.delta.dx);
@@ -162,44 +163,68 @@ class CompanyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 300,
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              company.getName(),
-              style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              description,
-              style: const TextStyle(
-                fontSize: 18.0,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Expanded(
-              child: SizedBox(
-                width: 100,
-                height: 100,
-                child: Image.network(
-                  "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return Center(
-                        child: PlatformCircularProgressIndicator(),
-                      );
-                    }
-                  },
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)), // Top corners rounded
+        child: Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)), // Top corners rounded
+                child: SizedBox(
+                  height: 300, // Fixed height for the square
+                  width: 300,
+                  child: Image.network(
+                    "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+                    fit: BoxFit.cover, // Covers the box, maintaining aspect ratio, and may clip the image
+                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(), // Assuming you have a CircularProgressIndicator
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        child: AutoSizeText(
+                            company.getName(),
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center
+                        ),
+                      ),
+                      Flexible(
+                        child: AutoSizeText(
+                          description,
+                          minFontSize: 15,
+                          maxFontSize: 18,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.left,
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

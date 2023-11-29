@@ -75,7 +75,6 @@ class Company {
 
     // Modify the title to improve search accuracy. This is a basic example and can be refined.
     String searchQuery = "$title";
-    print(searchQuery);
 
     var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
 
