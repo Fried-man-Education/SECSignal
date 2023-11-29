@@ -7,6 +7,7 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
   - https://www.sec.gov/Archives/edgar/cik-lookup-data.txt
   - https://www.sec.gov/files/company_tickers.json
 - **Featured Companies**: Showcase trending companies, perhaps those with recent major filings or significant market news.
+  - https://finnhub.io/docs/api/
 - **Latest Filings**: Display the most recent 10-Q and 10-K filings across all companies.
 
 ## Company Profile Page
