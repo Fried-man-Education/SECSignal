@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
 import '../main.dart';
+import '../prefabs/PlatformListView.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -16,7 +17,6 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
-  // Company.randomCompany().then((value) => value.getCompanyDescription().then((value) => print(value)));
 
   Future<List<Company>> _fetchRandomCompanies(int count) async {
     List<Company> companies = [];
@@ -29,87 +29,97 @@ class _MyHomePageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: PlatformTextField(
-                    cupertino: (BuildContext context, PlatformTarget platformTarget) => CupertinoTextFieldData(
-                      placeholder: "Search by Name, CIK, or Ticker",
-                      padding: const EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: borderColor),
-                      ),
-                      prefix: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          CupertinoIcons.search,
-                          color: Colors.grey,
+    return SafeArea(
+      bottom: false,
+      child: PlatformScaffold(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: PlatformTextField(
+                      cupertino: (BuildContext context, PlatformTarget platformTarget) => CupertinoTextFieldData(
+                        placeholder: "Search by Name, CIK, or Ticker",
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: borderColor),
+                        ),
+                        prefix: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Icon(
+                            CupertinoIcons.search,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
-                    material: (BuildContext context, PlatformTarget platformTarget) => MaterialTextFieldData(
-                      decoration: InputDecoration(
-                        hintText: "Search by Name, CIK, or Ticker",
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                        ),
-                        isDense: true,
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.grey,
+                      material: (BuildContext context, PlatformTarget platformTarget) => MaterialTextFieldData(
+                        decoration: InputDecoration(
+                          hintText: "Search by Name, CIK, or Ticker",
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: borderColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                          ),
+                          isDense: true,
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
-                    onChanged: (value) {},
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20.0,
+                      onChanged: (value) {},
                     ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-            for (int i = 0; i < 2; i++) ...[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  i == 0 ? "Your Companies" : "Hot",
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            Expanded(
+              child: PlatformListView(
+                children: <Widget>[
+
+                  for (int i = 0; i < 2; i++) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        i == 0 ? "Your Companies" : "Hot",
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    FutureBuilder<List<Company>>(
+                      future: _fetchRandomCompanies(i == 0 ? 6 : 200),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: PlatformCircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (snapshot.hasData) {
+                          return CompanySection(companies: snapshot.data!);
+                        } else {
+                          return const Text('No companies found');
+                        }
+                      },
+                    ),
+                  ]
+                ],
               ),
-              FutureBuilder<List<Company>>(
-                future: _fetchRandomCompanies(i == 0 ? 6 : 200),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: PlatformCircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return CompanySection(companies: snapshot.data!);
-                  } else {
-                    return const Text('No companies found');
-                  }
-                },
-              ),
-            ]
+            ),
           ],
         ),
       ),
