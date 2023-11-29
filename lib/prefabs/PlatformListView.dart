@@ -12,18 +12,24 @@ class PlatformListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (PlatformProvider.of(context)!.platform == TargetPlatform.iOS || PlatformProvider.of(context)!.platform == TargetPlatform.macOS) {
+    if (PlatformProvider.of(context)!.platform == TargetPlatform.macOS) {
       return CupertinoScrollbar(
-        child: ListView(
-          children: children,
-        )
+          child: ListView(
+            children: children,
+          )
       );
     }
 
-    return Scrollbar(
-        child: ListView(
-          children: children,
-        )
+    if (PlatformProvider.of(context)!.platform == TargetPlatform.windows || PlatformProvider.of(context)!.platform == TargetPlatform.linux || PlatformProvider.of(context)!.platform == TargetPlatform.fuchsia) {
+      return Scrollbar(
+          child: ListView(
+            children: children,
+          )
+      );
+    }
+
+    return ListView(
+      children: children,
     );
   }
 }

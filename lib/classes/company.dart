@@ -15,7 +15,7 @@ class Company {
   static Map<String, dynamic>? _companyDataCache;
 
   static Future<void> _fetchCompanyData() async {
-    final jsonString = await rootBundle.loadString('data/company_tickers.json');
+    final jsonString = await rootBundle.loadString('assets/data/company_tickers.json');
     Map<String, dynamic> jsonData = json.decode(jsonString);
 
     _companyDataCache = {};
@@ -84,7 +84,6 @@ class Company {
 
     var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
 
-    print("getting internet");
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
