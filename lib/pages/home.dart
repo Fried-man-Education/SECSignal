@@ -90,13 +90,13 @@ class _MyHomePageState extends State<Home> {
             Expanded(
               child: PlatformListView(
                 children: <Widget>[
-                  for (int i = 0; i < 2; i++) ...[
+                  for (int i = 0; i < 4; i++) ...[
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text(
-                          i == 0 ? "Your Companies" : "Hot",
+                          ["Your Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
                           style: const TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,

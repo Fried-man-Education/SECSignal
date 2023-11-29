@@ -8,6 +8,7 @@ class Company {
   int? cikStr;
   String? ticker;
   String? title;
+  String? description;
 
   Company({this.cikStr, required this.ticker, this.title});
 
@@ -69,6 +70,11 @@ class Company {
   }
 
   Future<String> getCompanyDescription() async {
+    if (description != null) {
+      // Return the stored description if it's already fetched
+      return description!;
+    }
+
     if (title == null) {
       return 'No title available for the company.';
     }
@@ -78,6 +84,7 @@ class Company {
 
     var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
 
+    print("getting internet");
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -86,7 +93,9 @@ class Company {
         return 'Multiple entries found. Please specify the query.';
       }
 
-      return data['extract'] ?? 'No description available.';
+      // Store the description for future use
+      description = data['extract'] ?? 'No description available.';
+      return description!;
     } else {
       return 'Failed to load description.';
     }
