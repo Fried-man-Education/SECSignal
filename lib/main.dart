@@ -182,3 +182,16 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
     return MaterialColor(color.value, swatch);
   }
 }
+
+// Function to convert a string to Title Case
+String toTitleCase(String text) {
+  if (text.isEmpty) return '';
+
+  List<String> words = text.split(' ');
+  return words.map((word) {
+    if (word.isNotEmpty) {
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }
+    return '';
+  }).join(' ');
+}

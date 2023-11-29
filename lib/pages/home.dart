@@ -15,47 +15,19 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
-  List<Map<String, String>> fakeFavorites = [
-    {
-      "name" : "Apple",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Tech giant known for iPhones, Macs, and a sleek ecosystem. A favorite for many seeking both functionality and style."
-    },
-    {
-      "name" : "Mike-Is-Soft",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Software behemoth behind Windows, Office, and Azure. Continuously innovating and expanding its tech footprint."
-    },
-    {
-      "name" : "Sony",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Multinational conglomerate known for PlayStation, cameras, and entertainment. A leader in both tech and content."
-    },
-    {
-      "name" : "Netflix",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Streaming powerhouse with a vast library of shows and movies. Home to many binge-worthy series."
-    },
-    {
-      "name" : "Tesla",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Electric car and clean energy innovator. Pushing the boundaries of transportation and sustainability."
-    },
-    {
-      "name" : "TikTok",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Social media app focused on short, catchy videos. A cultural phenomenon among the younger generation."
-    },
-    {
-      "name" : "Spotify",
-      "logo" : "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-      "description" : "Music streaming service with millions of songs and playlists. Tailored listening experiences for every mood."
+  // Company.randomCompany().then((value) => value.getCompanyDescription().then((value) => print(value)));
+
+  Future<List<Company>> _fetchRandomCompanies(int count) async {
+    List<Company> companies = [];
+    for (int i = 0; i < count; i++) {
+      Company company = await Company.randomCompany();
+      companies.add(company);
     }
-  ];
+    return companies;
+  }
 
   @override
   Widget build(BuildContext context) {
-    //Company.fromCikStr("000051143").then((value) => print(value));
     return PlatformScaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -122,7 +94,20 @@ class _MyHomePageState extends State<Home> {
                   ),
                 ),
               ),
-              CompanySection(companies: fakeFavorites),
+              FutureBuilder<List<Company>>(
+                future: _fetchRandomCompanies(10),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: PlatformCircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return CompanySection(companies: snapshot.data!);
+                  } else {
+                    return const Text('No companies found');
+                  }
+                },
+              ),
             ]
           ],
         ),
@@ -132,12 +117,10 @@ class _MyHomePageState extends State<Home> {
 }
 
 class CompanySection extends StatelessWidget {
-  CompanySection({
-    super.key,
-    required this.companies,
-  });
+  final List<Company> companies;
 
-  final List<Map<String, String>> companies;
+  CompanySection({super.key, required this.companies});
+
   final ScrollController _controller = ScrollController();
 
   @override
@@ -149,54 +132,73 @@ class CompanySection extends StatelessWidget {
         onHorizontalDragUpdate: (details) {
           _controller.jumpTo(_controller.offset - details.delta.dx);
         },
-        child: ListView(
+        child: ListView.builder(
           controller: _controller,
           scrollDirection: Axis.horizontal,
+          itemCount: companies.length,
+          itemBuilder: (context, index) {
+            Company company = companies[index];
+            return FutureBuilder<String>(
+              future: company.getCompanyDescription(),
+              builder: (context, snapshot) {
+                String description = snapshot.data ?? 'Description not available';
+                return CompanyCard(company: company, description: description);
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CompanyCard extends StatelessWidget {
+  final Company company;
+  final String description;
+
+  const CompanyCard({super.key, required this.company, required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            for (Map<String, String> company in companies)
-              SizedBox(
-                width: 300,
-                child: Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        company["name"]!,
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        company["description"]!,
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: Image.network(
-                            company["logo"]!,
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Center(
-                                  child: PlatformCircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+            Text(
+              company.getName(),
+              style: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              description,
+              style: const TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Expanded(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Image.network(
+                  "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: PlatformCircularProgressIndicator(),
+                      );
+                    }
+                  },
                 ),
               ),
+            ),
           ],
         ),
       ),
