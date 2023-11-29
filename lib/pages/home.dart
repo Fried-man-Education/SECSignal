@@ -90,15 +90,17 @@ class _MyHomePageState extends State<Home> {
             Expanded(
               child: PlatformListView(
                 children: <Widget>[
-
                   for (int i = 0; i < 2; i++) ...[
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        i == 0 ? "Your Companies" : "Hot",
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          i == 0 ? "Your Companies" : "Hot",
+                          style: const TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -153,7 +155,18 @@ class CompanySection extends StatelessWidget {
               future: company.getCompanyDescription(),
               builder: (context, snapshot) {
                 String description = snapshot.data ?? 'Description not available';
-                return CompanyCard(company: company, description: description);
+
+                // Check if the current item is the first one
+                if (index == 0) {
+                  // Add left padding to the first item
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8.0), // Adjust the padding value as needed
+                    child: CompanyCard(company: company, description: description),
+                  );
+                } else {
+                  // For other items, no additional padding is added
+                  return CompanyCard(company: company, description: description);
+                }
               },
             );
           },
