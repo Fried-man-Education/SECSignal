@@ -3,16 +3,42 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
 import '../main.dart';
+import '../secrets.dart';
 
 class Company {
   int? cikStr;
   String? ticker;
   String? title;
   String? description;
+  FinnhubProfile? profile;
 
   Company({this.cikStr, required this.ticker, this.title});
 
+  
+
   static Map<String, dynamic>? _companyDataCache;
+
+  Future<FinnhubProfile?> getFinnhubProfile() async {
+    if (profile != null) return profile;
+
+    const String baseURL = 'https://finnhub.io/api/v1/stock/profile2';
+
+    if (ticker == null) {
+      throw Exception('Ticker must be provided');
+    }
+
+    String requestURL = '$baseURL?symbol=$ticker&token=$apiKey';
+
+    final response = await http.get(Uri.parse(requestURL));
+
+    if (response.statusCode == 200) {
+      profile = FinnhubProfile.fromJson(json.decode(response.body));
+      return profile;
+    } else {
+      print('Failed to load Finnhub profile');
+      return null;
+    }
+  }
 
   static Future<void> _fetchCompanyData() async {
     final jsonString = await rootBundle.loadString('assets/data/company_tickers.json');
@@ -119,5 +145,52 @@ class Company {
   @override
   String toString() {
     return 'Company{cikStr: $cikStr, ticker: $ticker, title: $title}';
+  }
+}
+
+class FinnhubProfile {
+  String? country;
+  String? currency;
+  String? exchange;
+  String? finnhubIndustry;
+  String? ipo;
+  String? logo;
+  double? marketCapitalization;
+  String? name;
+  String? phone;
+  double? shareOutstanding;
+  String? ticker;
+  String? weburl;
+
+  FinnhubProfile({
+    this.country,
+    this.currency,
+    this.exchange,
+    this.finnhubIndustry,
+    this.ipo,
+    this.logo,
+    this.marketCapitalization,
+    this.name,
+    this.phone,
+    this.shareOutstanding,
+    this.ticker,
+    this.weburl,
+  });
+
+  factory FinnhubProfile.fromJson(Map<String, dynamic> json) {
+    return FinnhubProfile(
+      country: json['country'],
+      currency: json['currency'],
+      exchange: json['exchange'],
+      finnhubIndustry: json['finnhubIndustry'],
+      ipo: json['ipo'],
+      logo: json['logo'],
+      marketCapitalization: json['marketCapitalization']?.toDouble(),
+      name: json['name'],
+      phone: json['phone'],
+      shareOutstanding: json['shareOutstanding']?.toDouble(),
+      ticker: json['ticker'],
+      weburl: json['weburl'],
+    );
   }
 }

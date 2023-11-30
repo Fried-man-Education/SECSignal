@@ -4,7 +4,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
-import '../main.dart';
 import '../prefabs/PlatformListView.dart';
 import 'company.dart';
 
@@ -128,7 +127,7 @@ class _MyHomePageState extends State<Home> {
                       SizedBox(
                         height: 500,
                         child: FutureBuilder<List<Company>>(
-                          future: _fetchRandomCompanies(i == 0 ? 6 : 200),
+                          future: _fetchRandomCompanies(12),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: PlatformCircularProgressIndicator());
@@ -227,25 +226,47 @@ class CompanyCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)), // Top corners rounded
-                  child: SizedBox(
-                    height: 300, // Fixed height for the square
-                    width: 300,
-                    child: Image.network(
-                      "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-                      fit: BoxFit.cover, // Covers the box, maintaining aspect ratio, and may clip the image
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(), // Assuming you have a CircularProgressIndicator
-                          );
-                        }
-                      },
-                    ),
-                  ),
+                FutureBuilder<FinnhubProfile?>(
+                  future: company.getFinnhubProfile(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: Center(child: Text('Error loading image')),
+                      );
+                    } else if (snapshot.hasData && snapshot.data?.weburl != null && snapshot.data!.weburl!.isNotEmpty) {
+                      print(snapshot.data!.weburl!);
+                      print('https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}');
+                      return ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
+                        child: SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: Image.network(
+                            'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
+                            fit: BoxFit.cover,
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(child: CircularProgressIndicator());
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: Center(child: Text('No image available')),
+                      );
+                    }
+                  },
                 ),
                 Flexible(
                   child: Padding(
