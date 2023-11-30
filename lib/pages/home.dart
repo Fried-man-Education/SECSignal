@@ -31,97 +31,121 @@ class _MyHomePageState extends State<Home> {
     return SafeArea(
       bottom: false,
       child: PlatformScaffold(
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: PlatformTextField(
-                      cupertino: (BuildContext context, PlatformTarget platformTarget) => CupertinoTextFieldData(
-                        placeholder: "Search by Name, CIK, or Ticker",
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: borderColor),
-                        ),
-                        prefix: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Icon(
-                            CupertinoIcons.search,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      material: (BuildContext context, PlatformTarget platformTarget) => MaterialTextFieldData(
-                        decoration: InputDecoration(
-                          hintText: "Search by Name, CIK, or Ticker",
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: borderColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                          ),
-                          isDense: true,
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {},
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  )
-                ],
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            // Check if the width is greater than the height
+            bool isLandscape = constraints.maxWidth > constraints.maxHeight;
+
+            List<Widget> navBar = [
+              PlatformIconButton(
+                padding: const EdgeInsets.all(0),
+                materialIcon: Icon(
+                  Icons.search,
+                  size: MediaQuery.of(context).size.height / 32,
+                  color: Theme.of(context).primaryColor,
+                ),
+                cupertinoIcon: Icon(
+                  CupertinoIcons.search,
+                  size: MediaQuery.of(context).size.height / 32,
+                ),
+                onPressed: () {
+                  print('Search');
+                },
               ),
-            ),
-            Expanded(
-              child: PlatformListView(
-                children: <Widget>[
-                  for (int i = 0; i < 4; i++) ...[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          ["Your Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
+              const Spacer(),
+              PlatformIconButton(
+                padding: const EdgeInsets.all(0),
+                materialIcon: Icon(
+                  Icons.info_outline,
+                  size: MediaQuery.of(context).size.height / 32,
+                  color: Theme.of(context).primaryColor,
+                ),
+                cupertinoIcon: Icon(
+                  CupertinoIcons.info,
+                  size: MediaQuery.of(context).size.height / 32,
+                ),
+                onPressed: () {
+                  print('About');
+                },
+              ),
+              PlatformIconButton(
+                padding: const EdgeInsets.all(0),
+                materialIcon: Icon(
+                  Icons.person_outline, // Changed to person icon
+                  size: MediaQuery.of(context).size.height / 32,
+                  color: Theme.of(context).primaryColor,
+                ),
+                cupertinoIcon: Icon(
+                  CupertinoIcons.person, // Changed to a more appropriate Cupertino icon
+                  size: MediaQuery.of(context).size.height / 32,
+                ),
+                onPressed: () {
+                  print('Login');
+                },
+              ),
+            ];
+
+            Widget navBarWidget = Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: SizedBox(
+                // Flip the height and width if in landscape mode
+                height: isLandscape ? double.infinity : 50,
+                width: isLandscape ? 50 : double.infinity,
+                child: Card(
+                  child: isLandscape
+                      ? Column(children: navBar)
+                      : Row(children: navBar),
+                ),
+              ),
+            );
+
+            List<Widget> bodyContent = [
+              navBarWidget,
+              Expanded(
+                child: PlatformListView(
+                  children: <Widget>[
+                    if (isLandscape)
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    for (int i = 0; i < 4; i++) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            ["Your Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    FutureBuilder<List<Company>>(
-                      future: _fetchRandomCompanies(i == 0 ? 6 : 200),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(child: PlatformCircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.hasData) {
-                          return CompanySection(companies: snapshot.data!);
-                        } else {
-                          return const Text('No companies found');
-                        }
-                      },
-                    ),
-                  ]
-                ],
+                      FutureBuilder<List<Company>>(
+                        future: _fetchRandomCompanies(i == 0 ? 6 : 200),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Center(child: PlatformCircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            return CompanySection(companies: snapshot.data!);
+                          } else {
+                            return const Text('No companies found');
+                          }
+                        },
+                      ),
+                    ]
+                  ],
+                ),
               ),
-            ),
-          ],
+            ];
+
+            return isLandscape
+                ? Row(children: bodyContent)
+                : Column(children: bodyContent);
+          },
         ),
       ),
     );
