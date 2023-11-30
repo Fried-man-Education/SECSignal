@@ -125,19 +125,22 @@ class _MyHomePageState extends State<Home> {
                           ),
                         ),
                       ),
-                      FutureBuilder<List<Company>>(
-                        future: _fetchRandomCompanies(i == 0 ? 6 : 200),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(child: PlatformCircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else if (snapshot.hasData) {
-                            return CompanySection(companies: snapshot.data!);
-                          } else {
-                            return const Text('No companies found');
-                          }
-                        },
+                      SizedBox(
+                        height: 500,
+                        child: FutureBuilder<List<Company>>(
+                          future: _fetchRandomCompanies(i == 0 ? 6 : 200),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: PlatformCircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (snapshot.hasData) {
+                              return CompanySection(companies: snapshot.data!);
+                            } else {
+                              return const Text('No companies found');
+                            }
+                          },
+                        ),
                       ),
                     ]
                   ],
@@ -164,39 +167,36 @@ class CompanySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 500,
-      child: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          _controller.jumpTo(_controller.offset - details.delta.dx);
-        },
-        child: ListView.builder(
-          controller: _controller,
-          scrollDirection: Axis.horizontal,
-          itemCount: companies.length,
-          itemBuilder: (context, index) {
-            Company company = companies[index];
-            return FutureBuilder<String>(
-              future: company.getCompanyDescription(),
-              builder: (context, snapshot) {
-                String description = snapshot.data ?? 'Description not available';
+    return GestureDetector(
+      onHorizontalDragUpdate: (details) {
+        _controller.jumpTo(_controller.offset - details.delta.dx);
+      },
+      child: ListView.builder(
+        controller: _controller,
+        scrollDirection: Axis.horizontal,
+        itemCount: companies.length,
+        primary: false,
+        itemBuilder: (context, index) {
+          Company company = companies[index];
+          return FutureBuilder<String>(
+            future: company.getCompanyDescription(),
+            builder: (context, snapshot) {
+              String description = snapshot.data ?? 'Description not available';
 
-                // Check if the current item is the first one
-                if (index == 0) {
-                  // Add left padding to the first item
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 8.0), // Adjust the padding value as needed
-                    child: CompanyCard(company: company, description: description),
-                  );
-                } else {
-                  // For other items, no additional padding is added
-                  return CompanyCard(company: company, description: description);
-                }
-              },
-            );
-          },
-        ),
+              // Check if the current item is the first one
+              if (index == 0) {
+                // Add left padding to the first item
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0), // Adjust the padding value as needed
+                  child: CompanyCard(company: company, description: description),
+                );
+              } else {
+                // For other items, no additional padding is added
+                return CompanyCard(company: company, description: description);
+              }
+            },
+          );
+        },
       ),
     );
   }
