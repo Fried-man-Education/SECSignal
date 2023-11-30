@@ -41,12 +41,12 @@ class _MyHomePageState extends State<Home> {
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
                   Icons.search,
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
                   CupertinoIcons.search,
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
                   print('Search');
@@ -57,12 +57,12 @@ class _MyHomePageState extends State<Home> {
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
                   Icons.info_outline,
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
                   CupertinoIcons.info,
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
                   print('About');
@@ -72,12 +72,12 @@ class _MyHomePageState extends State<Home> {
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
                   Icons.person_outline, // Changed to person icon
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
                   CupertinoIcons.person, // Changed to a more appropriate Cupertino icon
-                  size: MediaQuery.of(context).size.height / 32,
+                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
                   print('Login');
