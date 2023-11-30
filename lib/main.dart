@@ -91,7 +91,7 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
     return ValueListenableBuilder(
         valueListenable: brightnessNotifier,
         builder: (context, Brightness brightness, child) {
-          bool isLight = false; // brightness == Brightness.light
+          bool isLight = brightness == Brightness.light;
 
           primaryColor = isLight ? const Color(0xff345078) : lighten(const Color(0xff345078));
           borderColor = isLight ? Colors.black : Colors.white;
@@ -145,7 +145,7 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                   DefaultCupertinoLocalizations.delegate,
                 ],
                 title: 'SECSignal',
-                home: Home(title: "SECSignal"),
+                home: Home(),
               ),
             ),
           );

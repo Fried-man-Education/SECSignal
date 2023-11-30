@@ -6,11 +6,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import '../classes/company.dart';
 import '../main.dart';
 import '../prefabs/PlatformListView.dart';
+import 'company.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key, required this.title});
-
-  final String title;
+  const Home({super.key});
 
   @override
   State<Home> createState() => _MyHomePageState();
@@ -188,65 +187,75 @@ class CompanyCard extends StatelessWidget {
       width: 300,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10.0)), // Top corners rounded
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)), // Top corners rounded
-                child: SizedBox(
-                  height: 300, // Fixed height for the square
-                  width: 300,
-                  child: Image.network(
-                    "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
-                    fit: BoxFit.cover, // Covers the box, maintaining aspect ratio, and may clip the image
-                    loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(), // Assuming you have a CircularProgressIndicator
-                        );
-                      }
-                    },
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              platformPageRoute(
+                context: context,
+                builder: (_) => CompanyProfile(company: company),
+              ),
+            );
+          },
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)), // Top corners rounded
+                  child: SizedBox(
+                    height: 300, // Fixed height for the square
+                    width: 300,
+                    child: Image.network(
+                      "https://static.vecteezy.com/system/resources/previews/000/249/015/non_2x/vector-modern-watercolor-colorful-headers-set-template-design.jpg",
+                      fit: BoxFit.cover, // Covers the box, maintaining aspect ratio, and may clip the image
+                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(), // Assuming you have a CircularProgressIndicator
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: AutoSizeText(
-                            company.getName(),
-                            style: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center
-                        ),
-                      ),
-                      Flexible(
-                        child: AutoSizeText(
-                          description,
-                          minFontSize: 15,
-                          maxFontSize: 18,
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.grey,
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: AutoSizeText(
+                              company.getName(),
+                              style: const TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center
                           ),
-                          textAlign: TextAlign.left,
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                        Flexible(
+                          child: AutoSizeText(
+                            description,
+                            minFontSize: 15,
+                            maxFontSize: 18,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.left,
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

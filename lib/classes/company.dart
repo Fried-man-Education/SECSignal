@@ -79,24 +79,30 @@ class Company {
       return 'No title available for the company.';
     }
 
-    // Modify the title to improve search accuracy. This is a basic example and can be refined.
-    String searchQuery = "$title";
+    // URL encode the title
+    String searchQuery = Uri.encodeComponent(title!);
 
-    var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
+    try {
+      var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
 
-      // Check if the page is a disambiguation page
-      if (data['type'] == 'disambiguation') {
-        return 'Multiple entries found. Please specify the query.';
+        // Check if the page is a disambiguation page or a redirect
+        if (data['type'] == 'disambiguation' || data['type'] == 'redirect') {
+          return 'Multiple entries found or redirected. Please specify the query.';
+        }
+
+        // Store the description for future use
+        description = data['extract'] ?? 'No description available.';
+        return description!;
+      } else {
+        // Provide more detailed error information
+        return 'Failed to load description. HTTP Status Code: ${response.statusCode}';
       }
-
-      // Store the description for future use
-      description = data['extract'] ?? 'No description available.';
-      return description!;
-    } else {
-      return 'Failed to load description.';
+    } catch (e) {
+      // Handle any exceptions that might occur during the HTTP request
+      return 'An error occurred: $e';
     }
   }
 
