@@ -122,6 +122,9 @@ class Company {
         description = data['extract'] ?? 'No description available.';
         return description!;
       } else {
+        if (response.statusCode.toString() == "404") {
+          description = 'Failed to load description. HTTP Status Code: ${response.statusCode}';
+        }
         // Provide more detailed error information
         return 'Failed to load description. HTTP Status Code: ${response.statusCode}';
       }
