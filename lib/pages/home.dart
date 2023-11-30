@@ -89,12 +89,15 @@ class _MyHomePageState extends State<Home> {
               padding: const EdgeInsets.all(4.0),
               child: SizedBox(
                 // Flip the height and width if in landscape mode
-                height: isLandscape ? double.infinity : 50,
-                width: isLandscape ? 50 : double.infinity,
+                height: isLandscape ? double.infinity : null,
+                width: isLandscape ? null : double.infinity,
                 child: Card(
-                  child: isLandscape
-                      ? Column(children: navBar)
-                      : Row(children: navBar),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: isLandscape
+                        ? Column(children: navBar)
+                        : Row(children: navBar),
+                  )
                 ),
               ),
             );
