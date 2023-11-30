@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
 import '../prefabs/PlatformListView.dart';
+import '../prefabs/PreviewCard.dart';
 import 'company.dart';
 
 class Home extends StatefulWidget {
@@ -209,139 +210,95 @@ class CompanyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 300,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)), // Top corners rounded
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              platformPageRoute(
-                context: context,
-                builder: (_) => CompanyProfile(company: company),
-              ),
-            );
-          },
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 300,
-                  child: Center(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      child: Container(
-                        height: 250,
-                        width: 250,
-                        color: Theme.of(context).primaryColor,
-                        child: FutureBuilder<FinnhubProfile?>(
-                          future: company.getFinnhubProfile(),
-                          builder: (context, snapshot) {
-                            Widget placeHolder = PlatformIconButton(
-                              color: Theme.of(context).cardColor,
-                              materialIcon: Icon(
-                                Icons.business,
-                                size: 100,
-                                color: Theme.of(context).cardColor,
-                              ),
-                              cupertinoIcon: Icon(
-                                  CupertinoIcons.building_2_fill,
-                                  size: 100,
-                                  color: Theme.of(context).cardColor
-                              ),
-                              onPressed: null,  // The icon button is for display only
-                            );
-
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Align( // Use Align instead of SizedBox
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  height: 100,
-                                  width: 100,
-                                  child: PlatformCircularProgressIndicator(
-                                    material: (_, __) => MaterialProgressIndicatorData(
-                                      color: Theme.of(context).cardColor,
-                                    ),
-                                    cupertino: (_, __) => CupertinoProgressIndicatorData(
-                                      color: Theme.of(context).cardColor,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data?.weburl == null || snapshot.data!.weburl!.isEmpty) {
-                              return placeHolder;
-                            } else {
-                              return Image.network(
-                                'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
-                                fit: BoxFit.cover,
-                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Container(
-                                    height: 250,
-                                    width: 250,
-                                    color: Theme.of(context).primaryColor,
-                                    child: Center(
-                                      child: PlatformCircularProgressIndicator(
-                                        material: (_, __) => MaterialProgressIndicatorData(
-                                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).cardColor),
-                                        ),
-                                        cupertino: (_, __) => CupertinoProgressIndicatorData(
-                                          color: Theme.of(context).cardColor,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                errorBuilder: (context, error, stackTrace) {
-                                  return placeHolder; // Displaying error widget
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: AutoSizeText(
-                              company.getName(),
-                              style: const TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center
-                          ),
-                        ),
-                        Flexible(
-                          child: AutoSizeText(
-                            description,
-                            minFontSize: 15,
-                            maxFontSize: 18,
-                            style: const TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.grey,
-                            ),
-                            textAlign: TextAlign.left,
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          platformPageRoute(
+            context: context,
+            builder: (_) => CompanyProfile(company: company),
           ),
+        );
+      },
+      child: CompanyPrefab(
+        header: buildHeader(context),
+        title: company.getName(),
+        footer: buildFooter(),
+      ),
+    );
+  }
+
+  Widget buildHeader(BuildContext context) {
+    return FutureBuilder<FinnhubProfile?>(
+      future: company.getFinnhubProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return buildPlaceholder(context, true);
+        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data?.weburl == null || snapshot.data!.weburl!.isEmpty) {
+          return buildPlaceholder(context, false);
+        } else {
+          return Image.network(
+            'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
+            fit: BoxFit.cover,
+            height: 250,
+            width: 250,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return buildPlaceholder(context, true);
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return buildPlaceholder(context, false);
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildFooter() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: AutoSizeText(
+        description,
+        minFontSize: 15,
+        maxFontSize: 18,
+        style: const TextStyle(
+          fontSize: 18.0,
+          color: Colors.grey,
+        ),
+        textAlign: TextAlign.left,
+        maxLines: 5,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget buildPlaceholder(BuildContext context, bool isLoading) {
+    return Container(
+      height: 250,
+      width: 250,
+      color: Theme.of(context).primaryColor,
+      child: Center(
+        child: isLoading
+            ? PlatformCircularProgressIndicator(
+          material: (_, __) => MaterialProgressIndicatorData(
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).cardColor),
+          ),
+          cupertino: (_, __) => CupertinoProgressIndicatorData(
+            color: Theme.of(context).cardColor,
+          ),
+        )
+            : PlatformIconButton(
+          materialIcon: Icon(
+            Icons.business,
+            size: 100,
+            color: Theme.of(context).cardColor,
+          ),
+          cupertinoIcon: Icon(
+            CupertinoIcons.building_2_fill,
+            size: 100,
+            color: Theme.of(context).cardColor,
+          ),
+          onPressed: null,
         ),
       ),
     );
