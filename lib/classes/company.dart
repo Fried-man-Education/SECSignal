@@ -35,7 +35,6 @@ class Company {
       profile = FinnhubProfile.fromJson(json.decode(response.body));
       return profile;
     } else {
-      print('Failed to load Finnhub profile');
       return null;
     }
   }

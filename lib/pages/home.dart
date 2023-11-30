@@ -226,48 +226,85 @@ class CompanyCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                FutureBuilder<FinnhubProfile?>(
-                  future: company.getFinnhubProfile(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: Center(child: Text('Error loading image')),
-                      );
-                    } else if (snapshot.hasData && snapshot.data?.weburl != null && snapshot.data!.weburl!.isNotEmpty) {
-                      print(snapshot.data!.weburl!);
-                      print('https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}');
-                      return ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
-                        child: SizedBox(
-                          height: 300,
-                          width: 300,
-                          child: Image.network(
-                            'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
-                            fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(child: CircularProgressIndicator());
-                            },
-                          ),
+                SizedBox(
+                  height: 300,
+                  child: Center(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      child: Container(
+                        height: 250,
+                        width: 250,
+                        color: Theme.of(context).primaryColor,
+                        child: FutureBuilder<FinnhubProfile?>(
+                          future: company.getFinnhubProfile(),
+                          builder: (context, snapshot) {
+                            Widget placeHolder = PlatformIconButton(
+                              color: Theme.of(context).cardColor,
+                              materialIcon: Icon(
+                                Icons.business,
+                                size: 100,
+                                color: Theme.of(context).cardColor,
+                              ),
+                              cupertinoIcon: Icon(
+                                  CupertinoIcons.building_2_fill,
+                                  size: 100,
+                                  color: Theme.of(context).cardColor
+                              ),
+                              onPressed: null,  // The icon button is for display only
+                            );
+
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Align( // Use Align instead of SizedBox
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: PlatformCircularProgressIndicator(
+                                    material: (_, __) => MaterialProgressIndicatorData(
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                    cupertino: (_, __) => CupertinoProgressIndicatorData(
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data?.weburl == null || snapshot.data!.weburl!.isEmpty) {
+                              return placeHolder;
+                            } else {
+                              return Image.network(
+                                'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    height: 250,
+                                    width: 250,
+                                    color: Theme.of(context).primaryColor,
+                                    child: Center(
+                                      child: PlatformCircularProgressIndicator(
+                                        material: (_, __) => MaterialProgressIndicatorData(
+                                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).cardColor),
+                                        ),
+                                        cupertino: (_, __) => CupertinoProgressIndicatorData(
+                                          color: Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return placeHolder; // Displaying error widget
+                                },
+                              );
+                            }
+                          },
                         ),
-                      );
-                    } else {
-                      return const SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: Center(child: Text('No image available')),
-                      );
-                    }
-                  },
+                      ),
+                    ),
+                  ),
                 ),
+
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
