@@ -250,7 +250,6 @@ class _CompanyProfile extends State<CompanyProfile> {
                       );
                     }
                   ),
-
                   NewsSection(
                     title: "${widget.company.getName()} News",
                     newsFuture: NewsService().getCompanyNews(
@@ -259,6 +258,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                         to: today
                     )
                   ),
+
                 ],
               ),
             ),
