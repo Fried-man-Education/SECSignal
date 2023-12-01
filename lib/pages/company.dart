@@ -230,8 +230,8 @@ class _CompanyProfile extends State<CompanyProfile> {
                                                       fontSize: 18
                                                     ),
                                                     children: <TextSpan>[
-                                                      TextSpan(text: "${entry.key}: ", style: const TextStyle(fontWeight: FontWeight.bold)),
-                                                      TextSpan(text: "${entry.value}"),
+                                                      TextSpan(text: "${entry.key}: "),
+                                                      TextSpan(text: "${entry.value}", style: const TextStyle(color: Colors.grey)),
                                                     ],
                                                   ),
                                                 );
