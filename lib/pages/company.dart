@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:secsignal/prefabs/company.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 import '../classes/company.dart';
 import '../classes/news.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/news.dart';
+import '../secrets.dart';
 
 class CompanyProfile extends StatefulWidget {
   const CompanyProfile({super.key, required this.company});
@@ -20,10 +25,34 @@ class CompanyProfile extends StatefulWidget {
 }
 
 class _CompanyProfile extends State<CompanyProfile> {
-
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
+
+    Future<List<Company>> _fetchPeerCompanies() async {
+      List<String> companySymbols = [];
+      final response = await http.get(
+        Uri.parse('https://finnhub.io/api/v1/stock/peers?symbol=${widget.company.ticker}&token=$apiFinnhubKey'),
+      );
+
+      if (response.statusCode == 200) {
+        companySymbols = List<String>.from(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load company peers');
+      }
+
+      List<Company> output = [];
+      companySymbols.forEach((ticker) async {
+        try {
+          Company company = await Company.fromTicker(ticker);
+          output.add(company);
+        } catch (e) {
+          print('Error fetching company with ticker $ticker: $e');
+          // Handle the exception or log it
+        }
+      });
+      return output;
+    }
 
     return SafeArea(
       bottom: false,
@@ -251,14 +280,40 @@ class _CompanyProfile extends State<CompanyProfile> {
                     }
                   ),
                   NewsSection(
-                    title: "${widget.company.getName()} News",
-                    newsFuture: NewsService().getCompanyNews(
-                        symbol: widget.company.ticker!,
-                        from: DateTime(today.year - 1, today.month, today.day),
-                        to: today
-                    )
+                      title: "${widget.company.getName()} News",
+                      newsFuture: NewsService().getCompanyNews(
+                          symbol: widget.company.ticker!,
+                          from: DateTime(today.year - 1, today.month, today.day),
+                          to: today
+                      )
                   ),
-
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        "${widget.company.getName()}'s Peers",
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        "A list of peers operating in the same country and sector/industry.",
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.grey
+                        ),
+                      ),
+                    ),
+                  ),
+                  CompanySection(companies: _fetchPeerCompanies()),
                 ],
               ),
             ),

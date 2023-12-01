@@ -43,7 +43,10 @@ class _CompanySectionState extends State<CompanySection> {
                   future: company.getCompanyDescription(),
                   builder: (context, descriptionSnapshot) {
                     String description = descriptionSnapshot.data ?? 'Description not available';
-                    return CompanyCard(company: company, description: description);
+                    return Padding(
+                      padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                      child: CompanyCard(company: company, description: description)
+                    );
                   },
                 );
               },
