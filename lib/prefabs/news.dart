@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../classes/news.dart';
 import 'PreviewCard.dart';
@@ -123,21 +124,122 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void showNewsDetailsPopup(News newsItem) {
+      showPlatformDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PlatformAlertDialog(
+            title: Text(newsItem.headline),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width / 25,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                        child: Image.network(
+                          newsItem.image,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return buildPlaceholder(context, true);
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return buildPlaceholder(context, false);
+                          },
+                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        DateFormat('MMMM dd, yyyy h:mm a').format(DateTime.fromMillisecondsSinceEpoch(newsItem.datetime * 1000)),
+                        style: const TextStyle(
+                            color: Colors.grey
+                        ),
+                      ),
+                    ),
+                    Text(
+                      newsItem.summary,
+                      style: const TextStyle(
+                          fontStyle: FontStyle.italic
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Wrap(
+                        spacing: 8.0, // Horizontal space between the containers
+                        runSpacing: 8.0, // Vertical space between the containers
+                        children: newsItem.toMap().entries
+                            .where((entry) =>
+                        entry.value != null &&
+                            entry.value != '' &&
+                            entry.value != 'N/A' &&
+                            entry.key != "url" &&
+                            entry.key != "image" &&
+                            entry.key != "headline" &&
+                            entry.key != "summary" &&
+                            entry.key != "datetime" &&
+                            entry.key != "id"
+                        )
+                            .map((entry) {
+                          dynamic value = entry.value;
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(minWidth: 100), // Set a minimal width for the container
+                            child: Container(
+                              margin: EdgeInsets.all(4.0),
+                              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Text(
+                                '$value',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Theme.of(context).dialogBackgroundColor,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    )
+                  ],
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Open Article'),
+                onPressed: () async {
+                  final Uri _url = Uri.parse(newsItem.url);
+                  if (await canLaunchUrl(_url)) {
+                    await launchUrl(
+                      _url,
+                      mode: LaunchMode.platformDefault,
+                      webOnlyWindowName: kIsWeb ? '_blank' : null,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Could not launch ${newsItem.url}')),
+                    );
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return GestureDetector(
-      onTap: () async {
-        final Uri _url = Uri.parse(newsItem.url);
-        if (await canLaunchUrl(_url)) {
-          await launchUrl(
-            _url,
-            mode: LaunchMode.platformDefault,
-            webOnlyWindowName: kIsWeb ? '_blank' : null,
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Could not launch ${newsItem.url}')),
-          );
-        }
-      },
+      onTap: () => showNewsDetailsPopup(newsItem),
       child: CompanyPrefab(
         header: Image.network(
           newsItem.image,

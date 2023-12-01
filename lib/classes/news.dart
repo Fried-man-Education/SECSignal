@@ -53,6 +53,23 @@ class News {
       to: json['to'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'category': category,
+      'datetime': datetime,
+      'headline': headline,
+      'id': id,
+      'image': image,
+      'related': related,
+      'source': source,
+      'summary': summary,
+      'url': url,
+      'symbol': symbol,
+      'from': from,
+      'to': to,
+    };
+  }
 }
 
 enum MarketNewsCategory { general, forex, crypto, merger }
