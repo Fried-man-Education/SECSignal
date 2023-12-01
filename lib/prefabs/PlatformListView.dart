@@ -28,8 +28,10 @@ class PlatformListView extends StatelessWidget {
       );
     }
 
-    return ListView(
-      children: children,
+    return SingleChildScrollView(
+      child: Column(
+        children: children,
+      ),
     );
   }
 }
