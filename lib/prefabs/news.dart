@@ -147,7 +147,10 @@ class NewsCard extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return PlatformAlertDialog(
-            title: Text(newsItem.headline),
+            title: Text(
+              newsItem.headline,
+              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+            ),
             content: SizedBox(
               width: MediaQuery.of(context).size.width / 25,
               child: SingleChildScrollView(

@@ -99,20 +99,16 @@ class _CompanyProfile extends State<CompanyProfile> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Align(
+                                    Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         "About",
-                                        style: TextStyle(
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
                                       ),
                                     ),
                                     AutoSizeText(
                                       description,
                                       style: const TextStyle(
-                                        fontSize: 18.0,
                                         color: Colors.grey
                                       ),
                                     ),
@@ -235,14 +231,11 @@ class _CompanyProfile extends State<CompanyProfile> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.stretch, // Aligns children to the start horizontally
                                         children: [
-                                          const Align(
+                                          Align(
                                             alignment: Alignment.centerLeft,
                                             child: Text(
                                               "Full Description",
-                                              style: TextStyle(
-                                                fontSize: 24.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
                                             ),
                                           ),
                                           Expanded(
@@ -255,9 +248,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                                                   .map((entry) {
                                                 return RichText(
                                                   text: TextSpan(
-                                                    style: const TextStyle(
-                                                      fontSize: 18
-                                                    ),
+                                                    style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium,
                                                     children: <TextSpan>[
                                                       TextSpan(text: "${entry.key}: "),
                                                       TextSpan(text: "${entry.value}", style: const TextStyle(color: Colors.grey)),
