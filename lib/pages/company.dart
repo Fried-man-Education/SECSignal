@@ -184,7 +184,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                                               width: 250,
                                               color: Theme.of(context).primaryColor,
                                               child: Image.network(
-                                                snapshot.data!.getLogo()!,
+                                                snapshot.data!.getLogo() ?? "",
                                                 fit: BoxFit.cover,
                                                 width: double.infinity,
                                                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {

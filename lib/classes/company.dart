@@ -144,6 +144,98 @@ class Company {
     }
   }
 
+  // Override == operator
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Company &&
+        other.ticker == ticker &&
+        other.title == title &&
+        other.cikStr == cikStr;
+  }
+
+  // Override hashCode
+  @override
+  int get hashCode => Object.hash(ticker, title, cikStr);
+
+  // Method to search companies by string
+  static Future<List<Company>> searchCompanies(String query) async {
+    if (query.isEmpty) return [];
+
+    if (_companyDataCache == null || _companyDataCache!.isEmpty) {
+      await _fetchCompanyData();
+    }
+
+    // Updated helper function to check if all characters of 'small' are in 'large' with correct frequency
+    bool _isSubset(String small, String large) {
+      var countMap = Map<String, int>();
+
+      for (var char in large.split('')) {
+        countMap[char] = (countMap[char] ?? 0) + 1;
+      }
+
+      for (var char in small.split('')) {
+        if (!countMap.containsKey(char) || countMap[char] == 0) {
+          return false;
+        }
+        countMap[char] = countMap[char]! - 1;
+      }
+
+      return true;
+    }
+
+    // Convert the query to lowercase
+    String lowerQuery = query.toLowerCase();
+
+    Set<Company> matches = {};
+    _companyDataCache!.forEach((key, value) {
+      // Convert each field to lowercase
+      String lowerTicker = value['ticker']?.toLowerCase() ?? '';
+      String lowerTitle = value['title']?.toLowerCase() ?? '';
+      String lowerCikStr = value['cik_str'].toString().toLowerCase();
+
+      // Check if the query is a subset of any field
+      if (_isSubset(lowerQuery, lowerTicker) || _isSubset(lowerQuery, lowerTitle) || _isSubset(lowerQuery, lowerCikStr)) {
+        matches.add(Company(
+          cikStr: value['cik_str'],
+          ticker: value['ticker'],
+          title: value['title'],
+        ));
+      }
+    });
+
+    // Updated function to calculate similarity score with emphasis on exact matches
+    double _similarityScore(String query, String s) {
+      if (s == query) return double.maxFinite; // Maximum score for exact matches
+
+      int score = 0;
+      int lastIndex = -1;
+      for (var char in query.split('')) {
+        int index = s.indexOf(char, lastIndex + 1);
+        if (index != -1) {
+          score += (s.length - index); // Higher score for characters closer to start
+          lastIndex = index;
+        }
+      }
+      return score / s.length; // Normalize by string length
+    }
+
+    // Calculate and sort by total score
+    var matchesList = matches.toList();
+    matchesList.sort((a, b) {
+      double scoreA = _similarityScore(lowerQuery, a.ticker?.toLowerCase() ?? '') +
+          _similarityScore(lowerQuery, a.title?.toLowerCase() ?? '') +
+          _similarityScore(lowerQuery, a.cikStr.toString());
+      double scoreB = _similarityScore(lowerQuery, b.ticker?.toLowerCase() ?? '') +
+          _similarityScore(lowerQuery, b.title?.toLowerCase() ?? '') +
+          _similarityScore(lowerQuery, b.cikStr.toString());
+      return scoreB.compareTo(scoreA);
+    });
+
+    return matchesList;
+  }
+
   @override
   String toString() {
     return 'Company{cikStr: $cikStr, ticker: $ticker, title: $title}';

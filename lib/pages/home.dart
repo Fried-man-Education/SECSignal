@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:secsignal/pages/search.dart';
 
 import '../classes/company.dart';
 import '../classes/news.dart';
@@ -33,6 +34,7 @@ class _MyHomePageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Company.searchCompanies("apple inc.").then((value) => print(value.length));
     return SafeArea(
       bottom: false,
       child: PlatformScaffold(
@@ -54,7 +56,12 @@ class _MyHomePageState extends State<Home> {
                   size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
-                  print('Search');
+                  Navigator.of(context).push(
+                    platformPageRoute(
+                      context: context,
+                      builder: (_) => CompanySearch(),
+                    ),
+                  );
                 },
               ),
               const Spacer(),
