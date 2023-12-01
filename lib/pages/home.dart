@@ -256,11 +256,11 @@ class CompanyCard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return buildPlaceholder(context, true);
-        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data?.weburl == null || snapshot.data!.weburl!.isEmpty) {
+        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.getLogo() == null) {
           return buildPlaceholder(context, false);
         } else {
           return Image.network(
-            'https://logo.clearbit.com/${Uri.parse(snapshot.data!.weburl!).host}',
+            snapshot.data!.getLogo()!,
             fit: BoxFit.cover,
             height: 250,
             width: 250,

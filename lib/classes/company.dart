@@ -195,4 +195,41 @@ class FinnhubProfile {
       weburl: json['weburl'],
     );
   }
+
+  String? getLogo () => weburl != null && weburl!.isNotEmpty ? 'https://logo.clearbit.com/${Uri.parse(weburl!).host}' : null;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'country': country,
+      'currency': currency,
+      'exchange': exchange,
+      'finnhubIndustry': finnhubIndustry,
+      'ipo': ipo,
+      'logo': logo,
+      'marketCapitalization': marketCapitalization,
+      'name': name,
+      'phone': phone,
+      'shareOutstanding': shareOutstanding,
+      'ticker': ticker,
+      'weburl': weburl,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'FinnhubProfile('
+        'country: $country, '
+        'currency: $currency, '
+        'exchange: $exchange, '
+        'finnhubIndustry: $finnhubIndustry, '
+        'ipo: $ipo, '
+        'logo: $logo, '
+        'marketCapitalization: $marketCapitalization, '
+        'name: $name, '
+        'phone: $phone, '
+        'shareOutstanding: $shareOutstanding, '
+        'ticker: $ticker, '
+        'weburl: $weburl'
+        ')';
+  }
 }

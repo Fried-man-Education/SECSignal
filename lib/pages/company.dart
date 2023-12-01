@@ -93,6 +93,39 @@ class _CompanyProfile extends State<CompanyProfile> {
                       );
                     },
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "ALL INFO",
+                                    style: TextStyle(
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                AutoSizeText(
+                                  widget.company.profile.toString(),
+                                  style: const TextStyle(
+                                      fontSize: 18.0,
+                                      color: Colors.grey
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                      ),
+                    ),
+                  ),
                   NewsSection(
                       title: "${widget.company.getName()} News",
                       newsFuture: NewsService().getCompanyNews(
