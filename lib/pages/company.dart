@@ -56,7 +56,41 @@ class _CompanyProfile extends State<CompanyProfile> {
                     builder: (context, snapshot) {
                       String description = snapshot.data ?? 'Description not available';
 
-                      return Text(description);
+                      if (snapshot.data == "Failed to load description. HTTP Status Code: 404") return Container();
+
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                          child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "About",
+                                        style: TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      description,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        color: Colors.grey
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                        ),
+                      );
                     },
                   ),
                   NewsSection(
