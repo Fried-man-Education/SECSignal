@@ -226,7 +226,9 @@ class _CompanyProfile extends State<CompanyProfile> {
                                                   .map((entry) {
                                                 return RichText(
                                                   text: TextSpan(
-                                                    style: DefaultTextStyle.of(context).style,
+                                                    style: const TextStyle(
+                                                      fontSize: 18
+                                                    ),
                                                     children: <TextSpan>[
                                                       TextSpan(text: "${entry.key}: ", style: const TextStyle(fontWeight: FontWeight.bold)),
                                                       TextSpan(text: "${entry.value}"),
