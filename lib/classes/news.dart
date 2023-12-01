@@ -82,15 +82,24 @@ extension MarketNewsCategoryExtension on MarketNewsCategory {
 
 class NewsService {
   static const String baseUrl = 'https://finnhub.io/api/v1';
+  final Map<String, List<News>> _newsCache = {};
 
   Future<List<News>> getMarketNews([MarketNewsCategory category = MarketNewsCategory.general]) async {
+    final String cacheKey = 'market-${category.value}';
+
+    if (_newsCache.containsKey(cacheKey)) {
+      return _newsCache[cacheKey]!;
+    }
+
     final response = await http.get(
       Uri.parse('$baseUrl/news?category=${category.value}&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      return data.map((json) => News.fromJson(json)).toList();
+      List<News> newsList = data.map((json) => News.fromJson(json)).toList();
+      _newsCache[cacheKey] = newsList;
+      return newsList;
     } else {
       throw Exception('Failed to load market news');
     }
@@ -99,14 +108,26 @@ class NewsService {
   Future<List<News>> getCompanyNews({required String symbol, required DateTime from, required DateTime to}) async {
     final String formattedFromDate = DateFormat('yyyy-MM-dd').format(from);
     final String formattedToDate = DateFormat('yyyy-MM-dd').format(to);
+    final String cacheKey = '$symbol-$formattedFromDate-$formattedToDate';
 
+    // Return cached data if available
+    if (_newsCache.containsKey(cacheKey)) {
+      return _newsCache[cacheKey]!;
+    }
+
+    // Fetch data if not in cache
     final response = await http.get(
       Uri.parse('$baseUrl/company-news?symbol=$symbol&from=$formattedFromDate&to=$formattedToDate&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      return data.map((json) => News.fromJson(json)).toList();
+      List<News> newsList = data.map((json) => News.fromJson(json)).toList();
+
+      // Cache the data
+      _newsCache[cacheKey] = newsList;
+
+      return newsList;
     } else {
       throw Exception('Failed to load company news');
     }

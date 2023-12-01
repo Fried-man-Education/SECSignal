@@ -11,15 +11,15 @@ import '../classes/news.dart';
 import 'PreviewCard.dart';
 
 class NewsSection extends StatefulWidget {
-  final String title;                 // Title string
-  final String description;           // Description string with a default empty value
+  final String title;
+  final String description;
   final Future<List<News>> newsFuture;
 
   NewsSection({
     super.key,
     required this.newsFuture,
     required this.title,
-    this.description = ''             // Default value for description
+    this.description = '',
   });
 
   @override
@@ -27,8 +27,14 @@ class NewsSection extends StatefulWidget {
 }
 
 class _NewsSectionState extends State<NewsSection> {
+  Future<List<News>>? _cachedNewsFuture;
   final ScrollController _controller = ScrollController();
-  List<News>? newsCache;
+
+  @override
+  void initState() {
+    super.initState();
+    _cachedNewsFuture = widget.newsFuture;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +65,8 @@ class _NewsSectionState extends State<NewsSection> {
           ),
         SizedBox(
           height: 500,
-          child: newsCache != null
-              ? buildNewsList(newsCache!)
-              : FutureBuilder<List<News>>(
-            future: widget.newsFuture,
+          child: FutureBuilder<List<News>>(
+            future: _cachedNewsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -71,8 +75,8 @@ class _NewsSectionState extends State<NewsSection> {
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return Center(child: Text('No news available.'));
               } else {
-                newsCache = snapshot.data;
-                return buildNewsList(newsCache!);
+                // Use snapshot data to build the news list
+                return buildNewsList(snapshot.data!);
               }
             },
           ),

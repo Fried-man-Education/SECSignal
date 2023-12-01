@@ -14,6 +14,8 @@ import '../prefabs/company.dart';
 import '../prefabs/news.dart';
 import 'company.dart';
 
+NewsService newsController = NewsService();
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -22,7 +24,6 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
-
   Future<List<Company>> _fetchRandomCompanies(int count) async {
     List<Company> companies = [];
     for (int i = 0; i < count; i++) {
@@ -126,7 +127,7 @@ class _MyHomePageState extends State<Home> {
 
                     NewsSection(
                       title: "Market News",
-                      newsFuture: NewsService().getMarketNews()
+                      newsFuture: newsController.getMarketNews()
                     ),
 
                     for (int i = 0; i < 4; i++) ...[
@@ -138,17 +139,17 @@ class _MyHomePageState extends State<Home> {
 
                     NewsSection(
                         title: "Crypto News",
-                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.crypto)
+                        newsFuture: newsController.getMarketNews(MarketNewsCategory.crypto)
                     ),
 
                     NewsSection(
                         title: "Forex News",
-                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.forex)
+                        newsFuture: newsController.getMarketNews(MarketNewsCategory.forex)
                     ),
 
                     NewsSection(
                         title: "Merger News",
-                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.merger)
+                        newsFuture: newsController.getMarketNews(MarketNewsCategory.merger)
                     ),
                   ],
                 ),

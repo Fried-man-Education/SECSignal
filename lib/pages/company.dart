@@ -14,6 +14,7 @@ import '../classes/news.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/news.dart';
 import '../secrets.dart';
+import 'home.dart';
 
 class CompanyProfile extends StatefulWidget {
   const CompanyProfile({super.key, required this.company});
@@ -273,7 +274,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                   ),
                   NewsSection(
                       title: "${widget.company.getName()} News",
-                      newsFuture: NewsService().getCompanyNews(
+                      newsFuture: newsController.getCompanyNews(
                           symbol: widget.company.ticker!,
                           from: DateTime(today.year - 1, today.month, today.day),
                           to: today
