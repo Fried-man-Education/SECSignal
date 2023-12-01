@@ -10,6 +10,11 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
   - https://finnhub.io/docs/api/
   - https://www.alphavantage.co
 - **Latest Filings**: Display the most recent 10-Q and 10-K filings across all companies.
+- **Other Data**
+  - [Market Status](https://finnhub.io/docs/api/market-status)
+  - [Market Holiday](https://finnhub.io/docs/api/market-holiday)
+  - [IPO Calendar](https://finnhub.io/docs/api/ipo-calendar)
+  - [FDA Committee Meeting Calendar](https://finnhub.io/docs/api/fda-committee-meeting-calendar)
 
 ## Company Profile Page
 
@@ -25,6 +30,20 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
   - Sentiment analysis results over consecutive filings.
   - Risk heatmaps and profiles.
 - **Bookmark Option**: Allows users to bookmark the company for easy access and notifications.
+- **Other Data**
+  - [Basic Financials](https://finnhub.io/docs/api/market-status](https://finnhub.io/docs/api/company-basic-financials)
+  - [Insider Transactions](https://finnhub.io/docs/api/market-holiday](https://finnhub.io/docs/api/insider-transactions)
+  - [Insider Sentiment](https://finnhub.io/docs/api/insider-sentiment)
+  - [Financials As Reported](https://finnhub.io/docs/api/insider-sentiment](https://finnhub.io/docs/api/financials-reported)
+  - [SEC Filings](https://finnhub.io/docs/api/filings)
+  - [Recommendation Trends](https://finnhub.io/docs/api/recommendation-trends)
+  - [Earnings Surprises](https://finnhub.io/docs/api/company-earnings)
+  - [Earnings Calendar](https://finnhub.io/docs/api/earnings-calendar)
+  - [Quote](https://finnhub.io/docs/api/quote)
+  - [USPTO Patents](https://finnhub.io/docs/api/stock-uspto-patent)
+  - [H1-B Visa Application](https://finnhub.io/docs/api/stock-visa-application)
+  - [Senate Lobbying](https://finnhub.io/docs/api/stock-lobbying)
+  - [USA Spending](https://finnhub.io/docs/api/stock-usa-spending)
 
 ## Detailed Filing View
 
