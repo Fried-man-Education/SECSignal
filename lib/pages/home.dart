@@ -35,7 +35,6 @@ class _MyHomePageState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Company.searchCompanies("apple inc.").then((value) => print(value.length));
     return SafeArea(
       bottom: false,
       child: PlatformScaffold(
