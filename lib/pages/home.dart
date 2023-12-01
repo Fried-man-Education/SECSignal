@@ -12,6 +12,7 @@ import '../prefabs/PlatformListView.dart';
 import '../prefabs/PreviewCard.dart';
 import '../prefabs/company.dart';
 import '../prefabs/news.dart';
+import 'about.dart';
 import 'company.dart';
 
 NewsService newsController = NewsService();
@@ -77,7 +78,12 @@ class _MyHomePageState extends State<Home> {
                   size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
-                  print('About');
+                  Navigator.of(context).push(
+                    platformPageRoute(
+                      context: context,
+                      builder: (_) => About(),
+                    ),
+                  );
                 },
               ),
               PlatformIconButton(
