@@ -37,6 +37,7 @@ class _CompanyProfile extends State<CompanyProfile> {
 
       if (response.statusCode == 200) {
         companySymbols = List<String>.from(json.decode(response.body));
+        companySymbols.removeWhere((ticker) => ticker == widget.company.ticker);
       } else {
         throw Exception('Failed to load company peers');
       }
