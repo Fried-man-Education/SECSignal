@@ -31,10 +31,10 @@ AI-driven insights and analysis on SEC filings, empowering investors with concis
   - Risk heatmaps and profiles.
 - **Bookmark Option**: Allows users to bookmark the company for easy access and notifications.
 - **Other Data**
-  - [Basic Financials](https://finnhub.io/docs/api/market-status](https://finnhub.io/docs/api/company-basic-financials)
-  - [Insider Transactions](https://finnhub.io/docs/api/market-holiday](https://finnhub.io/docs/api/insider-transactions)
+  - [Basic Financials](https://finnhub.io/docs/api/company-basic-financials)
+  - [Insider Transactions](https://finnhub.io/docs/api/insider-transactions)
   - [Insider Sentiment](https://finnhub.io/docs/api/insider-sentiment)
-  - [Financials As Reported](https://finnhub.io/docs/api/insider-sentiment](https://finnhub.io/docs/api/financials-reported)
+  - [Financials As Reported](https://finnhub.io/docs/api/financials-reported)
   - [SEC Filings](https://finnhub.io/docs/api/filings)
   - [Recommendation Trends](https://finnhub.io/docs/api/recommendation-trends)
   - [Earnings Surprises](https://finnhub.io/docs/api/company-earnings)
