@@ -4,7 +4,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
+import '../classes/news.dart';
 import '../prefabs/PlatformListView.dart';
+import '../prefabs/news.dart';
 
 class CompanyProfile extends StatefulWidget {
   const CompanyProfile({super.key, required this.company});
@@ -19,6 +21,8 @@ class _CompanyProfile extends State<CompanyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now();
+
     return SafeArea(
       bottom: false,
       child: PlatformScaffold(
@@ -54,7 +58,15 @@ class _CompanyProfile extends State<CompanyProfile> {
 
                       return Text(description);
                     },
-                  )
+                  ),
+                  NewsSection(
+                      title: "${widget.company.getName()} News",
+                      newsFuture: NewsService().getCompanyNews(
+                          symbol: widget.company.ticker!,
+                          from: DateTime(today.year - 1, today.month, today.day),
+                          to: today
+                      )
+                  ),
                 ],
               ),
             ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import '../main.dart';
 import '../secrets.dart';
@@ -78,9 +79,12 @@ class NewsService {
     }
   }
 
-  Future<List<News>> getCompanyNews(String symbol, String from, String to) async {
+  Future<List<News>> getCompanyNews({required String symbol, required DateTime from, required DateTime to}) async {
+    final String formattedFromDate = DateFormat('yyyy-MM-dd').format(from);
+    final String formattedToDate = DateFormat('yyyy-MM-dd').format(to);
+
     final response = await http.get(
-      Uri.parse('$baseUrl/company-news?symbol=$symbol&from=$from&to=$to&token=$apiFinnhubKey'),
+      Uri.parse('$baseUrl/company-news?symbol=$symbol&from=$formattedFromDate&to=$formattedToDate&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {
