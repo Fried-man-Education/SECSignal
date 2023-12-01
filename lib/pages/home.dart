@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -121,23 +123,10 @@ class _MyHomePageState extends State<Home> {
                     ),
 
                     for (int i = 0; i < 4; i++) ...[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            ["Your Favorite Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
-                            style: const TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 500,
-                        child: CompanySection(companies: _fetchRandomCompanies(12))
-                      ),
+                      CompanySection(
+                        companies: _fetchRandomCompanies(5),
+                        title: ["Your Favorite Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
+                      )
                     ],
 
                     NewsSection(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,10 +11,16 @@ import '../classes/news.dart';
 import 'PreviewCard.dart';
 
 class NewsSection extends StatefulWidget {
-  final String title;
+  final String title;                 // Title string
+  final String description;           // Description string with a default empty value
   final Future<List<News>> newsFuture;
 
-  NewsSection({super.key, required this.title, required this.newsFuture});
+  NewsSection({
+    super.key,
+    required this.newsFuture,
+    required this.title,
+    this.description = ''             // Default value for description
+  });
 
   @override
   _NewsSectionState createState() => _NewsSectionState();
@@ -32,13 +40,23 @@ class _NewsSectionState extends State<NewsSection> {
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               widget.title,
-              style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
+        if (widget.description.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                  widget.description,
+                  style: Platform.isIOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                      color: Colors.grey
+                  ) : Theme.of(context).textTheme.headlineMedium!
+              ),
+            ),
+          ),
         SizedBox(
           height: 500,
           child: newsCache != null

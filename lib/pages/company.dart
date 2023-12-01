@@ -287,33 +287,11 @@ class _CompanyProfile extends State<CompanyProfile> {
                           to: today
                       )
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        "${widget.company.getName()}'s Peers",
-                        style: const TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  CompanySection(
+                    title: "${widget.company.getName()}'s Peers",
+                    description: "A list of peers operating in the same country and sector/industry.",
+                    companies: _fetchPeerCompanies()
                   ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        "A list of peers operating in the same country and sector/industry.",
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.grey
-                        ),
-                      ),
-                    ),
-                  ),
-                  CompanySection(companies: _fetchPeerCompanies()),
                 ],
               ),
             ),

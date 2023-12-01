@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -9,8 +11,15 @@ import '../prefabs/PreviewCard.dart';
 
 class CompanySection extends StatefulWidget {
   final Future<List<Company>> companies;
+  final String title;                 // Title string
+  final String description;           // Description string with a default empty value
 
-  CompanySection({super.key, required this.companies});
+  CompanySection({
+    super.key,
+    required this.companies,
+    required this.title,
+    this.description = ''             // Default value for description
+  });
 
   @override
   _CompanySectionState createState() => _CompanySectionState();
@@ -21,39 +30,66 @@ class _CompanySectionState extends State<CompanySection> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Company>>(
-      future: widget.companies,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator()));
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const SizedBox(height: 500, child: Text('No companies found'));
-        } else {
-          return SizedBox(
-            height: 500,
-            child: ListView.builder(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Company company = snapshot.data![index];
-                return FutureBuilder<String>(
-                  future: company.getCompanyDescription(),
-                  builder: (context, descriptionSnapshot) {
-                    String description = descriptionSnapshot.data ?? 'Description not available';
-                    return Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
-                      child: CompanyCard(company: company, description: description)
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              widget.title,
+              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+            ),
+          ),
+        ),
+        if (widget.description.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                widget.description,
+                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                  color: Colors.grey
+                ) : Theme.of(context).textTheme.headlineMedium!
+              ),
+            ),
+          ),
+        FutureBuilder<List<Company>>(
+          future: widget.companies,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator()));
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const SizedBox(height: 500, child: Text('No companies found'));
+            } else {
+              return SizedBox(
+                height: 500,
+                child: ListView.builder(
+                  controller: _controller,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    Company company = snapshot.data![index];
+                    return FutureBuilder<String>(
+                      future: company.getCompanyDescription(),
+                      builder: (context, descriptionSnapshot) {
+                        String description = descriptionSnapshot.data ?? 'Description not available';
+                        return Padding(
+                          padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                          child: CompanyCard(company: company, description: description)
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-          );
-        }
-      },
+                ),
+              );
+            }
+          },
+        ),
+      ],
     );
   }
 }
