@@ -27,7 +27,7 @@ class Company {
       throw Exception('Ticker must be provided');
     }
 
-    String requestURL = '$baseURL?symbol=$ticker&token=$apiKey';
+    String requestURL = '$baseURL?symbol=$ticker&token=$apiFinnhubKey';
 
     final response = await http.get(Uri.parse(requestURL));
 

@@ -4,8 +4,10 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../classes/company.dart';
+import '../classes/news.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/PreviewCard.dart';
+import '../prefabs/news.dart';
 import 'company.dart';
 
 class Home extends StatefulWidget {
@@ -111,13 +113,19 @@ class _MyHomePageState extends State<Home> {
                       const SizedBox(
                         height: 8,
                       ),
+
+                    NewsSection(
+                      title: "Market News",
+                      newsFuture: NewsService().getMarketNews()
+                    ),
+
                     for (int i = 0; i < 4; i++) ...[
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            ["Your Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
+                            ["Your Favorite Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
                             style: const TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
@@ -142,7 +150,22 @@ class _MyHomePageState extends State<Home> {
                           },
                         ),
                       ),
-                    ]
+                    ],
+
+                    NewsSection(
+                        title: "Crypto News",
+                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.crypto)
+                    ),
+
+                    NewsSection(
+                        title: "Forex News",
+                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.forex)
+                    ),
+
+                    NewsSection(
+                        title: "Merger News",
+                        newsFuture: NewsService().getMarketNews(MarketNewsCategory.merger)
+                    ),
                   ],
                 ),
               ),
@@ -290,12 +313,12 @@ class CompanyCard extends StatelessWidget {
             : PlatformIconButton(
           materialIcon: Icon(
             Icons.business,
-            size: 100,
+            size: 150,
             color: Theme.of(context).cardColor,
           ),
           cupertinoIcon: Icon(
             CupertinoIcons.building_2_fill,
-            size: 100,
+            size: 150,
             color: Theme.of(context).cardColor,
           ),
           onPressed: null,
