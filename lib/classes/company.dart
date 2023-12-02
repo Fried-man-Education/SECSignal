@@ -238,6 +238,36 @@ class Company {
     return matchesList;
   }
 
+  static Future<List<Company>> searchCompaniesByTickers(List<String> tickers) async {
+    if (tickers.isEmpty) return [];
+
+    if (_companyDataCache == null || _companyDataCache!.isEmpty) {
+      await _fetchCompanyData();
+    }
+
+    Set<Company> matches = {};
+
+    // Iterate over each ticker in the list
+    for (var ticker in tickers) {
+      // Convert the ticker to lowercase for case-insensitive comparison
+      String lowerTicker = ticker.toLowerCase();
+
+      // Search for exact matches in the ticker field
+      _companyDataCache!.forEach((key, value) {
+        String lowerCacheTicker = value['ticker']?.toLowerCase() ?? '';
+        if (lowerCacheTicker == lowerTicker) {
+          matches.add(Company(
+            cikStr: value['cik_str'],
+            ticker: value['ticker'],
+            title: value['title'],
+          ));
+        }
+      });
+    }
+
+    return matches.toList();
+  }
+
   @override
   String toString() {
     return 'Company{cikStr: $cikStr, ticker: $ticker, title: $title}';

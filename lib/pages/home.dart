@@ -136,10 +136,16 @@ class _MyHomePageState extends State<Home> {
                       newsFuture: newsController.getMarketNews()
                     ),
 
-                    for (int i = 0; i < 4; i++) ...[
+                    CompanySection(
+                      companies: Company.searchCompaniesByTickers(["FND", "AAPL", "TSLA", "TTE", "GOOGL"]),
+                      title: "Your Favorite Companies",
+                      description: "Companies you have bookmarked",
+                    ),
+
+                    for (int i = 0; i < 3; i++) ...[
                       CompanySection(
                         companies: _fetchRandomCompanies(5),
-                        title: ["Your Favorite Companies", "Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
+                        title: ["Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
                       )
                     ],
 
