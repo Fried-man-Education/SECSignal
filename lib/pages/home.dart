@@ -1,19 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:secsignal/pages/search.dart';
 
 import '../classes/company.dart';
 import '../classes/news.dart';
 import '../prefabs/PlatformListView.dart';
-import '../prefabs/PreviewCard.dart';
 import '../prefabs/company.dart';
 import '../prefabs/news.dart';
 import 'about.dart';
-import 'company.dart';
 
 NewsService newsController = NewsService();
 

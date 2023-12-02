@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math' as math;
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'dart:math' as math;
+
 import '../main.dart';
 import '../secrets.dart';
 

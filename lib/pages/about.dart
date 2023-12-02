@@ -9,11 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:secsignal/prefabs/PlatformListView.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-
-import '../classes/company.dart';
-import '../main.dart';
-import 'company.dart';
 
 class About extends StatefulWidget {
   const About({super.key});

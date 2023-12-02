@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'dart:math' as math;
-import '../main.dart';
+
 import '../secrets.dart';
 
 class News {
