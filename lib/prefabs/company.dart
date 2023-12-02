@@ -145,6 +145,10 @@ class CompanyCard extends StatelessWidget {
   }
 
   Widget buildFooter() {
+    if (description == "Failed to load description. HTTP Status Code: 404") {
+      return Container();
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: AutoSizeText(
