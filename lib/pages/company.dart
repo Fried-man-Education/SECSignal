@@ -147,7 +147,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                           // Format date
                           DateTime parsedDate = DateTime.parse(value);
                           return DateFormat('MMMM dd, yyyy').format(parsedDate);
-                        } else if (key == 'phone') {
+                        } else if (key == 'phone' && value != null) {
                           // Format phone number
                           String rawNumber = double.parse(value).toInt().toString();
                           return '+${rawNumber.substring(0, 1)} (${rawNumber.substring(1, 4)}) ${rawNumber.substring(4, 7)}-${rawNumber.substring(7, 11)}';
