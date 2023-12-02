@@ -133,6 +133,7 @@ class _MyHomePageState extends State<Home> {
 
                     NewsSection(
                       title: "Market News",
+                      description: "What's going on in the world",
                       newsFuture: newsController.getMarketNews()
                     ),
 
@@ -140,6 +141,12 @@ class _MyHomePageState extends State<Home> {
                       companies: Company.searchCompaniesByTickers(["FND", "AAPL", "TSLA", "TTE", "GOOGL"]),
                       title: "Your Favorite Companies",
                       description: "Companies you have bookmarked",
+                    ),
+
+                    NewsSection(
+                        title: "Forex News",
+                        description: "The foreign exchange market is a global decentralized or over-the-counter market for the trading of currencies",
+                        newsFuture: newsController.getMarketNews(MarketNewsCategory.forex)
                     ),
 
                     for (int i = 0; i < 3; i++) ...[
@@ -154,10 +161,7 @@ class _MyHomePageState extends State<Home> {
                         newsFuture: newsController.getMarketNews(MarketNewsCategory.crypto)
                     ),
 
-                    NewsSection(
-                        title: "Forex News",
-                        newsFuture: newsController.getMarketNews(MarketNewsCategory.forex)
-                    ),
+
 
                     NewsSection(
                         title: "Merger News",
