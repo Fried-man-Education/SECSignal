@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:secsignal/prefabs/company.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -128,6 +129,32 @@ class _CompanyProfile extends State<CompanyProfile> {
                         return Container();
                       }
 
+                      String formatKey(String key) {
+                        switch (key) {
+                          case 'finnhubIndustry':
+                            return 'Industry';
+                          case 'marketCapitalization':
+                            return 'Market Capitalization';
+                          case 'shareOutstanding':
+                            return 'Share Outstanding';
+                          default:
+                            return key[0].toUpperCase() + key.substring(1); // Capitalize first letter
+                        }
+                      }
+
+                      String formatValue(String key, dynamic value) {
+                        if (key == 'iso' && value is String) {
+                          // Format date
+                          DateTime parsedDate = DateTime.parse(value);
+                          return DateFormat('MMMM dd, yyyy').format(parsedDate);
+                        } else if (key == 'phone') {
+                          // Format phone number
+                          String rawNumber = double.parse(value).toInt().toString();
+                          return '+${rawNumber.substring(0, 1)} (${rawNumber.substring(1, 4)}) ${rawNumber.substring(4, 7)}-${rawNumber.substring(7, 11)}';
+                        }
+                        return value.toString();
+                      }
+
                       Widget buildPlaceholder(bool isLoading) {
                         return Container(
                           height: 250,
@@ -247,18 +274,22 @@ class _CompanyProfile extends State<CompanyProfile> {
                                               children: widget.company.profile!.toMap().entries
                                                   .where((entry) => entry.key != 'logo' && entry.key != 'weburl')
                                                   .map((entry) {
+                                                String formattedKey = formatKey(entry.key);
+                                                String formattedValue = formatValue(entry.key, entry.value);
                                                 return RichText(
                                                   text: TextSpan(
-                                                    style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium,
+                                                    style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                                        ? CupertinoTheme.of(context).textTheme.textStyle
+                                                        : Theme.of(context).textTheme.bodyMedium,
                                                     children: <TextSpan>[
-                                                      TextSpan(text: "${entry.key}: "),
-                                                      TextSpan(text: "${entry.value}", style: const TextStyle(color: Colors.grey)),
+                                                      TextSpan(text: "$formattedKey: "),
+                                                      TextSpan(text: formattedValue, style: const TextStyle(color: Colors.grey)),
                                                     ],
                                                   ),
                                                 );
                                               }).toList(),
                                             ),
-                                          ),
+                                          )
                                         ],
                                       ),
                                     ),
