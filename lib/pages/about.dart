@@ -128,49 +128,61 @@ class _AboutState extends State<About> {
                                   style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
-                                for (String library in [
-                                  'cupertino_icons',
-                                  'flutter_platform_widgets',
-                                  'http',
-                                  'auto_size_text',
-                                  'url_launcher',
-                                  'intl',
-                                ])
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 40),
-                                    child: RichText(
-                                      text: TextSpan(
-                                          style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium,
-                                          children: [
-                                            const TextSpan(
-                                              text: "- ",
+                                Expanded(
+                                  child: Wrap(
+                                    direction: Axis.vertical,
+                                    children: [
+                                      for (String library in [
+                                        'cupertino_icons',
+                                        'flutter_platform_widgets',
+                                        'http',
+                                        'auto_size_text',
+                                        'url_launcher',
+                                        'intl',
+                                        'font_awesome_flutter',
+                                        'package_info_plus',
+                                        'firebase_core',
+                                        'firebase_auth',
+                                        'cloud_firestore',
+                                      ])
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 40),
+                                          child: RichText(
+                                            text: TextSpan(
+                                                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium,
+                                                children: [
+                                                  const TextSpan(
+                                                    text: "- ",
+                                                  ),
+                                                  TextSpan(
+                                                    text: library,
+                                                    recognizer: TapGestureRecognizer()..onTap = () async {
+                                                      final Uri _url = Uri.parse(
+                                                          'https://pub.dev/packages/$library');
+                                                      if (await canLaunchUrl(_url)) {
+                                                        await launchUrl(
+                                                          _url,
+                                                          mode: LaunchMode.platformDefault,
+                                                          webOnlyWindowName: kIsWeb ? '_blank' : null,
+                                                        );
+                                                      } else {
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                          SnackBar(content: Text('Could not launch $library')),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: TextStyle(
+                                                      color: Theme.of(context).primaryColor,
+                                                      decoration: TextDecoration.underline,
+                                                    ),
+                                                  )
+                                                ]
                                             ),
-                                            TextSpan(
-                                              text: library,
-                                              recognizer: TapGestureRecognizer()..onTap = () async {
-                                                final Uri _url = Uri.parse(
-                                                    'https://pub.dev/packages/$library');
-                                                if (await canLaunchUrl(_url)) {
-                                                  await launchUrl(
-                                                    _url,
-                                                    mode: LaunchMode.platformDefault,
-                                                    webOnlyWindowName: kIsWeb ? '_blank' : null,
-                                                  );
-                                                } else {
-                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                    SnackBar(content: Text('Could not launch $library')),
-                                                  );
-                                                }
-                                              },
-                                              style: TextStyle(
-                                                color: Theme.of(context).primaryColor,
-                                                decoration: TextDecoration.underline,
-                                              ),
-                                            )
-                                          ]
-                                      ),
-                                    ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
+                                ),
                               ],
                             ),
                           ),
