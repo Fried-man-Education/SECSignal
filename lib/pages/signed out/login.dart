@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,14 +81,20 @@ class _LoginState extends State<Login> {
                                       padding: const EdgeInsets.all(20.0),
                                       child: Image.asset(
                                         "assets/icon_rounded.png",
-                                        height: MediaQuery
+                                        height: min(MediaQuery
                                             .of(context)
                                             .size
-                                            .width / 2,
-                                        width: MediaQuery
+                                            .width / 2, MediaQuery
                                             .of(context)
                                             .size
-                                            .width / 2,
+                                            .height / 2),
+                                        width: min(MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width / 2, MediaQuery
+                                            .of(context)
+                                            .size
+                                            .height / 2),
                                       ),
                                     ),
                                     Padding(
