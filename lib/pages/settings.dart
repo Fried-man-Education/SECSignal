@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -116,7 +117,7 @@ class _SettingsState extends State<Settings> {
                                     child: Text("Sign Out"),
                                   ),
                                 ),
-                                for (String label in ["Reset Email", "Delete Account"])
+                                for (String label in ["Reset Password", "Delete Account"])
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: PlatformElevatedButton(
@@ -145,7 +146,7 @@ class _SettingsState extends State<Settings> {
                                       : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
-                                for (String label in ["Change Name", "Clear Favorites"])
+                                for (String label in ["Change Name"])
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: PlatformElevatedButton(
@@ -154,7 +155,42 @@ class _SettingsState extends State<Settings> {
                                       },
                                       child: Text(label),
                                     ),
-                                  )
+                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: PlatformElevatedButton(
+                                    onPressed: () async {
+                                      try {
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                                            .update({'bookmarked': []});
+
+                                        // Show platform dialog after successfully clearing favorites
+                                        showPlatformDialog(
+                                          context: context,
+                                          builder: (_) => PlatformAlertDialog(
+                                            title: Text("Favorites Cleared"),
+                                            content: Text(
+                                                "Your favorites have been successfully cleared.",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('OK'),
+                                                onPressed: () => Navigator.of(context).pop(),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        // Handle the error here, if the update fails
+                                        print('Error clearing favorites: $e');
+                                      }
+                                    },
+                                    child: Text("Clear Favorites"),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
