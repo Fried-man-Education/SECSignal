@@ -162,13 +162,14 @@ class _LoginState extends State<Login> {
                                                     user =
                                                         FirebaseAuth.instance.currentUser;
                                                     if (user != null &&
-                                                        user!.emailVerified) {
+                                                        (user!.emailVerified || true)) {
                                                       /*userData =
                                                       (await FirebaseFirestore.instance
                                                           .collection("users").doc(
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid).get())
                                                           .data()!;*/
+                                                      Navigator.pop(context);
                                                       return;
                                                     }
                                                     throw CustomException(
@@ -275,34 +276,90 @@ class _LoginState extends State<Login> {
                                                     user =
                                                         FirebaseAuth.instance.currentUser;
                                                     if (user != null) {
-                                                      showPlatformDialog<void>(
-                                                        context: context,
-                                                        builder: (_) =>
-                                                            PlatformAlertDialog(
-                                                              title:
-                                                              const Text(
-                                                                  "Account Created"),
-                                                              content: const Text(
-                                                                  "Verify your email before logging in."),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  child: const Text('OK'),
-                                                                  onPressed: () =>
-                                                                      Navigator.pop(
-                                                                          context),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                      );
-                                                      await FirebaseFirestore.instance
-                                                          .collection('users').doc(
-                                                          FirebaseAuth.instance
-                                                              .currentUser!.uid).set(
-                                                          {"saved": []});
-                                                      await user!
-                                                          .sendEmailVerification();
-                                                      await FirebaseAuth.instance
-                                                          .signOut();
+                                                      // After the user account is created successfully
+                                                      user = FirebaseAuth.instance.currentUser;
+                                                      if (user != null) {
+                                                        // Prompt for the user's name
+                                                        String? userName = await showPlatformDialog<String>(
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            String userInput = '';
+                                                            TextEditingController textEditingController = TextEditingController();
+                                                            bool showError = false; // To track whether to show error
+
+                                                            return StatefulBuilder(
+                                                              builder: (context, setState) {
+                                                                return PlatformAlertDialog(
+                                                                  title: const Text("Enter Your Name"),
+                                                                  content: TextField(
+                                                                    controller: textEditingController,
+                                                                    onChanged: (value) {
+                                                                      userInput = value;
+                                                                      if (showError && value.isNotEmpty) {
+                                                                        setState(() {
+                                                                          showError = false;
+                                                                        });
+                                                                      }
+                                                                    },
+                                                                    decoration: InputDecoration(
+                                                                      hintText: "Name",
+                                                                      errorText: showError ? "Please fill in the field" : null,
+                                                                      errorBorder: const OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Colors.red, width: 1),
+                                                                      ),
+                                                                      focusedErrorBorder: const OutlineInputBorder(
+                                                                        borderSide: BorderSide(color: Colors.red, width: 2),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  actions: <Widget>[
+                                                                    TextButton(
+                                                                      child: const Text('OK'),
+                                                                      onPressed: () {
+                                                                        if (userInput.isNotEmpty) {
+                                                                          Navigator.of(context).pop(userInput);
+                                                                        } else {
+                                                                          setState(() {
+                                                                            showError = true;
+                                                                          });
+                                                                        }
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            );
+                                                          },
+                                                        );
+
+                                                        // Set the user document with name and bookmarked
+                                                        await FirebaseFirestore.instance
+                                                            .collection('users').doc(user!.uid).set({
+                                                          "name": userName != null && userName.isNotEmpty ? userName : "User",
+                                                          "bookmarked": []
+                                                        });
+
+                                                        Navigator.pop(context);
+
+                                                        // Send email verification and sign out
+                                                        /*await user!.sendEmailVerification();
+                                                        await FirebaseAuth.instance.signOut();
+
+                                                        // Show platform dialog for account creation confirmation
+                                                        showPlatformDialog<void>(
+                                                          context: context,
+                                                          builder: (_) => PlatformAlertDialog(
+                                                            title: const Text("Account Created"),
+                                                            content: const Text("Verify your email before logging in."),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                child: const Text('OK'),
+                                                                onPressed: () => Navigator.pop(context),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );*/
+                                                      }
                                                     }
                                                   });
                                                 } on FirebaseAuthException catch (e) {
@@ -334,6 +391,16 @@ class _LoginState extends State<Login> {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
+                                        // valid email check
+                                        String email = inputText['Email']!.text;
+                                        if (!email.contains('@') ||
+                                            !email.contains('.') ||
+                                            email.indexOf('.') ==
+                                                (email.length - 1)) {
+                                          throw CustomException(
+                                              'Fill in a valid email');
+                                        }
+
                                         await FirebaseAuth.instance
                                             .sendPasswordResetEmail(
                                             email: inputText["Email"]!.text)

@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:secsignal/pages/search.dart';
+import 'package:secsignal/pages/settings.dart';
 import 'package:secsignal/pages/signed%20out/login.dart';
 
 import '../classes/company.dart';
@@ -39,6 +41,8 @@ class _MyHomePageState extends State<Home> {
           builder: (context, constraints) {
             // Check if the width is greater than the height
             bool isLandscape = constraints.maxWidth > constraints.maxHeight;
+
+            FirebaseAuth auth = FirebaseAuth.instance;
 
             List<Widget> navBar = [
               PlatformIconButton(
@@ -85,21 +89,32 @@ class _MyHomePageState extends State<Home> {
               PlatformIconButton(
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
-                  Icons.person_outline, // Changed to person icon
+                  auth.currentUser != null ? Icons.settings : Icons.person_outline, // Conditional icon
                   size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
-                  CupertinoIcons.person, // Changed to a more appropriate Cupertino icon
+                  auth.currentUser != null ? CupertinoIcons.settings : CupertinoIcons.person, // Conditional Cupertino icon
                   size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                    platformPageRoute(
-                      context: context,
-                      builder: (_) => Login(),
-                    ),
-                  );
+                  if (auth.currentUser != null) {
+                    // Navigate to Settings if the user is signed in
+                    Navigator.of(context).push(
+                      platformPageRoute(
+                        context: context,
+                        builder: (_) => const Settings(),
+                      ),
+                    );
+                  } else {
+                    // Navigate to Login if the user is not signed in
+                    Navigator.of(context).push(
+                      platformPageRoute(
+                        context: context,
+                        builder: (_) => const Login(),
+                      ),
+                    );
+                  }
                 },
               ),
             ];
@@ -137,11 +152,12 @@ class _MyHomePageState extends State<Home> {
                       newsFuture: newsController.getMarketNews()
                     ),
 
-                    CompanySection(
-                      companies: Company.searchCompaniesByTickers(["FND", "AAPL", "TSLA", "TTE", "GOOGL"]),
-                      title: "Your Favorite Companies",
-                      description: "Companies you have bookmarked",
-                    ),
+                    if (auth.currentUser != null)
+                      CompanySection(
+                        companies: Company.searchCompaniesByTickers(["FND", "AAPL", "TSLA", "TTE", "GOOGL"]),
+                        title: "Your Favorite Companies",
+                        description: "Companies you have bookmarked",
+                      ),
 
                     NewsSection(
                         title: "Forex News",
@@ -149,19 +165,26 @@ class _MyHomePageState extends State<Home> {
                         newsFuture: newsController.getMarketNews(MarketNewsCategory.forex)
                     ),
 
-                    for (int i = 0; i < 3; i++) ...[
+                    CompanySection(
+                      companies: _fetchRandomCompanies(5),
+                      title: "Trending This Week",
+                    ),
+
+                    if (auth.currentUser != null)
                       CompanySection(
                         companies: _fetchRandomCompanies(5),
-                        title: ["Trending This Week", "Recommended Companies For Andrew Friedman", "All Time Popular"][i],
-                      )
-                    ],
+                        title: "Recommended Companies For Andrew Friedman",
+                      ),
+
+                    CompanySection(
+                      companies: _fetchRandomCompanies(5),
+                      title: "All Time Popular",
+                    ),
 
                     NewsSection(
                         title: "Crypto News",
                         newsFuture: newsController.getMarketNews(MarketNewsCategory.crypto)
                     ),
-
-
 
                     NewsSection(
                         title: "Merger News",
