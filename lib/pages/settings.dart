@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:secsignal/prefabs/PlatformListView.dart';
 
 class Settings extends StatefulWidget {
@@ -44,6 +45,50 @@ class _SettingsState extends State<Settings> {
             padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
             child: PlatformListView(
               children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "User Info",
+                          style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                              ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                              : Theme.of(context).textTheme.titleLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            "- Email: ${FirebaseAuth.instance.currentUser!.email!}",
+                            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                ? CupertinoTheme.of(context).textTheme.textStyle
+                                : Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            "- Account Created: ${DateFormat("MMMM d, yyyy").format(FirebaseAuth.instance.currentUser!.metadata.creationTime!)}",
+                            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                ? CupertinoTheme.of(context).textTheme.textStyle
+                                : Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            "- User ID: ${FirebaseAuth.instance.currentUser!.uid}",
+                            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                ? CupertinoTheme.of(context).textTheme.textStyle
+                                : Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 250,
                   child: Row(
