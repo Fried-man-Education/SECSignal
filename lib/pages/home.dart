@@ -98,23 +98,16 @@ class _MyHomePageState extends State<Home> {
                   size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
                 ),
                 onPressed: () {
-                  if (auth.currentUser != null) {
-                    // Navigate to Settings if the user is signed in
-                    Navigator.of(context).push(
-                      platformPageRoute(
-                        context: context,
-                        builder: (_) => const Settings(),
-                      ),
-                    );
-                  } else {
-                    // Navigate to Login if the user is not signed in
-                    Navigator.of(context).push(
-                      platformPageRoute(
-                        context: context,
-                        builder: (_) => const Login(),
-                      ),
-                    );
-                  }
+                  Navigator.of(context).push(
+                    platformPageRoute(
+                      context: context,
+                      builder: (_) => auth.currentUser != null ? const Settings() : const Login(),
+                    ),
+                  ).then((value) {
+                    if (value is bool && value) {
+                      setState(() {});
+                    }
+                  });
                 },
               ),
             ];

@@ -169,7 +169,7 @@ class _LoginState extends State<Login> {
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid).get())
                                                           .data()!;*/
-                                                      Navigator.pop(context);
+                                                      Navigator.pop(context, true);
                                                       return;
                                                     }
                                                     throw CustomException(
@@ -339,7 +339,7 @@ class _LoginState extends State<Login> {
                                                           "bookmarked": []
                                                         });
 
-                                                        Navigator.pop(context);
+                                                        Navigator.pop(context, true);
 
                                                         // Send email verification and sign out
                                                         /*await user!.sendEmailVerification();

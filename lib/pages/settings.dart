@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,17 @@ class _SettingsState extends State<Settings> {
                                   style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
-                                for (String label in ["Sign Out", "Reset Email", "Delete Account"])
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: PlatformElevatedButton(
+                                    onPressed: () async {
+                                      await FirebaseAuth.instance.signOut();
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: Text("Sign Out"),
+                                  ),
+                                ),
+                                for (String label in ["Reset Email", "Delete Account"])
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: PlatformElevatedButton(
