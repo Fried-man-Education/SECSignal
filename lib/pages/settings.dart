@@ -117,16 +117,81 @@ class _SettingsState extends State<Settings> {
                                     child: Text("Sign Out"),
                                   ),
                                 ),
-                                for (String label in ["Reset Password", "Delete Account"])
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: PlatformElevatedButton(
-                                      onPressed: () {
-                                        print("placeholder");
-                                      },
-                                      child: Text(label),
-                                    ),
-                                  )
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: PlatformElevatedButton(
+                                    onPressed: () async {
+                                      await FirebaseAuth.instance
+                                          .sendPasswordResetEmail(
+                                          email: FirebaseAuth.instance.currentUser!.email!)
+                                          .then((value) {
+                                        showPlatformDialog<void>(
+                                          context: context,
+                                          builder: (_) =>
+                                              PlatformAlertDialog(
+                                                title: const Text(
+                                                    "Password Reset Email Sent"),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text('OK'),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                ],
+                                              ),
+                                        );
+                                      });
+                                    },
+                                    child: const Text("Reset Password"),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: PlatformElevatedButton(
+                                    onPressed: () async {
+                                      try {
+                                        // Get the current user
+                                        User? user = FirebaseAuth.instance.currentUser;
+
+                                        if (user != null) {
+                                          // Delete the user document from Firestore
+                                          await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+
+                                          // Delete the user's authentication account
+                                          await user.delete();
+
+                                          showPlatformDialog<void>(
+                                            context: context,
+                                            builder: (_) =>
+                                                PlatformAlertDialog(
+                                                  title: const Text(
+                                                      "Password Reset Email Sent"),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: const Text('OK'),
+                                                      onPressed: ()  {
+                                                        Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                          );
+                                        }
+                                      } on FirebaseAuthException catch (e) {
+                                        print('Error deleting user: ${e.message}');
+                                        // Handle the auth delete error here
+                                      } on FirebaseException catch (e) {
+                                        print('Error deleting user document: ${e.message}');
+                                        // Handle the Firestore delete error here
+                                      } catch (e) {
+                                        print('Unknown error: $e');
+                                        // Handle any other errors here
+                                      }
+                                    },
+                                    child: Text("Delete Account"),
+                                  ),
+                                )
                               ],
                             ),
                           ),
