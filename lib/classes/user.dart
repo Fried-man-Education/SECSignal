@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'company.dart';
 
 class UserDoc {
@@ -73,6 +76,81 @@ class UserDoc {
     await FirebaseFirestore.instance.collection('UserDocs').doc(uid).update({
       'bookmarked': FieldValue.arrayRemove([bookmarkToRemove])
     });
+  }
+
+  Future<void> changeName(BuildContext context) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Display a dialog to input the new name
+      String? newName = await showPlatformDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          String userInput = '';
+          TextEditingController textEditingController = TextEditingController();
+          bool showError = false;
+
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return PlatformAlertDialog(
+                title: const Text("Enter Your New Name"),
+                content: TextField(
+                  controller: textEditingController,
+                  onChanged: (value) {
+                    userInput = value;
+                    if (showError && value.isNotEmpty) {
+                      setState(() {
+                        showError = false;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: "New Name",
+                    errorText: showError ? "Please fill in the field" : null,
+                    errorBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red, width: 1),
+                    ),
+                    focusedErrorBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red, width: 2),
+                    ),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      if (userInput.isNotEmpty) {
+                        Navigator.of(context).pop(userInput);
+                      } else {
+                        setState(() {
+                          showError = true;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+
+      // Update the user's name in Firestore
+      if (newName != null && newName.isNotEmpty && newName != name) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'name': newName,
+        }).then((_) {
+          name = newName;
+          print("User name updated to $newName");
+        }).catchError((error) {
+          print("Failed to update user's name: $error");
+          // Handle errors here
+        });
+      }
+    } else {
+      print('No user logged in');
+      // Handle no user logged in error here
+    }
   }
 
   @override

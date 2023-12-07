@@ -228,77 +228,12 @@ class _SettingsState extends State<Settings> {
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
                                     onPressed: () async {
-                                      User? user = FirebaseAuth.instance.currentUser;
-
-                                      if (user != null) {
-                                        // Display a dialog to input the new name
-                                        String? newName = await showPlatformDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            String userInput = '';
-                                            TextEditingController textEditingController = TextEditingController();
-                                            bool showError = false;
-
-                                            return StatefulBuilder(
-                                              builder: (context, setState) {
-                                                return PlatformAlertDialog(
-                                                  title: const Text("Enter Your New Name"),
-                                                  content: TextField(
-                                                    controller: textEditingController,
-                                                    onChanged: (value) {
-                                                      userInput = value;
-                                                      if (showError && value.isNotEmpty) {
-                                                        setState(() {
-                                                          showError = false;
-                                                        });
-                                                      }
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      hintText: "New Name",
-                                                      errorText: showError ? "Please fill in the field" : null,
-                                                      errorBorder: const OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.red, width: 1),
-                                                      ),
-                                                      focusedErrorBorder: const OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.red, width: 2),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      child: const Text('OK'),
-                                                      onPressed: () {
-                                                        if (userInput.isNotEmpty) {
-                                                          Navigator.of(context).pop(userInput);
-                                                        } else {
-                                                          setState(() {
-                                                            showError = true;
-                                                          });
-                                                        }
-                                                      },
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                        );
-
-                                        // Update the user's name in Firestore
-                                        if (newName != null && newName.isNotEmpty) {
-                                          await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-                                            'name': newName,
-                                          }).then((_) {
-                                            print("User name updated to $newName");
-                                          }).catchError((error) {
-                                            print("Failed to update user's name: $error");
-                                            // Handle errors here
-                                          });
-                                        }
-                                      } else {
-                                        print('No user logged in');
-                                        // Handle no user logged in error here
-                                      }
+                                      String name = userDoc!.name;
+                                       await userDoc!.changeName(context);
+                                       
+                                       if (name != userDoc!.name) {
+                                         setState(() {});
+                                       }
                                     },
                                     child: const Text("Change Name"),
                                   ),
