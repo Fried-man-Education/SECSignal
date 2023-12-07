@@ -33,7 +33,7 @@ class Company {
 
     final response = await http.get(Uri.parse(requestURL));
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && response.body.toString() != "{}") {
       profile = FinnhubProfile.fromJson(json.decode(response.body));
       return profile;
     } else {
