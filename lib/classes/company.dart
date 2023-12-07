@@ -13,9 +13,9 @@ class Company {
   String? title;
   String? description;
   FinnhubProfile? profile;
+  SECEdgar? secEdgar;
 
   Company({this.cikStr, required this.ticker, this.title, this.description, this.profile});
-
   
 
   static Map<String, dynamic>? _companyDataCache;
@@ -38,6 +38,17 @@ class Company {
       return profile;
     } else {
       return null;
+    }
+  }
+
+  Future<SECEdgar?> fetchSECEdgarData() async {
+    if (secEdgar != null) return secEdgar;
+
+    if (cikStr != null) {
+      secEdgar = await SECEdgar.fetchSECData(cikStr!);
+      return secEdgar;
+    } else {
+      throw Exception('CIK number must be provided');
     }
   }
 
@@ -417,5 +428,71 @@ class FinnhubProfile {
         'ticker: $ticker, '
         'weburl: $weburl'
         ')';
+  }
+}
+
+class SECEdgar {
+  Map<String, dynamic>? secData;
+  List<Map<String, dynamic>>? filings;
+
+  // Constructor
+  SECEdgar({this.secData}) {
+    _processFilings();
+  }
+
+  // Fetch SEC data using the CIK number
+  static Future<SECEdgar> fetchSECData(int cikStr) async {
+    // Pad the CIK number to ensure it is 10 digits long
+    String formattedCikStr = cikStr.toString().padLeft(10, '0');
+    String url = 'https://data.sec.gov/submissions/CIK$formattedCikStr.json';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        return SECEdgar(secData: jsonData);
+      } else {
+        throw Exception('Failed to load SEC data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('An error occurred: $e');
+    }
+  }
+
+  // Process 'filings' data
+  void _processFilings() {
+    if (secData != null && secData!['filings'] != null && secData!['filings']['recent'] != null) {
+      Map<String, dynamic> recentFilings = secData!['filings']['recent'];
+      filings = [];
+      int filingCount = recentFilings[recentFilings.keys.first].length;
+
+      for (int i = 0; i < filingCount; i++) {
+        Map<String, dynamic> filing = {};
+        recentFilings.forEach((key, value) {
+          filing[key] = value[i];
+        });
+        filings!.add(filing);
+      }
+    }
+  }
+
+  String getFilingURL(Map<String, dynamic> filing) {
+    String baseUrl = 'https://www.sec.gov/Archives/edgar/data/';
+
+    // Extract the CIK number and the accession number
+    String accessionNumber = filing['accessionNumber'] ?? '';
+    List<String> parts = accessionNumber.split('-');
+
+    // Remove leading zeros from the CIK number and hyphens from the accession number
+    String cikNumber = secData!["cik"];
+    String formattedAccessionNumber = parts.join('');
+
+    // Extract the primary document
+    String primaryDocument = filing['primaryDocument'] ?? '';
+
+    // Construct the URL
+    String url = '$baseUrl$cikNumber/$formattedAccessionNumber/$primaryDocument';
+    return url;
   }
 }
