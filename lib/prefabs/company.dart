@@ -43,57 +43,58 @@ class _CompanySectionState extends State<CompanySection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    List<Widget> content = [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Text(
+            widget.title,
+            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+      ),
+      if (widget.description.isNotEmpty)
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Text(
-              widget.title,
-              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-        ),
-        if (widget.description.isNotEmpty)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
                 widget.description,
                 style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                  color: Colors.grey
+                    color: Colors.grey
                 ) : Theme.of(context).textTheme.headlineMedium!
-              ),
             ),
           ),
-        FutureBuilder<List<Company>>(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator()));
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const SizedBox(height: 500, child: Text('No companies found'));
-            } else {
-              return SizedBox(
-                height: 500,
-                child: ListView.builder(
-                  controller: _controller,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    Company company = snapshot.data![index];
-                    return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
-                  },
-                ),
-              );
-            }
-          },
         ),
-      ],
+    ];
+
+    return FutureBuilder<List<Company>>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) return Container();
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          content.add(SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator())));
+        } else {
+          content.add(SizedBox(
+            height: 500,
+            child: ListView.builder(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Company company = snapshot.data![index];
+                return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
+              },
+            ),
+          ));
+        }
+
+        return Column(
+          children: content,
+        );
+      },
     );
   }
 }
