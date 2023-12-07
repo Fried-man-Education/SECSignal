@@ -300,6 +300,41 @@ class Company {
   String toString() {
     return 'Company{cikStr: $cikStr, ticker: $ticker, title: $title}';
   }
+
+  Future<List<Company>> fetchPeerCompanies() async {
+    List<String> companySymbols = [];
+    final response = await http.get(
+      Uri.parse('https://finnhub.io/api/v1/stock/peers?symbol=$ticker&token=$apiFinnhubKey'),
+    );
+
+    if (response.statusCode == 200) {
+      companySymbols = List<String>.from(json.decode(response.body));
+      companySymbols.removeWhere((temp) => temp == ticker);
+    } else {
+      throw Exception('Failed to load company peers');
+    }
+
+    List<Company> output = [];
+    companySymbols.forEach((ticker) async {
+      try {
+        Company company = await Company.fromTicker(ticker);
+        output.add(company);
+      } catch (e) {
+        print('Error fetching company with ticker $ticker: $e');
+        // Handle the exception or log it
+      }
+    });
+    return output;
+  }
+
+  static Future<List<Company>> fetchRandomCompanies(int count) async {
+    List<Company> companies = [];
+    for (int i = 0; i < count; i++) {
+      Company company = await Company.randomCompany();
+      companies.add(company);
+    }
+    return companies;
+  }
 }
 
 class FinnhubProfile {

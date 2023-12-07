@@ -24,15 +24,6 @@ class Home extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Home> {
-  Future<List<Company>> _fetchRandomCompanies(int count) async {
-    List<Company> companies = [];
-    for (int i = 0; i < count; i++) {
-      Company company = await Company.randomCompany();
-      companies.add(company);
-    }
-    return companies;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -161,18 +152,18 @@ class _MyHomePageState extends State<Home> {
                     ),
 
                     CompanySection(
-                      companies: _fetchRandomCompanies(5),
+                      companies: Company.fetchRandomCompanies(5),
                       title: "Trending This Week",
                     ),
 
-                    if (auth.currentUser != null)
+                    if (userDoc != null)
                       CompanySection(
-                        companies: _fetchRandomCompanies(5),
+                        companies: userDoc!.getRecommendations(),
                         title: "Recommended Companies For Andrew Friedman",
                       ),
 
                     CompanySection(
-                      companies: _fetchRandomCompanies(5),
+                      companies: Company.fetchRandomCompanies(5),
                       title: "All Time Popular",
                     ),
 

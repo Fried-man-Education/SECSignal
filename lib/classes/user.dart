@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'company.dart';
+import 'dart:math' as math;
 
 class UserDoc {
   String uid; // Assuming you have a unique identifier for each UserDoc
@@ -187,6 +188,30 @@ class UserDoc {
     return sortedBookmarks.map((bookmark) => (bookmark['company'] as Company).ticker).whereType<String>().toList();
   }
 
+  Future<List<Company>> getRecommendations() async {
+    var random = math.Random();
+    List<String> triedTickers = []; // To keep track of which companies have been tried
+    Set<String?> favoritedTickers = bookmarked.map((bookmark) => (bookmark['company'] as Company).ticker).toSet();
+
+    // Shuffle the bookmarked list to randomize the order
+    List<Map<String, dynamic>> shuffledBookmarks = List.from(bookmarked)..shuffle(random);
+
+    for (var bookmark in shuffledBookmarks) {
+      Company company = bookmark['company'];
+      if (!triedTickers.contains(company.ticker)) {
+        triedTickers.add(company.ticker!);
+        var peerCompanies = await company.fetchPeerCompanies();
+        // Filter out favorited companies
+        var filteredPeerCompanies = peerCompanies.where((peer) => !favoritedTickers.contains(peer.ticker)).toList();
+        if (filteredPeerCompanies.isNotEmpty) {
+          return filteredPeerCompanies;
+        }
+      }
+    }
+
+    // If no recommendations are found from bookmarked companies, fetch random companies
+    return await Company.fetchRandomCompanies(5);
+  }
 
   @override
   String toString() {

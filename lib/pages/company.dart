@@ -41,32 +41,6 @@ class _CompanyProfile extends State<CompanyProfile> {
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
 
-    Future<List<Company>> _fetchPeerCompanies() async {
-      List<String> companySymbols = [];
-      final response = await http.get(
-        Uri.parse('https://finnhub.io/api/v1/stock/peers?symbol=${widget.company.ticker}&token=$apiFinnhubKey'),
-      );
-
-      if (response.statusCode == 200) {
-        companySymbols = List<String>.from(json.decode(response.body));
-        companySymbols.removeWhere((ticker) => ticker == widget.company.ticker);
-      } else {
-        throw Exception('Failed to load company peers');
-      }
-
-      List<Company> output = [];
-      companySymbols.forEach((ticker) async {
-        try {
-          Company company = await Company.fromTicker(ticker);
-          output.add(company);
-        } catch (e) {
-          print('Error fetching company with ticker $ticker: $e');
-          // Handle the exception or log it
-        }
-      });
-      return output;
-    }
-
     return SafeArea(
       bottom: false,
       child: PlatformScaffold(
@@ -348,7 +322,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                   CompanySection(
                     title: "${widget.company.getName()}'s Peers",
                     description: "A list of peers operating in the same country and sector/industry.",
-                    companies: _fetchPeerCompanies()
+                    companies: widget.company.fetchPeerCompanies()
                   ),
                 ],
               ),
