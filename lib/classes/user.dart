@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'company.dart';
 
 class UserDoc {
@@ -27,6 +28,24 @@ class UserDoc {
         'company': Company.fromMap(bookmark['company']),
       })),
     );
+  }
+
+  static Future<UserDoc?> fromFirebase() async {
+    User? firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      return null;
+    }
+
+    DocumentSnapshot docSnap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser.uid)
+        .get();
+
+    if (!docSnap.exists) {
+      return null;
+    }
+
+    return UserDoc.fromMap(docSnap.data() as Map<String, dynamic>, firebaseUser.uid);
   }
 
   Future<void> addBookmark(Company company) async {

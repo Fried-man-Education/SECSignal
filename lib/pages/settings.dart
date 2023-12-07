@@ -122,6 +122,7 @@ class _SettingsState extends State<Settings> {
                                   child: PlatformElevatedButton(
                                     onPressed: () async {
                                       await FirebaseAuth.instance.signOut();
+                                      userDoc = null;
                                       Navigator.pop(context, true);
                                     },
                                     child: Text("Sign Out"),
@@ -170,18 +171,20 @@ class _SettingsState extends State<Settings> {
                                           // Delete the user's authentication account
                                           await user.delete();
 
+                                          userDoc = null;
+
                                           showPlatformDialog<void>(
                                             context: context,
                                             builder: (_) =>
                                                 PlatformAlertDialog(
                                                   title: const Text(
-                                                      "Password Reset Email Sent"),
+                                                      "Account Deleted"),
                                                   actions: <Widget>[
                                                     TextButton(
                                                       child: const Text('OK'),
                                                       onPressed: ()  {
                                                         Navigator.pop(context);
-                                                        Navigator.pop(context);
+                                                        Navigator.pop(context, true);
                                                       },
                                                     ),
                                                   ],

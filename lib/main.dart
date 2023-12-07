@@ -18,14 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (FirebaseAuth.instance.currentUser != null) {
-    DocumentSnapshot docSnap = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-
-    userDoc = UserDoc.fromMap(docSnap.data() as Map<String, dynamic>, FirebaseAuth.instance.currentUser!.uid);
-  }
+  userDoc = await UserDoc.fromFirebase();
 
   runApp(const SecSignal());
 }

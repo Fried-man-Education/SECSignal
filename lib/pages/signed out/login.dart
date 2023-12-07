@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../classes/user.dart';
 import '../../main.dart';
 
 class Login extends StatefulWidget {
@@ -169,6 +170,7 @@ class _LoginState extends State<Login> {
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid).get())
                                                           .data()!;*/
+                                                      userDoc = await UserDoc.fromFirebase();
                                                       Navigator.pop(context, true);
                                                       return;
                                                     }
@@ -338,6 +340,12 @@ class _LoginState extends State<Login> {
                                                           "name": userName != null && userName.isNotEmpty ? userName : "User",
                                                           "bookmarked": []
                                                         });
+
+                                                        userDoc = UserDoc(
+                                                            uid: FirebaseAuth.instance.currentUser!.uid,
+                                                            name: userName != null && userName.isNotEmpty ? userName : "User",
+                                                            bookmarked: []
+                                                        );
 
                                                         Navigator.pop(context, true);
 
