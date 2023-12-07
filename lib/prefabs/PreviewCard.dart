@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class CompanyPrefab extends StatelessWidget {
+class PreviewCard extends StatelessWidget {
   final Widget header;
   final String title;
   final Widget footer;
 
-  const CompanyPrefab({
+  const PreviewCard({
     super.key,
     required this.header,
     required this.title,

@@ -265,7 +265,7 @@ class NewsCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => showNewsDetailsPopup(newsItem),
-      child: CompanyPrefab(
+      child: PreviewCard(
         header: Image.network(
           newsItem.image,
           fit: BoxFit.cover,

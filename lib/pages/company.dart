@@ -8,6 +8,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:secsignal/prefabs/company.dart';
+import 'package:secsignal/prefabs/filings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../classes/company.dart';
@@ -319,6 +320,15 @@ class _CompanyProfile extends State<CompanyProfile> {
                           to: today
                       )
                   ),
+                  FilingSection(filings: () async {
+                    await widget.company.fetchSECEdgarData();
+                    for (var filing in widget.company.secEdgar!.filings!) {
+                      if (!filing.containsKey("url")) {
+                        filing["url"] = widget.company.secEdgar!.getFilingURL(filing);
+                      }
+                    }
+                    return widget.company.secEdgar!.filings!;
+                  }(), title: "All Filings"),
                   CompanySection(
                     title: "${widget.company.getName()}'s Peers",
                     description: "A list of peers operating in the same country and sector/industry.",

@@ -134,7 +134,7 @@ class _CompanyCardState extends State<CompanyCard> {
           }
         });
       },
-      child: CompanyPrefab(
+      child: PreviewCard(
         header: buildHeader(context),
         title: widget.company.getName(),
         footer: buildFooter(),
