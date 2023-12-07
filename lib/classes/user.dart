@@ -52,6 +52,10 @@ class UserDoc {
   }
 
   Future<void> addBookmark(Company company) async {
+    if (isCompanyBookmarked(company)) {
+      return;
+    }
+
     var timestamp = DateTime.now().microsecondsSinceEpoch;
     bookmarked.add({
       'timestamp': timestamp,
@@ -59,23 +63,34 @@ class UserDoc {
     });
 
     // Update the Firestore UserDoc document
-    await FirebaseFirestore.instance.collection('UserDocs').doc(uid).update({
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
       'bookmarked': FieldValue.arrayUnion([{
         'timestamp': timestamp,
-        'company': company.toMap(),
+        'company': company.toMapFirebase(),
       }])
     });
   }
 
-  Future<void> removeBookmark(Map<String, dynamic> bookmarkToRemove) async {
-    bookmarked.removeWhere((bookmark) =>
-    bookmark['timestamp'] == bookmarkToRemove['timestamp'] &&
-        bookmark['company'].ticker == bookmarkToRemove['company'].ticker);
+  Future<void> removeBookmark(Company companyToRemove) async {
+    // Find the bookmark that matches the company's cikStr
+    var bookmarkToRemove = bookmarked.firstWhere(
+          (bookmark) => (bookmark['company'] as Company).cikStr == companyToRemove.cikStr,
+    );
 
-    // Update the Firestore UserDoc document
-    await FirebaseFirestore.instance.collection('UserDocs').doc(uid).update({
-      'bookmarked': FieldValue.arrayRemove([bookmarkToRemove])
-    });
+    if (bookmarkToRemove != null) {
+      // Remove the bookmark from the local list
+      bookmarked.remove(bookmarkToRemove);
+
+      // Update the Firestore UserDoc document
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'bookmarked': FieldValue.arrayRemove([{
+          'timestamp': bookmarkToRemove['timestamp'],
+          'company': (bookmarkToRemove['company'] as Company).toMapFirebase(),
+        }])
+      });
+    } else {
+      print('Bookmark not found');
+    }
   }
 
   Future<void> changeName(BuildContext context) async {
@@ -152,6 +167,26 @@ class UserDoc {
       // Handle no user logged in error here
     }
   }
+
+  bool isCompanyBookmarked(Company company) {
+    for (var bookmark in bookmarked) {
+      Company bookmarkedCompany = bookmark['company'];
+      if (bookmarkedCompany.cikStr == company.cikStr) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  List<String> getSortedTickers() {
+    // Sort the bookmarked list by timestamp in descending order (most recent first)
+    List<Map<String, dynamic>> sortedBookmarks = List.from(bookmarked);
+    sortedBookmarks.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+
+    // Extract and return the list of tickers from the Company objects
+    return sortedBookmarks.map((bookmark) => (bookmark['company'] as Company).ticker).whereType<String>().toList();
+  }
+
 
   @override
   String toString() {

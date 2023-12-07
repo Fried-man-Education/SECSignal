@@ -11,6 +11,7 @@ import 'package:secsignal/prefabs/company.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../classes/company.dart';
+import '../main.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/news.dart';
 import '../secrets.dart';
@@ -26,6 +27,16 @@ class CompanyProfile extends StatefulWidget {
 }
 
 class _CompanyProfile extends State<CompanyProfile> {
+  bool isInitiallyFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (userDoc != null) {
+      isInitiallyFavorited = userDoc!.isCompanyBookmarked(widget.company);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
@@ -66,18 +77,42 @@ class _CompanyProfile extends State<CompanyProfile> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, isInitiallyFavorited != userDoc!.isCompanyBookmarked(widget.company));
               },
             ),
           ),
           cupertino: (_, __) => CupertinoNavigationBarData(
-          leading: CupertinoNavigationBarBackButton(
-            color: Theme.of(context).primaryColor,
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            leading: CupertinoNavigationBarBackButton(
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.pop(context, isInitiallyFavorited != userDoc!.isCompanyBookmarked(widget.company));
+              },
+            ),
           ),
-        ),
+          trailingActions: [
+            if (userDoc != null)
+              PlatformIconButton(
+                padding: const EdgeInsets.all(0),
+                materialIcon: Icon(
+                  userDoc!.isCompanyBookmarked(widget.company) ? Icons.favorite : Icons.favorite_border,
+                  color: Theme.of(context).primaryColor,
+                ),
+                cupertinoIcon: Icon(
+                  userDoc!.isCompanyBookmarked(widget.company) ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                ),
+                onPressed: () async {
+                  if (userDoc!.isCompanyBookmarked(widget.company)) {
+                    // Remove from bookmarks
+                    await userDoc!.removeBookmark(widget.company);
+                  } else {
+                    // Add to bookmarks
+                    await userDoc!.addBookmark(widget.company);
+                  }
+
+                  setState(() {});
+                },
+              ),
+          ],
         ),
         body: Column(
           children: [

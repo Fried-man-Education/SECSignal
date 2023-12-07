@@ -8,6 +8,7 @@ import 'package:secsignal/pages/signed%20out/login.dart';
 
 import '../classes/company.dart';
 import '../classes/news.dart';
+import '../main.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/company.dart';
 import '../prefabs/news.dart';
@@ -145,11 +146,12 @@ class _MyHomePageState extends State<Home> {
                       newsFuture: newsController.getMarketNews()
                     ),
 
-                    if (auth.currentUser != null)
+                    if (userDoc != null)
                       CompanySection(
-                        companies: Company.searchCompaniesByTickers(["FND", "AAPL", "TSLA", "TTE", "GOOGL"]),
+                        companies: Company.searchCompaniesByTickers(userDoc!.getSortedTickers()),
                         title: "Your Favorite Companies",
                         description: "Companies you have bookmarked",
+                        onFavoriteChanged: (){setState(() {});},
                       ),
 
                     NewsSection(

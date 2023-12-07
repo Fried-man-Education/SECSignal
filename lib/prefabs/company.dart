@@ -11,13 +11,20 @@ class CompanySection extends StatefulWidget {
   final Future<List<Company>> companies;
   final String title;                 // Title string
   final String description;           // Description string with a default empty value
+  final VoidCallback onFavoriteChanged;
 
   CompanySection({
     super.key,
     required this.companies,
     required this.title,
-    this.description = ''             // Default value for description
+    this.description = '',
+    this.onFavoriteChanged = _defaultOnFavoriteChanged
   });
+
+  static void _defaultOnFavoriteChanged() {
+    // This is an empty function that does nothing
+  }
+
 
   @override
   _CompanySectionState createState() => _CompanySectionState();
@@ -77,7 +84,7 @@ class _CompanySectionState extends State<CompanySection> {
                         String description = descriptionSnapshot.data ?? 'Description not available';
                         return Padding(
                           padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
-                          child: CompanyCard(company: company, description: description)
+                          child: CompanyCard(company: company, description: description, onFavoriteChanged: widget.onFavoriteChanged)
                         );
                       },
                     );
@@ -95,8 +102,9 @@ class _CompanySectionState extends State<CompanySection> {
 class CompanyCard extends StatelessWidget {
   final Company company;
   final String description;
+  final VoidCallback onFavoriteChanged;
 
-  const CompanyCard({super.key, required this.company, required this.description});
+  const CompanyCard({super.key, required this.company, required this.description, required this.onFavoriteChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +115,11 @@ class CompanyCard extends StatelessWidget {
             context: context,
             builder: (_) => CompanyProfile(company: company),
           ),
-        );
+        ).then((value) {
+          if (value is bool && value) {
+            onFavoriteChanged();
+          }
+        });
       },
       child: CompanyPrefab(
         header: buildHeader(context),
