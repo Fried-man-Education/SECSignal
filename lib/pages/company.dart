@@ -320,19 +320,38 @@ class _CompanyProfile extends State<CompanyProfile> {
                           to: today
                       )
                   ),
-                  FilingSection(filings: () async {
-                    await widget.company.fetchSECEdgarData();
-                    for (var filing in widget.company.secEdgar!.filings!) {
-                      if (!filing.containsKey("url")) {
-                        filing["url"] = widget.company.secEdgar!.getFilingURL(filing);
+                  FilingSection(
+                    filings: () async {
+                      await widget.company.fetchSECEdgarData();
+                      List<Map<String, dynamic>> filteredFilings = [];
+                      for (var filing in widget.company.secEdgar!.filings!) {
+                        if (filing['form'] == '10-K' || filing['form'] == '10-Q') {
+                          if (!filing.containsKey("url")) {
+                            filing["url"] = widget.company.secEdgar!.getFilingURL(filing);
+                          }
+                          filteredFilings.add(filing);
+                        }
                       }
-                    }
-                    return widget.company.secEdgar!.filings!;
-                  }(), title: "All Filings"),
+                      return filteredFilings;
+                    }(),
+                    title: "10-K & 10-Q Filings",
+                    description: "Annual and quarterly financial reports",
+                  ),
                   CompanySection(
                     title: "${widget.company.getName()}'s Peers",
                     description: "A list of peers operating in the same country and sector/industry.",
                     companies: widget.company.fetchPeerCompanies()
+                  ),
+                  FilingSection(
+                    filings: () async {
+                      await widget.company.fetchSECEdgarData();
+                      for (var filing in widget.company.secEdgar!.filings!) {
+                        if (!filing.containsKey("url")) {
+                          filing["url"] = widget.company.secEdgar!.getFilingURL(filing);
+                        }
+                      }
+                      return widget.company.secEdgar!.filings!;
+                    }(), title: "All Filings"
                   ),
                 ],
               ),
