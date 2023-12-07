@@ -237,7 +237,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                                               ),
                                             ),
                                           ),
-                                          if (widget.company.profile!.weburl != null)
+                                          if (widget.company.profile!.weburl != null && widget.company.profile!.weburl!.isNotEmpty)
                                             Padding(
                                               padding: const EdgeInsets.only(top: 8),
                                               child: PlatformElevatedButton(
