@@ -315,15 +315,14 @@ class Company {
     }
 
     List<Company> output = [];
-    companySymbols.forEach((ticker) async {
+    for (String ticker in companySymbols) {
       try {
         Company company = await Company.fromTicker(ticker);
         output.add(company);
       } catch (e) {
         print('Error fetching company with ticker $ticker: $e');
-        // Handle the exception or log it
       }
-    });
+    }
     return output;
   }
 
