@@ -18,7 +18,7 @@ Allows users to search for any publicly traded company by name or ticker symbol.
 - https://www.sec.gov/files/company_tickers.json
 
 ## Company Profile Page
-
+- [Apple Inc. SECEdgar](https://data.sec.gov/submissions/CIK0000320193.json)
 - **Company Overview**: 
   - Logo, name, ticker symbol, and a brief description.
   - Current stock price, market cap, and other key metrics (sourced from stock market APIs).
