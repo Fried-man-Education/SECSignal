@@ -10,11 +10,14 @@ import 'package:intl/intl.dart';
 import 'package:secsignal/prefabs/company.dart';
 import 'package:secsignal/prefabs/filings.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart' as yahoo;
+
 
 import '../classes/company.dart';
 import '../main.dart';
 import '../prefabs/PlatformListView.dart';
 import '../prefabs/news.dart';
+import '../prefabs/stock.dart';
 import '../secrets.dart';
 import 'home.dart';
 
@@ -342,6 +345,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                     description: "A list of peers operating in the same country and sector/industry.",
                     companies: widget.company.fetchPeerCompanies()
                   ),
+                  StockGraphCard(ticker: widget.company.ticker!),
                   FilingSection(
                     filings: () async {
                       await widget.company.fetchSECEdgarData();
