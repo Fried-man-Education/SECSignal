@@ -82,7 +82,10 @@ class _FilingSectionState extends State<FilingSection> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     Map<String, dynamic> filing = snapshot.data![index];
-                    return FilingCard(filing: filing);
+                    return Padding(
+                      padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                      child: FilingCard(filing: filing),
+                    );
                   },
                 ),
               );
