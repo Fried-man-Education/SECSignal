@@ -82,6 +82,9 @@ Security measures such as encryption and two-factor authentication should be imp
 
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
 - Accent: #345078
+
+## Links
+- [SECEdgar API documentation](https://www.sec.gov/edgar/sec-api-documentation)
 ## Schedule
 | Date  | Milestone                               | Meta-skill Highlight |
 |-------|-----------------------------------------|----------------------|
