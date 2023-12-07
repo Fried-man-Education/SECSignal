@@ -31,126 +31,134 @@ class _StockGraphCardState extends State<StockGraphCard> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Stock Chart",
-                  style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    "Up to last five years",
-                    style: Platform.isIOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                        color: Colors.grey
-                    ) : Theme.of(context).textTheme.headlineMedium!
-                ),
-              ),
-              SizedBox(
-                height: 700,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: FutureBuilder<Map<String, dynamic>>(
-                    future: _stockDataFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return PlatformCircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (!snapshot.hasData) {
-                        return Text('No data available');
-                      } else {
-                        List<FlSpot> spots = _getSpots(snapshot.data!);
+      child: FutureBuilder<Map<String, dynamic>>(
+        future: _stockDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PlatformCircularProgressIndicator(),
+                Text("Loading..."),
+              ],
+            );
+          } else if (snapshot.hasError || !snapshot.hasData) {
+            return Container();
+          } else {
+            List<FlSpot> spots = _getSpots(snapshot.data!);
 
-                        double maxY = List<double>.from(snapshot.data!["indicators"]["quote"].first["open"]).reduce(max) * 1.15;  // 110% of the highest value
-                        if (maxY > 1) {
-                          maxY = maxY.roundToDouble();
-                        }
+            double maxY = List<double>.from(snapshot.data!["indicators"]["quote"].first["open"]).reduce(max) * 1.15;  // 110% of the highest value
+            if (maxY > 1) {
+              maxY = maxY.roundToDouble();
+            }
 
-                        double interval = (maxY - 0) * 0.15;  // 15% of the range
-                        if (interval > 1) {
-                          interval = interval.roundToDouble();
-                        }
+            double interval = (maxY - 0) * 0.15;  // 15% of the range
+            if (interval > 1) {
+              interval = interval.roundToDouble();
+            }
 
-                        return LineChart(
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    // Header
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Stock Chart",
+                        style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                            ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                            : Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Up to last five years",
+                        style: Platform.isIOS
+                            ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey)
+                            : Theme.of(context).textTheme.headlineMedium!,
+                      ),
+                    ),
+                    // Chart
+                    SizedBox(
+                      height: 700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: LineChart(
                           LineChartData(
-                            minY: 0,
-                            maxY: maxY,
-                            gridData: FlGridData(
-                              show: true,
-                              drawVerticalLine: false,
-                              horizontalInterval: interval,
-                              getDrawingHorizontalLine: (value) {
-                                return const FlLine(
-                                  color: Color(0xff37434d),
-                                  strokeWidth: 1,
-                                );
-                              },
-                            ),
-                            titlesData: FlTitlesData(
-                              show: true,
-                              bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 30,
-                                    interval: const Duration(days: 365).inMilliseconds / 1000,
-                                    getTitlesWidget: _bottomTitleWidgets,
-                                  )
-                              ),
-                              rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    reservedSize: 44,
-                                    interval: interval,
-                                  )
-                              ),
-                              leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            ),
-                            borderData: FlBorderData(
-                              show: true,
-                              border: Border.all(color: const Color(0xff37434d), width: 1),
-                            ),
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: spots,
-                                isCurved: true,
-                                color: Theme.of(context).primaryColor,
-                                barWidth: 5,
-                                isStrokeCapRound: true,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(show: false),
-                              ),
-                            ],
-                            lineTouchData: LineTouchData(
-                              touchTooltipData: LineTouchTooltipData(
-                                tooltipBgColor: Theme.of(context).primaryColor, // Set your desired color here
-                                getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-                                  return touchedBarSpots.map((barSpot) {
-                                    return LineTooltipItem(
-                                      '${(barSpot.y * 100).roundToDouble() / 100}',
-                                      const TextStyle(color: Colors.white),
-                                    );
-                                  }).toList();
+                              minY: 0,
+                              maxY: maxY,
+                              gridData: FlGridData(
+                                show: true,
+                                drawVerticalLine: false,
+                                horizontalInterval: interval,
+                                getDrawingHorizontalLine: (value) {
+                                  return const FlLine(
+                                    color: Color(0xff37434d),
+                                    strokeWidth: 1,
+                                  );
                                 },
                               ),
-                            )
+                              titlesData: FlTitlesData(
+                                show: true,
+                                bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 30,
+                                      interval: const Duration(days: 365).inMilliseconds / 1000,
+                                      getTitlesWidget: _bottomTitleWidgets,
+                                    )
+                                ),
+                                rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 44,
+                                      interval: interval,
+                                    )
+                                ),
+                                leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              ),
+                              borderData: FlBorderData(
+                                show: true,
+                                border: Border.all(color: const Color(0xff37434d), width: 1),
+                              ),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: spots,
+                                  isCurved: true,
+                                  color: Theme.of(context).primaryColor,
+                                  barWidth: 5,
+                                  isStrokeCapRound: true,
+                                  dotData: const FlDotData(show: false),
+                                  belowBarData: BarAreaData(show: false),
+                                ),
+                              ],
+                              lineTouchData: LineTouchData(
+                                touchTooltipData: LineTouchTooltipData(
+                                  tooltipBgColor: Theme.of(context).primaryColor, // Set your desired color here
+                                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                                    return touchedBarSpots.map((barSpot) {
+                                      return LineTooltipItem(
+                                        '${(barSpot.y * 100).roundToDouble() / 100}',
+                                        const TextStyle(color: Colors.white),
+                                      );
+                                    }).toList();
+                                  },
+                                ),
+                              )
                           ),
-                        );
-                      }
-                    },
-                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }
