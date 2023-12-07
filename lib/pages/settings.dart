@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:secsignal/main.dart';
 import 'package:secsignal/prefabs/PlatformListView.dart';
 
 class Settings extends StatefulWidget {
@@ -58,6 +59,15 @@ class _SettingsState extends State<Settings> {
                               ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
                               : Theme.of(context).textTheme.titleLarge,
                           textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            "- Name: ${userDoc!.name}",
+                            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                ? CupertinoTheme.of(context).textTheme.textStyle
+                                : Theme.of(context).textTheme.bodyMedium,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

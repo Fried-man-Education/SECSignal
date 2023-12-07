@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,15 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:secsignal/pages/home.dart';
 
+import 'classes/user.dart';
 import 'firebase_options.dart';
 
 User? user;
+UserDoc? userDoc;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if (FirebaseAuth.instance.currentUser != null) {
+    DocumentSnapshot docSnap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    userDoc = UserDoc.fromMap(docSnap.data() as Map<String, dynamic>, FirebaseAuth.instance.currentUser!.uid);
+  }
+
   runApp(const SecSignal());
 }
 

@@ -14,7 +14,7 @@ class Company {
   String? description;
   FinnhubProfile? profile;
 
-  Company({this.cikStr, required this.ticker, this.title});
+  Company({this.cikStr, required this.ticker, this.title, this.description, this.profile});
 
   
 
@@ -144,6 +144,34 @@ class Company {
     } else {
       return title!;
     }
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'cikStr': cikStr,
+      'ticker': ticker,
+      'title': title,
+      'description': description,
+      'profile': profile?.toMap(), // Assuming FinnhubProfile has a toMap method
+    };
+  }
+
+  Map<String, dynamic> toMapFirebase() {
+    return {
+      'cikStr': cikStr,
+      'ticker': ticker,
+      'title': title,
+    };
+  }
+
+  factory Company.fromMap(Map<String, dynamic> map) {
+    return Company(
+      cikStr: map['cikStr'] as int?,
+      ticker: map['ticker'] as String?,
+      title: map['title'] as String?,
+      description: map['description'] as String?,
+      profile: map['profile'] != null ? FinnhubProfile.fromJson(map['profile']) : null,
+    );
   }
 
   // Override == operator
