@@ -33,6 +33,14 @@ class CompanySection extends StatefulWidget {
 class _CompanySectionState extends State<CompanySection> {
   final ScrollController _controller = ScrollController();
 
+  late Future<List<Company>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = widget.companies;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -61,7 +69,7 @@ class _CompanySectionState extends State<CompanySection> {
             ),
           ),
         FutureBuilder<List<Company>>(
-          future: widget.companies,
+          future: _future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator()));
@@ -78,16 +86,7 @@ class _CompanySectionState extends State<CompanySection> {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     Company company = snapshot.data![index];
-                    return FutureBuilder<String>(
-                      future: company.getCompanyDescription(),
-                      builder: (context, descriptionSnapshot) {
-                        String description = descriptionSnapshot.data ?? 'Description not available';
-                        return Padding(
-                          padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
-                          child: CompanyCard(company: company, description: description, onFavoriteChanged: widget.onFavoriteChanged)
-                        );
-                      },
-                    );
+                    return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
                   },
                 ),
               );
@@ -99,12 +98,26 @@ class _CompanySectionState extends State<CompanySection> {
   }
 }
 
-class CompanyCard extends StatelessWidget {
+class CompanyCard extends StatefulWidget {
   final Company company;
-  final String description;
   final VoidCallback onFavoriteChanged;
 
-  const CompanyCard({super.key, required this.company, required this.description, required this.onFavoriteChanged});
+  const CompanyCard({super.key, required this.company, required this.onFavoriteChanged});
+
+  @override
+  _CompanyCardState createState() => _CompanyCardState();
+}
+
+class _CompanyCardState extends State<CompanyCard> {
+  late Future<FinnhubProfile?> _profileFuture;
+  late Future<String> _descriptionFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = widget.company.getFinnhubProfile();
+    _descriptionFuture = widget.company.getCompanyDescription();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,17 +126,17 @@ class CompanyCard extends StatelessWidget {
         Navigator.of(context).push(
           platformPageRoute(
             context: context,
-            builder: (_) => CompanyProfile(company: company),
+            builder: (_) => CompanyProfile(company: widget.company),
           ),
         ).then((value) {
           if (value is bool && value) {
-            onFavoriteChanged();
+            widget.onFavoriteChanged();
           }
         });
       },
       child: CompanyPrefab(
         header: buildHeader(context),
-        title: company.getName(),
+        title: widget.company.getName(),
         footer: buildFooter(),
       ),
     );
@@ -131,7 +144,7 @@ class CompanyCard extends StatelessWidget {
 
   Widget buildHeader(BuildContext context) {
     return FutureBuilder<FinnhubProfile?>(
-      future: company.getFinnhubProfile(),
+      future: _profileFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return buildPlaceholder(context, true);
@@ -157,24 +170,43 @@ class CompanyCard extends StatelessWidget {
   }
 
   Widget buildFooter() {
-    if (description == "Failed to load description. HTTP Status Code: 404") {
-      return Container();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: AutoSizeText(
-        description,
-        minFontSize: 15,
-        maxFontSize: 18,
-        style: const TextStyle(
-          fontSize: 18.0,
-          color: Colors.grey,
-        ),
-        textAlign: TextAlign.left,
-        maxLines: 5,
-        overflow: TextOverflow.ellipsis,
-      ),
+    return FutureBuilder<String>(
+      future: _descriptionFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a placeholder or loading indicator while waiting for the data
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          // Show an error message if something went wrong
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Error loading description'),
+          );
+        } else if (!snapshot.hasData || snapshot.data == "Failed to load description. HTTP Status Code: 404") {
+          // Handle the case where no description is available
+          return Container();
+        } else {
+          // Display the description
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              snapshot.data!,
+              minFontSize: 15,
+              maxFontSize: 18,
+              style: const TextStyle(
+                fontSize: 18.0,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.left,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+        }
+      },
     );
   }
 
