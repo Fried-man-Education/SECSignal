@@ -56,7 +56,7 @@ class _FilingSectionState extends State<FilingSection> {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                   widget.description,
-                  style: Platform.isIOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                  style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
                       color: Colors.grey
                   ) : Theme.of(context).textTheme.headlineMedium!
               ),
