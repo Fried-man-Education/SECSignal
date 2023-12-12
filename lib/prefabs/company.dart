@@ -178,7 +178,7 @@ class _CompanyCardState extends State<CompanyCard> {
           // Show a placeholder or loading indicator while waiting for the data
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(),
+            child: PlatformCircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
           // Show an error message if something went wrong
