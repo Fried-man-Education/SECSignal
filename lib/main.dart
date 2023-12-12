@@ -40,84 +40,11 @@ class _SecSignal extends State<SecSignal> with WidgetsBindingObserver {
       WidgetsBinding.instance.platformDispatcher.platformBrightness);
   Brightness brightness =
       WidgetsBinding.instance.platformDispatcher.platformBrightness;
-  late Color primaryColor;
-  final TextTheme textTheme = TextTheme(
-    bodyMedium: TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontSize: 18,
-        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-                Brightness.light
-            ? Colors.black
-            : Colors.white),
-    // Regular font
-    bodyLarge: TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontWeight: FontWeight.bold,
-        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-                Brightness.light
-            ? Colors.black
-            : Colors.white),
-    // Bold font
-    bodySmall: TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontStyle: FontStyle.italic,
-        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-                Brightness.light
-            ? Colors.black
-            : Colors.white),
-    // Italic font
-    displayLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    displayMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    displaySmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    headlineMedium: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans', color: Colors.grey, fontSize: 18),
-    headlineSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    titleLarge: TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-                Brightness.light
-            ? Colors.black
-            : Colors.white),
-    titleMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    titleSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    labelLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-    labelSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
-  );
-
-  late CupertinoTextThemeData cupertinoTextTheme;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    primaryColor = brightness == Brightness.light
-        ? const Color(0xff345078)
-        : lighten(const Color(0xff345078));
-
-    cupertinoTextTheme = CupertinoTextThemeData(
-      primaryColor: primaryColor,
-      textStyle: textTheme.bodyMedium,
-      actionTextStyle: textTheme.bodyLarge,
-      tabLabelTextStyle: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-      ),
-      navTitleTextStyle: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontWeight: FontWeight.normal,
-      ),
-      navLargeTitleTextStyle: textTheme.titleLarge,
-      navActionTextStyle: textTheme.bodyLarge,
-      pickerTextStyle: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontWeight: FontWeight.normal,
-      ),
-      dateTimePickerTextStyle: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        fontWeight: FontWeight.normal,
-      ),
-    );
   }
 
   @override
@@ -140,6 +67,77 @@ class _SecSignal extends State<SecSignal> with WidgetsBindingObserver {
         valueListenable: brightnessNotifier,
         builder: (context, Brightness brightness, child) {
           bool isLight = brightness == Brightness.light;
+
+          Color primaryColor = brightness == Brightness.light
+              ? const Color(0xff345078)
+              : lighten(const Color(0xff345078));
+          final TextTheme textTheme = TextTheme(
+            bodyMedium: TextStyle(
+                fontFamily: 'IBM_Plex_Sans',
+                fontSize: 18,
+                color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                    Brightness.light
+                    ? Colors.black
+                    : Colors.white),
+            // Regular font
+            bodyLarge: TextStyle(
+                fontFamily: 'IBM_Plex_Sans',
+                fontWeight: FontWeight.bold,
+                color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                    Brightness.light
+                    ? Colors.black
+                    : Colors.white),
+            // Bold font
+            bodySmall: TextStyle(
+                fontFamily: 'IBM_Plex_Sans',
+                fontStyle: FontStyle.italic,
+                color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                    Brightness.light
+                    ? Colors.black
+                    : Colors.white),
+            // Italic font
+            displayLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            displayMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            displaySmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            headlineMedium: const TextStyle(
+                fontFamily: 'IBM_Plex_Sans', color: Colors.grey, fontSize: 18),
+            headlineSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            titleLarge: TextStyle(
+                fontFamily: 'IBM_Plex_Sans',
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+                color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                    Brightness.light
+                    ? Colors.black
+                    : Colors.white),
+            titleMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            titleSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            labelLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+            labelSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
+          );
+
+          CupertinoTextThemeData cupertinoTextTheme = CupertinoTextThemeData(
+            primaryColor: primaryColor,
+            textStyle: textTheme.bodyMedium,
+            actionTextStyle: textTheme.bodyLarge,
+            tabLabelTextStyle: const TextStyle(
+              fontFamily: 'IBM_Plex_Sans',
+            ),
+            navTitleTextStyle: const TextStyle(
+              fontFamily: 'IBM_Plex_Sans',
+              fontWeight: FontWeight.normal,
+            ),
+            navLargeTitleTextStyle: textTheme.titleLarge,
+            navActionTextStyle: textTheme.bodyLarge,
+            pickerTextStyle: const TextStyle(
+              fontFamily: 'IBM_Plex_Sans',
+              fontWeight: FontWeight.normal,
+            ),
+            dateTimePickerTextStyle: const TextStyle(
+              fontFamily: 'IBM_Plex_Sans',
+              fontWeight: FontWeight.normal,
+            ),
+          );
 
           primaryColor = isLight
               ? const Color(0xff345078)
