@@ -136,17 +136,24 @@ class _SettingsState extends State<Settings> {
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () async {
                                       await FirebaseAuth.instance.signOut();
                                       userDoc = null;
                                       Navigator.pop(context, true);
                                     },
-                                    child: Text("Sign Out"),
+                                    child: Text(
+                                      "Sign Out",
+                                      style: TextStyle(
+                                        color: Theme.of(context).cardColor
+                                      )
+                                    ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () async {
                                       await FirebaseAuth.instance
                                           .sendPasswordResetEmail(
@@ -169,12 +176,18 @@ class _SettingsState extends State<Settings> {
                                         );
                                       });
                                     },
-                                    child: const Text("Reset Password"),
+                                    child: Text(
+                                      "Reset Password",
+                                      style: TextStyle(
+                                          color: Theme.of(context).cardColor
+                                      )
+                                    ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () async {
                                       try {
                                         // Get the current user
@@ -224,7 +237,12 @@ class _SettingsState extends State<Settings> {
                                         // Handle any other errors here
                                       }
                                     },
-                                    child: Text("Delete Account"),
+                                    child: Text(
+                                      "Delete Account",
+                                      style: TextStyle(
+                                          color: Theme.of(context).cardColor
+                                      )
+                                    ),
                                   ),
                                 )
                               ],
@@ -253,6 +271,7 @@ class _SettingsState extends State<Settings> {
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () async {
                                       String name = userDoc!.name;
                                       await userDoc!.changeName(context);
@@ -261,12 +280,18 @@ class _SettingsState extends State<Settings> {
                                         setState(() {});
                                       }
                                     },
-                                    child: const Text("Change Name"),
+                                    child: Text(
+                                      "Change Name",
+                                      style: TextStyle(
+                                          color: Theme.of(context).cardColor
+                                      )
+                                    ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: PlatformElevatedButton(
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () async {
                                       try {
                                         await FirebaseFirestore.instance
@@ -298,7 +323,12 @@ class _SettingsState extends State<Settings> {
                                         print('Error clearing favorites: $e');
                                       }
                                     },
-                                    child: Text("Clear Favorites"),
+                                    child: Text(
+                                      "Clear Favorites",
+                                      style: TextStyle(
+                                          color: Theme.of(context).cardColor
+                                      )
+                                    ),
                                   ),
                                 ),
                               ],
