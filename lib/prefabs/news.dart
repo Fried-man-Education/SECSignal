@@ -48,7 +48,7 @@ class _NewsSectionState extends State<NewsSection> {
               child: Text(
                 widget.title,
                 style:
-                    PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                    isCupertino(context)
                         ? CupertinoTheme.of(context)
                             .textTheme
                             .navLargeTitleTextStyle

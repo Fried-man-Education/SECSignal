@@ -147,29 +147,13 @@ class _SecSignal extends State<SecSignal> with WidgetsBindingObserver {
           borderColor = isLight ? Colors.black : Colors.white;
 
           return PlatformProvider(
-            initialPlatform: TargetPlatform.iOS,
             settings: PlatformSettingsData(
               iosUsesMaterialWidgets: true,
             ),
             builder: (context) => PlatformTheme(
-              themeMode: ThemeMode.dark,
-              // isLight ? ThemeMode.light : ThemeMode.dark
-              materialLightTheme: ThemeData(
-                  primarySwatch: buildMaterialColor(primaryColor),
-                  textTheme: textTheme,
-                  tabBarTheme: const TabBarTheme(
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                  ),
-                  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-                      selectedItemColor: primaryColor,
-                      unselectedItemColor: Colors.grey,
-                      showSelectedLabels: true,
-                      showUnselectedLabels: true,
-                      type: BottomNavigationBarType.fixed),
-                  iconTheme: const IconThemeData(
-                    color: Colors.black54,
-                  )),
+              themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+              materialLightTheme: ThemeData.light()
+                  .copyWith(primaryColor: primaryColor, textTheme: textTheme),
               materialDarkTheme: ThemeData.dark()
                   .copyWith(primaryColor: primaryColor, textTheme: textTheme),
               cupertinoLightTheme: CupertinoThemeData(
