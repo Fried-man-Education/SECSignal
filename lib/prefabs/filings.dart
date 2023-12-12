@@ -39,62 +39,75 @@ class _FilingSectionState extends State<FilingSection> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              widget.title,
-              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-        ),
-        if (widget.description.isNotEmpty)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                  widget.description,
-                  style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                      color: Colors.grey
-                  ) : Theme.of(context).textTheme.headlineMedium!
-              ),
-            ),
-          ),
-
-        // FutureBuilder for displaying filings
         FutureBuilder<List<Map<String, dynamic>>>(
           future: _future,
           builder: (context, snapshot) {
+            // Initialize an empty list of widgets
+            List<Widget> children = [];
+
+            // Header and description widgets, displayed in all states except error or empty data
+            if (snapshot.connectionState != ConnectionState.done || (snapshot.hasData && snapshot.data!.isNotEmpty)) {
+              children.add(
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      widget.title,
+                      style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+              );
+              if (widget.description.isNotEmpty) {
+                children.add(
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        widget.description,
+                        style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey) : Theme.of(context).textTheme.headlineMedium!,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            }
+
+            // FutureBuilder states
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator()));
+              children.add(SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator())));
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              children.add(Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const SizedBox(height: 500, child: Text('No filings found'));
+              return Container();
             } else {
-              return SizedBox(
-                height: 500,
-                child: GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    _controller.jumpTo(_controller.offset - details.delta.dx);
-                  },
-                  child: ListView.builder(
-                    controller: _controller,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      Map<String, dynamic> filing = snapshot.data![index];
-                      return Padding(
-                        padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
-                        child: FilingCard(filing: filing),
-                      );
+              children.add(
+                SizedBox(
+                  height: 500,
+                  child: GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      _controller.jumpTo(_controller.offset - details.delta.dx);
                     },
+                    child: ListView.builder(
+                      controller: _controller,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> filing = snapshot.data![index];
+                        return Padding(
+                          padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                          child: FilingCard(filing: filing),
+                        );
+                      },
+                    ),
                   ),
                 ),
               );
             }
+
+            return Column(children: children);
           },
         ),
       ],
