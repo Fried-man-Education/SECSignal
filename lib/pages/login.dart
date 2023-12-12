@@ -220,23 +220,44 @@ class _LoginState extends State<Login> {
                                                       context: context,
                                                       builder: (_) =>
                                                           PlatformAlertDialog(
-                                                        title: const Text(
-                                                            "Sign in Failure"),
-                                                        content: const Text(
-                                                            "Verify account email"),
+                                                        title: Text(
+                                                          "Sign in Failure",
+                                                          style: isCupertino(context)
+                                                              ? CupertinoTheme.of(context)
+                                                              .textTheme
+                                                              .navLargeTitleTextStyle
+                                                              : Theme.of(context).textTheme.titleLarge,
+                                                        ),
+                                                        content: Text(
+                                                          "Verify account email",
+                                                          style: isCupertino(context)
+                                                              ? CupertinoTheme.of(context)
+                                                              .textTheme
+                                                              .textStyle
+                                                              : Theme.of(context).textTheme.bodyMedium,
+                                                          textAlign: TextAlign.center,
+                                                        ),
                                                         actions: <Widget>[
-                                                          TextButton(
-                                                            child: const Text(
-                                                                'Resend Email'),
+                                                          PlatformTextButton(
+                                                            child: Text(
+                                                              'Resend Email',
+                                                              style: isMaterial(context) ? TextStyle(
+                                                                  color: Theme.of(context).primaryColor
+                                                              ) : null,
+                                                            ),
                                                             onPressed:
                                                                 () async {
                                                               await user!
                                                                   .sendEmailVerification();
                                                             },
                                                           ),
-                                                          TextButton(
-                                                            child: const Text(
-                                                                'OK'),
+                                                          PlatformTextButton(
+                                                            child: Text(
+                                                              'OK',
+                                                              style: isMaterial(context) ? TextStyle(
+                                                                  color: Theme.of(context).primaryColor
+                                                              ) : null,
+                                                            ),
                                                             onPressed: () =>
                                                                 Navigator.pop(
                                                                     context),
@@ -336,8 +357,14 @@ class _LoginState extends State<Login> {
                                                               builder: (context,
                                                                   setState) {
                                                                 return PlatformAlertDialog(
-                                                                  title: const Text(
-                                                                      "Enter Your Name"),
+                                                                  title: Text(
+                                                                    "Enter Your Name",
+                                                                    style: isCupertino(context)
+                                                                        ? CupertinoTheme.of(context)
+                                                                        .textTheme
+                                                                        .navLargeTitleTextStyle
+                                                                        : Theme.of(context).textTheme.titleLarge,
+                                                                  ),
                                                                   content:
                                                                       TextField(
                                                                     controller:
@@ -380,9 +407,13 @@ class _LoginState extends State<Login> {
                                                                     ),
                                                                   ),
                                                                   actions: <Widget>[
-                                                                    TextButton(
-                                                                      child: const Text(
-                                                                          'OK'),
+                                                                    PlatformTextButton(
+                                                                      child: Text(
+                                                                        'OK',
+                                                                        style: isMaterial(context) ? TextStyle(
+                                                                            color: Theme.of(context).primaryColor
+                                                                        ) : null,
+                                                                      ),
                                                                       onPressed:
                                                                           () {
                                                                         if (userInput
@@ -505,11 +536,22 @@ class _LoginState extends State<Login> {
                                           showPlatformDialog<void>(
                                             context: context,
                                             builder: (_) => PlatformAlertDialog(
-                                              title: const Text(
-                                                  "Password Reset Email Sent"),
+                                              title: Text(
+                                                "Password Reset Email Sent",
+                                                style: isCupertino(context)
+                                                    ? CupertinoTheme.of(context)
+                                                    .textTheme
+                                                    .navLargeTitleTextStyle
+                                                    : Theme.of(context).textTheme.titleLarge,
+                                              ),
                                               actions: <Widget>[
                                                 TextButton(
-                                                  child: const Text('OK'),
+                                                  child: Text(
+                                                    'OK',
+                                                    style: isMaterial(context) ? TextStyle(
+                                                        color: Theme.of(context).primaryColor
+                                                    ) : null,
+                                                  ),
                                                   onPressed: () =>
                                                       Navigator.pop(context),
                                                 ),
@@ -532,13 +574,25 @@ class _LoginState extends State<Login> {
                                           showPlatformDialog<void>(
                                             context: context,
                                             builder: (_) => PlatformAlertDialog(
-                                              title: Text("Error: $error"),
+                                              title: Text(
+                                                "Error: $error",
+                                                style: isCupertino(context)
+                                                    ? CupertinoTheme.of(context)
+                                                    .textTheme
+                                                    .navLargeTitleTextStyle
+                                                    : Theme.of(context).textTheme.titleLarge,
+                                              ),
                                               content: Text(body.isNotEmpty
                                                   ? body
                                                   : stackTrace.toString()),
                                               actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('OK'),
+                                                PlatformTextButton(
+                                                  child: Text(
+                                                    'OK',
+                                                    style: isMaterial(context) ? TextStyle(
+                                                        color: Theme.of(context).primaryColor
+                                                    ) : null,
+                                                  ),
                                                   onPressed: () =>
                                                       Navigator.pop(context),
                                                 ),
@@ -574,11 +628,23 @@ void createErrorScreen(error, context, sourceString) {
   showPlatformDialog<void>(
     context: context,
     builder: (_) => PlatformAlertDialog(
-      title: Text(sourceString + " Failure"),
+      title: Text(
+        sourceString + " Failure",
+        style: isCupertino(context)
+            ? CupertinoTheme.of(context)
+            .textTheme
+            .navLargeTitleTextStyle
+            : Theme.of(context).textTheme.titleLarge,
+      ),
       content: Text(error),
       actions: <Widget>[
-        TextButton(
-          child: const Text('OK'),
+        PlatformTextButton(
+          child: Text(
+            'OK',
+            style: isMaterial(context) ? TextStyle(
+                color: Theme.of(context).primaryColor
+            ) : null,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ],
