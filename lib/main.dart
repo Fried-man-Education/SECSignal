@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,41 +35,51 @@ class SecSignal extends StatefulWidget {
   State<SecSignal> createState() => _SecSignal();
 }
 
-class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
-  final brightnessNotifier = ValueNotifier(WidgetsBinding.instance.platformDispatcher.platformBrightness);
-  Brightness brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+class _SecSignal extends State<SecSignal> with WidgetsBindingObserver {
+  final brightnessNotifier = ValueNotifier(
+      WidgetsBinding.instance.platformDispatcher.platformBrightness);
+  Brightness brightness =
+      WidgetsBinding.instance.platformDispatcher.platformBrightness;
   late Color primaryColor;
   final TextTheme textTheme = TextTheme(
     bodyMedium: TextStyle(
         fontFamily: 'IBM_Plex_Sans',
         fontSize: 18,
-        color: WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.light ? Colors.black : Colors.white
-    ), // Regular font
+        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.light
+            ? Colors.black
+            : Colors.white),
+    // Regular font
     bodyLarge: TextStyle(
-      fontFamily: 'IBM_Plex_Sans',
-      fontWeight: FontWeight.bold,
-      color: WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.light ? Colors.black : Colors.white
-    ), // Bold font
+        fontFamily: 'IBM_Plex_Sans',
+        fontWeight: FontWeight.bold,
+        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.light
+            ? Colors.black
+            : Colors.white),
+    // Bold font
     bodySmall: TextStyle(
-      fontFamily: 'IBM_Plex_Sans',
-      fontStyle: FontStyle.italic,
-      color: WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.light ? Colors.black : Colors.white
-    ), // Italic font
+        fontFamily: 'IBM_Plex_Sans',
+        fontStyle: FontStyle.italic,
+        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.light
+            ? Colors.black
+            : Colors.white),
+    // Italic font
     displayLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     displayMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     displaySmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     headlineMedium: const TextStyle(
-        fontFamily: 'IBM_Plex_Sans',
-        color: Colors.grey,
-        fontSize: 18
-    ),
+        fontFamily: 'IBM_Plex_Sans', color: Colors.grey, fontSize: 18),
     headlineSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     titleLarge: TextStyle(
-      fontFamily: 'IBM_Plex_Sans',
-      fontSize: 24.0,
-      fontWeight: FontWeight.bold,
-      color: WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.light ? Colors.black : Colors.white
-    ),
+        fontFamily: 'IBM_Plex_Sans',
+        fontSize: 24.0,
+        fontWeight: FontWeight.bold,
+        color: WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                Brightness.light
+            ? Colors.black
+            : Colors.white),
     titleMedium: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     titleSmall: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
     labelLarge: const TextStyle(fontFamily: 'IBM_Plex_Sans'),
@@ -83,7 +92,9 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    primaryColor = brightness == Brightness.light ? const Color(0xff345078) : lighten(const Color(0xff345078));
+    primaryColor = brightness == Brightness.light
+        ? const Color(0xff345078)
+        : lighten(const Color(0xff345078));
 
     cupertinoTextTheme = CupertinoTextThemeData(
       primaryColor: primaryColor,
@@ -130,7 +141,9 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
         builder: (context, Brightness brightness, child) {
           bool isLight = brightness == Brightness.light;
 
-          primaryColor = isLight ? const Color(0xff345078) : lighten(const Color(0xff345078));
+          primaryColor = isLight
+              ? const Color(0xff345078)
+              : lighten(const Color(0xff345078));
           borderColor = isLight ? Colors.black : Colors.white;
 
           return PlatformProvider(
@@ -139,7 +152,8 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
               iosUsesMaterialWidgets: true,
             ),
             builder: (context) => PlatformTheme(
-              themeMode: ThemeMode.dark, // isLight ? ThemeMode.light : ThemeMode.dark
+              themeMode: ThemeMode.dark,
+              // isLight ? ThemeMode.light : ThemeMode.dark
               materialLightTheme: ThemeData(
                   primarySwatch: buildMaterialColor(primaryColor),
                   textTheme: textTheme,
@@ -152,16 +166,12 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                       unselectedItemColor: Colors.grey,
                       showSelectedLabels: true,
                       showUnselectedLabels: true,
-                      type: BottomNavigationBarType.fixed
-                  ),
+                      type: BottomNavigationBarType.fixed),
                   iconTheme: const IconThemeData(
                     color: Colors.black54,
-                  )
-              ),
-              materialDarkTheme: ThemeData.dark().copyWith(
-                primaryColor: primaryColor,
-                textTheme: textTheme
-              ),
+                  )),
+              materialDarkTheme: ThemeData.dark()
+                  .copyWith(primaryColor: primaryColor, textTheme: textTheme),
               cupertinoLightTheme: CupertinoThemeData(
                 brightness: Brightness.light,
                 primaryColor: primaryColor,
@@ -184,19 +194,23 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                   DefaultCupertinoLocalizations.delegate,
                 ],
                 title: 'SECSignal',
-                home: (defaultTargetPlatform == TargetPlatform.iOS && kIsWeb) || (defaultTargetPlatform == TargetPlatform.android && kIsWeb) ? const Illegal() : const Home(),
+                home: (defaultTargetPlatform == TargetPlatform.iOS && kIsWeb) ||
+                        (defaultTargetPlatform == TargetPlatform.android &&
+                            kIsWeb)
+                    ? const Illegal()
+                    : const Home(),
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   Color lighten(Color color, [double amount = .1]) {
     assert(amount >= 0 && amount <= 1);
 
     final hsl = HSLColor.fromColor(color);
-    final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+    final hslLight =
+        hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
 
     return hslLight.toColor();
   }
@@ -269,9 +283,8 @@ String formatDate(DateTime date) {
     if (date.hour == 0) {
       output += "12";
     } else {
-      output += (date.hour > 12)
-          ? (date.hour - 12).toString()
-          : date.hour.toString();
+      output +=
+          (date.hour > 12) ? (date.hour - 12).toString() : date.hour.toString();
     }
     output += ":${date.minute.toString().padLeft(2, '0')} ";
     output += (date.hour > 12) ? "PM " : "AM ";
@@ -286,23 +299,21 @@ class Illegal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(child: SizedBox(
-                height: min(MediaQuery.of(context).size.height / 2, MediaQuery.of(context).size.width / 2),
-                width: min(MediaQuery.of(context).size.height / 2, MediaQuery.of(context).size.width / 2),
-                child: Image.asset("error.gif"))
-            ),
-            const Text(
-              "Please view on desktop.",
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20
-              ),
-            ),
-          ],
-        )
-    );
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+            child: SizedBox(
+                height: min(MediaQuery.of(context).size.height / 2,
+                    MediaQuery.of(context).size.width / 2),
+                width: min(MediaQuery.of(context).size.height / 2,
+                    MediaQuery.of(context).size.width / 2),
+                child: Image.asset("error.gif"))),
+        const Text(
+          "Please view on desktop.",
+          style: TextStyle(color: Colors.grey, fontSize: 20),
+        ),
+      ],
+    ));
   }
 }

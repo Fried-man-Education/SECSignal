@@ -26,12 +26,15 @@ class _AboutState extends State<About> {
           appBar: PlatformAppBar(
             title: Text(
               "About SECSignal",
-              style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+              style: isCupertino(context)
+                  ? CupertinoTheme.of(context).textTheme.textStyle
+                  : Theme.of(context).textTheme.bodyMedium!,
             ),
             backgroundColor: Theme.of(context).canvasColor,
             material: (_, __) => MaterialAppBarData(
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
+                icon: Icon(Icons.arrow_back,
+                    color: Theme.of(context).primaryColor),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -62,8 +65,7 @@ class _AboutState extends State<About> {
                       );
                     }
                   },
-                  icon: const Icon(FontAwesomeIcons.github)
-              )
+                  icon: const Icon(FontAwesomeIcons.github))
             ],
           ),
           body: Padding(
@@ -91,29 +93,31 @@ class _AboutState extends State<About> {
                 ),
                 Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(
-                            "About",
-                            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40),
-                            child: Text(
-                                "\t\t\t\tIn today's digital age, the democratization of financial data is more crucial than ever. As a college student, I have witnessed firsthand the challenges my peers and I face when attempting to access, understand, and analyze"
-                                    " the vast sea of corporate filings. Platforms like BAMSEC have dominated this space, offering invaluable tools for professionals, but often come with a hefty price tag, rendering them inaccessible to young and individual investors. "
-                                    "This financial gatekeeping limits the potential for informed investment decisions and hinders educational opportunities for those striving to learn more about the financial landscape. \n\t\t\t\t\"SECSignal\" was conceived as a modern "
-                                    "solution to bridge this gap. By recognizing the potential of technology and artificial intelligence, this platform aspires to deliver sophisticated insights from SEC filings in a user-friendly and cost-effective manner. "
-                                    "By harnessing the power of AI-driven analysis, SECSignal aims to empower its users with concise financial intelligence, making the intricate details of corporate filings more digestible. It is more than just a tool; it is a movement "
-                                    "towards financial literacy and inclusivity. In a world where information is power, SECSignal strives to ensure that power is available to all."
-                            ),
-                          )
-                        ],
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Text(
+                        "About",
+                        style: PlatformProvider.of(context)!.platform ==
+                                TargetPlatform.iOS
+                            ? CupertinoTheme.of(context)
+                                .textTheme
+                                .navLargeTitleTextStyle
+                            : Theme.of(context).textTheme.titleLarge,
                       ),
-                    )
-                ),
-
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                            "\t\t\t\tIn today's digital age, the democratization of financial data is more crucial than ever. As a college student, I have witnessed firsthand the challenges my peers and I face when attempting to access, understand, and analyze"
+                            " the vast sea of corporate filings. Platforms like BAMSEC have dominated this space, offering invaluable tools for professionals, but often come with a hefty price tag, rendering them inaccessible to young and individual investors. "
+                            "This financial gatekeeping limits the potential for informed investment decisions and hinders educational opportunities for those striving to learn more about the financial landscape. \n\t\t\t\t\"SECSignal\" was conceived as a modern "
+                            "solution to bridge this gap. By recognizing the potential of technology and artificial intelligence, this platform aspires to deliver sophisticated insights from SEC filings in a user-friendly and cost-effective manner. "
+                            "By harnessing the power of AI-driven analysis, SECSignal aims to empower its users with concise financial intelligence, making the intricate details of corporate filings more digestible. It is more than just a tool; it is a movement "
+                            "towards financial literacy and inclusivity. In a world where information is power, SECSignal strives to ensure that power is available to all."),
+                      )
+                    ],
+                  ),
+                )),
                 SizedBox(
                   height: 250,
                   child: Row(
@@ -128,7 +132,13 @@ class _AboutState extends State<About> {
                               children: [
                                 Text(
                                   "Packages",
-                                  style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+                                  style: PlatformProvider.of(context)!
+                                              .platform ==
+                                          TargetPlatform.iOS
+                                      ? CupertinoTheme.of(context)
+                                          .textTheme
+                                          .navLargeTitleTextStyle
+                                      : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
                                 Expanded(
@@ -152,38 +162,61 @@ class _AboutState extends State<About> {
                                         'fl_chart'
                                       ])
                                         Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 40),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 40),
                                           child: RichText(
                                             text: TextSpan(
-                                                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium,
+                                                style: PlatformProvider.of(
+                                                                context)!
+                                                            .platform ==
+                                                        TargetPlatform.iOS
+                                                    ? CupertinoTheme.of(context)
+                                                        .textTheme
+                                                        .textStyle
+                                                    : Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium,
                                                 children: [
                                                   const TextSpan(
                                                     text: "- ",
                                                   ),
                                                   TextSpan(
                                                     text: library,
-                                                    recognizer: TapGestureRecognizer()..onTap = () async {
-                                                      final Uri _url = Uri.parse(
-                                                          'https://pub.dev/packages/$library');
-                                                      if (await canLaunchUrl(_url)) {
-                                                        await launchUrl(
-                                                          _url,
-                                                          mode: LaunchMode.platformDefault,
-                                                          webOnlyWindowName: kIsWeb ? '_blank' : null,
-                                                        );
-                                                      } else {
-                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(content: Text('Could not launch $library')),
-                                                        );
-                                                      }
-                                                    },
+                                                    recognizer:
+                                                        TapGestureRecognizer()
+                                                          ..onTap = () async {
+                                                            final Uri _url =
+                                                                Uri.parse(
+                                                                    'https://pub.dev/packages/$library');
+                                                            if (await canLaunchUrl(
+                                                                _url)) {
+                                                              await launchUrl(
+                                                                _url,
+                                                                mode: LaunchMode
+                                                                    .platformDefault,
+                                                                webOnlyWindowName:
+                                                                    kIsWeb
+                                                                        ? '_blank'
+                                                                        : null,
+                                                              );
+                                                            } else {
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .showSnackBar(
+                                                                SnackBar(
+                                                                    content: Text(
+                                                                        'Could not launch $library')),
+                                                              );
+                                                            }
+                                                          },
                                                     style: TextStyle(
-                                                      color: Theme.of(context).primaryColor,
-                                                      decoration: TextDecoration.underline,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      decoration: TextDecoration
+                                                          .underline,
                                                     ),
                                                   )
-                                                ]
-                                            ),
+                                                ]),
                                           ),
                                         ),
                                     ],
@@ -203,51 +236,77 @@ class _AboutState extends State<About> {
                               children: [
                                 Text(
                                   "APIs",
-                                  style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
-                                      ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                                  style: PlatformProvider.of(context)!
+                                              .platform ==
+                                          TargetPlatform.iOS
+                                      ? CupertinoTheme.of(context)
+                                          .textTheme
+                                          .navLargeTitleTextStyle
                                       : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
                                 ...{
-                                  "SEC Edgar" : "https://www.sec.gov/edgar",
-                                  "Wikimedia REST API" : "https://en.wikipedia.org/api/rest_v1/",
-                                  "Finnhub" : "https://finnhub.io",
-                                  "Clearbit Logo API" : "https://clearbit.com/logo",
-                                  "Yahoo Finance API" : "https://finance.yahoo.com/"
+                                  "SEC Edgar": "https://www.sec.gov/edgar",
+                                  "Wikimedia REST API":
+                                      "https://en.wikipedia.org/api/rest_v1/",
+                                  "Finnhub": "https://finnhub.io",
+                                  "Clearbit Logo API":
+                                      "https://clearbit.com/logo",
+                                  "Yahoo Finance API":
+                                      "https://finance.yahoo.com/"
                                 }.entries.map((entry) => Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
-                                          ? CupertinoTheme.of(context).textTheme.textStyle
-                                          : Theme.of(context).textTheme.bodyMedium,
-                                      children: [
-                                        const TextSpan(text: "- "),
-                                        TextSpan(
-                                          text: entry.key,
-                                          recognizer: TapGestureRecognizer()..onTap = () async {
-                                            final Uri _url = Uri.parse(entry.value);
-                                            if (await canLaunchUrl(_url)) {
-                                              await launchUrl(
-                                                _url,
-                                                mode: LaunchMode.platformDefault,
-                                                webOnlyWindowName: kIsWeb ? '_blank' : null,
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text('Could not launch ${entry.key}')),
-                                              );
-                                            }
-                                          },
-                                          style: TextStyle(
-                                            color: Theme.of(context).primaryColor,
-                                            decoration: TextDecoration.underline,
-                                          ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: PlatformProvider.of(context)!
+                                                      .platform ==
+                                                  TargetPlatform.iOS
+                                              ? CupertinoTheme.of(context)
+                                                  .textTheme
+                                                  .textStyle
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                          children: [
+                                            const TextSpan(text: "- "),
+                                            TextSpan(
+                                              text: entry.key,
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () async {
+                                                  final Uri _url =
+                                                      Uri.parse(entry.value);
+                                                  if (await canLaunchUrl(
+                                                      _url)) {
+                                                    await launchUrl(
+                                                      _url,
+                                                      mode: LaunchMode
+                                                          .platformDefault,
+                                                      webOnlyWindowName: kIsWeb
+                                                          ? '_blank'
+                                                          : null,
+                                                    );
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                          content: Text(
+                                                              'Could not launch ${entry.key}')),
+                                                    );
+                                                  }
+                                                },
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
@@ -258,7 +317,8 @@ class _AboutState extends State<About> {
                 ),
                 FutureBuilder<String>(
                     future: getVersion(),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
                       return Text(
                         'SECSignal ${snapshot.hasData ? "${snapshot.data!} 💸" : 'unknown'}\nMade in Atlanta, GA',
                         style: const TextStyle(
@@ -267,20 +327,18 @@ class _AboutState extends State<About> {
                         ),
                         textAlign: TextAlign.center,
                       );
-                    }
-                ),
+                    }),
                 SizedBox(
                   height: 20,
                 )
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 
   Future<String> getVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    return "v${packageInfo.version}${packageInfo.buildNumber != "0" ?  " (${packageInfo.buildNumber})" : ""}";
+    return "v${packageInfo.version}${packageInfo.buildNumber != "0" ? " (${packageInfo.buildNumber})" : ""}";
   }
 }

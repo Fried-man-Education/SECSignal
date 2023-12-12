@@ -9,22 +9,20 @@ import '../prefabs/PreviewCard.dart';
 
 class CompanySection extends StatefulWidget {
   final Future<List<Company>> companies;
-  final String title;                 // Title string
-  final String description;           // Description string with a default empty value
+  final String title; // Title string
+  final String description; // Description string with a default empty value
   final VoidCallback onFavoriteChanged;
 
-  CompanySection({
-    super.key,
-    required this.companies,
-    required this.title,
-    this.description = '',
-    this.onFavoriteChanged = _defaultOnFavoriteChanged
-  });
+  CompanySection(
+      {super.key,
+      required this.companies,
+      required this.title,
+      this.description = '',
+      this.onFavoriteChanged = _defaultOnFavoriteChanged});
 
   static void _defaultOnFavoriteChanged() {
     // This is an empty function that does nothing
   }
-
 
   @override
   _CompanySectionState createState() => _CompanySectionState();
@@ -50,7 +48,9 @@ class _CompanySectionState extends State<CompanySection> {
           padding: const EdgeInsets.only(left: 20),
           child: Text(
             widget.title,
-            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+            style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                : Theme.of(context).textTheme.titleLarge,
           ),
         ),
       ),
@@ -59,12 +59,14 @@ class _CompanySectionState extends State<CompanySection> {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 20),
-            child: Text(
-                widget.description,
-                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                    color: Colors.grey
-                ) : Theme.of(context).textTheme.headlineMedium!
-            ),
+            child: Text(widget.description,
+                style:
+                    PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                        ? CupertinoTheme.of(context)
+                            .textTheme
+                            .textStyle
+                            .copyWith(color: Colors.grey)
+                        : Theme.of(context).textTheme.headlineMedium!),
           ),
         ),
     ];
@@ -72,10 +74,13 @@ class _CompanySectionState extends State<CompanySection> {
     return FutureBuilder<List<Company>>(
       future: _future,
       builder: (context, snapshot) {
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) return Container();
+        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty)
+          return Container();
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          content.add(SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator())));
+          content.add(SizedBox(
+              height: 500,
+              child: Center(child: PlatformCircularProgressIndicator())));
         } else {
           content.add(SizedBox(
             height: 500,
@@ -89,7 +94,9 @@ class _CompanySectionState extends State<CompanySection> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   Company company = snapshot.data![index];
-                  return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
+                  return CompanyCard(
+                      company: company,
+                      onFavoriteChanged: widget.onFavoriteChanged);
                 },
               ),
             ),
@@ -108,7 +115,8 @@ class CompanyCard extends StatefulWidget {
   final Company company;
   final VoidCallback onFavoriteChanged;
 
-  const CompanyCard({super.key, required this.company, required this.onFavoriteChanged});
+  const CompanyCard(
+      {super.key, required this.company, required this.onFavoriteChanged});
 
   @override
   _CompanyCardState createState() => _CompanyCardState();
@@ -129,12 +137,14 @@ class _CompanyCardState extends State<CompanyCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.of(context)
+            .push(
           platformPageRoute(
             context: context,
             builder: (_) => CompanyProfile(company: widget.company),
           ),
-        ).then((value) {
+        )
+            .then((value) {
           if (value is bool && value) {
             widget.onFavoriteChanged();
           }
@@ -154,7 +164,9 @@ class _CompanyCardState extends State<CompanyCard> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return buildPlaceholder(context, true);
-        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.getLogo() == null) {
+        } else if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!.getLogo() == null) {
           return buildPlaceholder(context, false);
         } else {
           return Image.network(
@@ -162,7 +174,8 @@ class _CompanyCardState extends State<CompanyCard> {
             fit: BoxFit.cover,
             height: 250,
             width: 250,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) return child;
               return buildPlaceholder(context, true);
             },
@@ -191,7 +204,9 @@ class _CompanyCardState extends State<CompanyCard> {
             padding: const EdgeInsets.all(8.0),
             child: Text('Error loading description'),
           );
-        } else if (!snapshot.hasData || snapshot.data == "Failed to load description. HTTP Status Code: 404") {
+        } else if (!snapshot.hasData ||
+            snapshot.data ==
+                "Failed to load description. HTTP Status Code: 404") {
           // Handle the case where no description is available
           return Container();
         } else {
@@ -224,26 +239,27 @@ class _CompanyCardState extends State<CompanyCard> {
       child: Center(
         child: isLoading
             ? PlatformCircularProgressIndicator(
-          material: (_, __) => MaterialProgressIndicatorData(
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).cardColor),
-          ),
-          cupertino: (_, __) => CupertinoProgressIndicatorData(
-            color: Theme.of(context).cardColor,
-          ),
-        )
+                material: (_, __) => MaterialProgressIndicatorData(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).cardColor),
+                ),
+                cupertino: (_, __) => CupertinoProgressIndicatorData(
+                  color: Theme.of(context).cardColor,
+                ),
+              )
             : PlatformIconButton(
-          materialIcon: Icon(
-            Icons.business,
-            size: 150,
-            color: Theme.of(context).cardColor,
-          ),
-          cupertinoIcon: Icon(
-            CupertinoIcons.building_2_fill,
-            size: 150,
-            color: Theme.of(context).cardColor,
-          ),
-          onPressed: null,
-        ),
+                materialIcon: Icon(
+                  Icons.business,
+                  size: 150,
+                  color: Theme.of(context).cardColor,
+                ),
+                cupertinoIcon: Icon(
+                  CupertinoIcons.building_2_fill,
+                  size: 150,
+                  color: Theme.of(context).cardColor,
+                ),
+                onPressed: null,
+              ),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../secrets.dart';
 
 class News {
-  final String? category;  // Made optional
+  final String? category; // Made optional
   final int datetime;
   final String headline;
   final int id;
@@ -83,7 +83,8 @@ class NewsService {
   static const String baseUrl = 'https://finnhub.io/api/v1';
   final Map<String, List<News>> _newsCache = {};
 
-  Future<List<News>> getMarketNews([MarketNewsCategory category = MarketNewsCategory.general]) async {
+  Future<List<News>> getMarketNews(
+      [MarketNewsCategory category = MarketNewsCategory.general]) async {
     final String cacheKey = 'market-${category.value}';
 
     if (_newsCache.containsKey(cacheKey)) {
@@ -91,7 +92,8 @@ class NewsService {
     }
 
     final response = await http.get(
-      Uri.parse('$baseUrl/news?category=${category.value}&token=$apiFinnhubKey'),
+      Uri.parse(
+          '$baseUrl/news?category=${category.value}&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {
@@ -104,7 +106,10 @@ class NewsService {
     }
   }
 
-  Future<List<News>> getCompanyNews({required String symbol, required DateTime from, required DateTime to}) async {
+  Future<List<News>> getCompanyNews(
+      {required String symbol,
+      required DateTime from,
+      required DateTime to}) async {
     final String formattedFromDate = DateFormat('yyyy-MM-dd').format(from);
     final String formattedToDate = DateFormat('yyyy-MM-dd').format(to);
     final String cacheKey = '$symbol-$formattedFromDate-$formattedToDate';
@@ -116,7 +121,8 @@ class NewsService {
 
     // Fetch data if not in cache
     final response = await http.get(
-      Uri.parse('$baseUrl/company-news?symbol=$symbol&from=$formattedFromDate&to=$formattedToDate&token=$apiFinnhubKey'),
+      Uri.parse(
+          '$baseUrl/company-news?symbol=$symbol&from=$formattedFromDate&to=$formattedToDate&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {

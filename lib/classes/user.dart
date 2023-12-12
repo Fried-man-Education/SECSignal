@@ -1,10 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+
 import 'company.dart';
-import 'dart:math' as math;
 
 class UserDoc {
   String uid; // Assuming you have a unique identifier for each UserDoc
@@ -16,10 +17,12 @@ class UserDoc {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'bookmarked': bookmarked.map((bookmark) => {
-        'timestamp': bookmark['timestamp'],
-        'company': (bookmark['company'] as Company).toMapFirebase(),
-      }).toList(),
+      'bookmarked': bookmarked
+          .map((bookmark) => {
+                'timestamp': bookmark['timestamp'],
+                'company': (bookmark['company'] as Company).toMapFirebase(),
+              })
+          .toList(),
     };
   }
 
@@ -27,10 +30,11 @@ class UserDoc {
     return UserDoc(
       uid: uid,
       name: map['name'],
-      bookmarked: List<Map<String, dynamic>>.from(map['bookmarked'].map((bookmark) => {
-        'timestamp': bookmark['timestamp'],
-        'company': Company.fromMap(bookmark['company']),
-      })),
+      bookmarked:
+          List<Map<String, dynamic>>.from(map['bookmarked'].map((bookmark) => {
+                'timestamp': bookmark['timestamp'],
+                'company': Company.fromMap(bookmark['company']),
+              })),
     );
   }
 
@@ -49,7 +53,8 @@ class UserDoc {
       return null;
     }
 
-    return UserDoc.fromMap(docSnap.data() as Map<String, dynamic>, firebaseUser.uid);
+    return UserDoc.fromMap(
+        docSnap.data() as Map<String, dynamic>, firebaseUser.uid);
   }
 
   Future<void> addBookmark(Company company) async {
@@ -65,17 +70,20 @@ class UserDoc {
 
     // Update the Firestore UserDoc document
     await FirebaseFirestore.instance.collection('users').doc(uid).update({
-      'bookmarked': FieldValue.arrayUnion([{
-        'timestamp': timestamp,
-        'company': company.toMapFirebase(),
-      }])
+      'bookmarked': FieldValue.arrayUnion([
+        {
+          'timestamp': timestamp,
+          'company': company.toMapFirebase(),
+        }
+      ])
     });
   }
 
   Future<void> removeBookmark(Company companyToRemove) async {
     // Find the bookmark that matches the company's cikStr
     var bookmarkToRemove = bookmarked.firstWhere(
-          (bookmark) => (bookmark['company'] as Company).cikStr == companyToRemove.cikStr,
+      (bookmark) =>
+          (bookmark['company'] as Company).cikStr == companyToRemove.cikStr,
     );
 
     if (bookmarkToRemove != null) {
@@ -84,10 +92,12 @@ class UserDoc {
 
       // Update the Firestore UserDoc document
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
-        'bookmarked': FieldValue.arrayRemove([{
-          'timestamp': bookmarkToRemove['timestamp'],
-          'company': (bookmarkToRemove['company'] as Company).toMapFirebase(),
-        }])
+        'bookmarked': FieldValue.arrayRemove([
+          {
+            'timestamp': bookmarkToRemove['timestamp'],
+            'company': (bookmarkToRemove['company'] as Company).toMapFirebase(),
+          }
+        ])
       });
     } else {
       print('Bookmark not found');
@@ -153,7 +163,10 @@ class UserDoc {
 
       // Update the user's name in Firestore
       if (newName != null && newName.isNotEmpty && newName != name) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'name': newName,
         }).then((_) {
           name = newName;
@@ -185,16 +198,23 @@ class UserDoc {
     sortedBookmarks.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
     // Extract and return the list of tickers from the Company objects
-    return sortedBookmarks.map((bookmark) => (bookmark['company'] as Company).ticker).whereType<String>().toList();
+    return sortedBookmarks
+        .map((bookmark) => (bookmark['company'] as Company).ticker)
+        .whereType<String>()
+        .toList();
   }
 
   Future<List<Company>> getRecommendations() async {
     var random = math.Random();
-    List<String> triedTickers = []; // To keep track of which companies have been tried
-    Set<String?> favoritedTickers = bookmarked.map((bookmark) => (bookmark['company'] as Company).ticker).toSet();
+    List<String> triedTickers =
+        []; // To keep track of which companies have been tried
+    Set<String?> favoritedTickers = bookmarked
+        .map((bookmark) => (bookmark['company'] as Company).ticker)
+        .toSet();
 
     // Shuffle the bookmarked list to randomize the order
-    List<Map<String, dynamic>> shuffledBookmarks = List.from(bookmarked)..shuffle(random);
+    List<Map<String, dynamic>> shuffledBookmarks = List.from(bookmarked)
+      ..shuffle(random);
 
     for (var bookmark in shuffledBookmarks) {
       Company company = bookmark['company'];
@@ -202,7 +222,9 @@ class UserDoc {
         triedTickers.add(company.ticker!);
         var peerCompanies = await company.fetchPeerCompanies();
         // Filter out favorited companies
-        var filteredPeerCompanies = peerCompanies.where((peer) => !favoritedTickers.contains(peer.ticker)).toList();
+        var filteredPeerCompanies = peerCompanies
+            .where((peer) => !favoritedTickers.contains(peer.ticker))
+            .toList();
         if (filteredPeerCompanies.isNotEmpty) {
           return filteredPeerCompanies;
         }

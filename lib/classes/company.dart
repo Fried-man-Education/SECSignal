@@ -15,8 +15,12 @@ class Company {
   FinnhubProfile? profile;
   SECEdgar? secEdgar;
 
-  Company({this.cikStr, required this.ticker, this.title, this.description, this.profile});
-  
+  Company(
+      {this.cikStr,
+      required this.ticker,
+      this.title,
+      this.description,
+      this.profile});
 
   static Map<String, dynamic>? _companyDataCache;
 
@@ -53,7 +57,8 @@ class Company {
   }
 
   static Future<void> _fetchCompanyData() async {
-    final jsonString = await rootBundle.loadString('assets/data/company_tickers.json');
+    final jsonString =
+        await rootBundle.loadString('assets/data/company_tickers.json');
     Map<String, dynamic> jsonData = json.decode(jsonString);
 
     _companyDataCache = {};
@@ -121,7 +126,8 @@ class Company {
     String searchQuery = Uri.encodeComponent(title!);
 
     try {
-      var response = await http.get(Uri.parse('https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
+      var response = await http.get(Uri.parse(
+          'https://en.wikipedia.org/api/rest_v1/page/summary/$searchQuery'));
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
@@ -136,7 +142,8 @@ class Company {
         return description!;
       } else {
         if (response.statusCode.toString() == "404") {
-          description = 'Failed to load description. HTTP Status Code: ${response.statusCode}';
+          description =
+              'Failed to load description. HTTP Status Code: ${response.statusCode}';
         }
         // Provide more detailed error information
         return 'Failed to load description. HTTP Status Code: ${response.statusCode}';
@@ -181,7 +188,9 @@ class Company {
       ticker: map['ticker'] as String?,
       title: map['title'] as String?,
       description: map['description'] as String?,
-      profile: map['profile'] != null ? FinnhubProfile.fromJson(map['profile']) : null,
+      profile: map['profile'] != null
+          ? FinnhubProfile.fromJson(map['profile'])
+          : null,
     );
   }
 
@@ -237,7 +246,9 @@ class Company {
       String lowerCikStr = value['cik_str'].toString().toLowerCase();
 
       // Check if the query is a subset of any field
-      if (_isSubset(lowerQuery, lowerTicker) || _isSubset(lowerQuery, lowerTitle) || _isSubset(lowerQuery, lowerCikStr)) {
+      if (_isSubset(lowerQuery, lowerTicker) ||
+          _isSubset(lowerQuery, lowerTitle) ||
+          _isSubset(lowerQuery, lowerCikStr)) {
         matches.add(Company(
           cikStr: value['cik_str'],
           ticker: value['ticker'],
@@ -248,14 +259,16 @@ class Company {
 
     // Updated function to calculate similarity score with emphasis on exact matches
     double _similarityScore(String query, String s) {
-      if (s == query) return double.maxFinite; // Maximum score for exact matches
+      if (s == query)
+        return double.maxFinite; // Maximum score for exact matches
 
       int score = 0;
       int lastIndex = -1;
       for (var char in query.split('')) {
         int index = s.indexOf(char, lastIndex + 1);
         if (index != -1) {
-          score += (s.length - index); // Higher score for characters closer to start
+          score +=
+              (s.length - index); // Higher score for characters closer to start
           lastIndex = index;
         }
       }
@@ -265,19 +278,22 @@ class Company {
     // Calculate and sort by total score
     var matchesList = matches.toList();
     matchesList.sort((a, b) {
-      double scoreA = _similarityScore(lowerQuery, a.ticker?.toLowerCase() ?? '') +
-          _similarityScore(lowerQuery, a.title?.toLowerCase() ?? '') +
-          _similarityScore(lowerQuery, a.cikStr.toString());
-      double scoreB = _similarityScore(lowerQuery, b.ticker?.toLowerCase() ?? '') +
-          _similarityScore(lowerQuery, b.title?.toLowerCase() ?? '') +
-          _similarityScore(lowerQuery, b.cikStr.toString());
+      double scoreA =
+          _similarityScore(lowerQuery, a.ticker?.toLowerCase() ?? '') +
+              _similarityScore(lowerQuery, a.title?.toLowerCase() ?? '') +
+              _similarityScore(lowerQuery, a.cikStr.toString());
+      double scoreB =
+          _similarityScore(lowerQuery, b.ticker?.toLowerCase() ?? '') +
+              _similarityScore(lowerQuery, b.title?.toLowerCase() ?? '') +
+              _similarityScore(lowerQuery, b.cikStr.toString());
       return scoreB.compareTo(scoreA);
     });
 
     return matchesList;
   }
 
-  static Future<List<Company>> searchCompaniesByTickers(List<String> tickers) async {
+  static Future<List<Company>> searchCompaniesByTickers(
+      List<String> tickers) async {
     if (tickers.isEmpty) return [];
 
     if (_companyDataCache == null || _companyDataCache!.isEmpty) {
@@ -315,7 +331,8 @@ class Company {
   Future<List<Company>> fetchPeerCompanies() async {
     List<String> companySymbols = [];
     final response = await http.get(
-      Uri.parse('https://finnhub.io/api/v1/stock/peers?symbol=$ticker&token=$apiFinnhubKey'),
+      Uri.parse(
+          'https://finnhub.io/api/v1/stock/peers?symbol=$ticker&token=$apiFinnhubKey'),
     );
 
     if (response.statusCode == 200) {
@@ -393,7 +410,9 @@ class FinnhubProfile {
     );
   }
 
-  String? getLogo () => weburl != null && weburl!.isNotEmpty ? 'https://logo.clearbit.com/${Uri.parse(weburl!).host}' : null;
+  String? getLogo() => weburl != null && weburl!.isNotEmpty
+      ? 'https://logo.clearbit.com/${Uri.parse(weburl!).host}'
+      : null;
 
   Map<String, dynamic> toMap() {
     return {
@@ -453,7 +472,8 @@ class SECEdgar {
         var jsonData = json.decode(response.body);
         return SECEdgar(secData: jsonData);
       } else {
-        throw Exception('Failed to load SEC data. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load SEC data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('An error occurred: $e');
@@ -462,7 +482,9 @@ class SECEdgar {
 
   // Process 'filings' data
   void _processFilings() {
-    if (secData != null && secData!['filings'] != null && secData!['filings']['recent'] != null) {
+    if (secData != null &&
+        secData!['filings'] != null &&
+        secData!['filings']['recent'] != null) {
       Map<String, dynamic> recentFilings = secData!['filings']['recent'];
       filings = [];
       int filingCount = recentFilings[recentFilings.keys.first].length;
@@ -492,7 +514,8 @@ class SECEdgar {
     String primaryDocument = filing['primaryDocument'] ?? '';
 
     // Construct the URL
-    String url = '$baseUrl$cikNumber/$formattedAccessionNumber/$primaryDocument';
+    String url =
+        '$baseUrl$cikNumber/$formattedAccessionNumber/$primaryDocument';
     return url;
   }
 }

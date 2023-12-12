@@ -41,12 +41,18 @@ class _MyHomePageState extends State<Home> {
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
                   Icons.search,
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
                   CupertinoIcons.search,
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
@@ -62,12 +68,18 @@ class _MyHomePageState extends State<Home> {
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
                   Icons.info_outline,
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
                   CupertinoIcons.info,
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                 ),
                 onPressed: () {
                   Navigator.of(context).push(
@@ -81,21 +93,35 @@ class _MyHomePageState extends State<Home> {
               PlatformIconButton(
                 padding: const EdgeInsets.all(0),
                 materialIcon: Icon(
-                  auth.currentUser != null ? Icons.settings : Icons.person_outline, // Conditional icon
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  auth.currentUser != null
+                      ? Icons.settings
+                      : Icons.person_outline, // Conditional icon
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                   color: Theme.of(context).primaryColor,
                 ),
                 cupertinoIcon: Icon(
-                  auth.currentUser != null ? CupertinoIcons.settings : CupertinoIcons.person, // Conditional Cupertino icon
-                  size: (isLandscape ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height) / 32,
+                  auth.currentUser != null
+                      ? CupertinoIcons.settings
+                      : CupertinoIcons.person, // Conditional Cupertino icon
+                  size: (isLandscape
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.height) /
+                      32,
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context)
+                      .push(
                     platformPageRoute(
                       context: context,
-                      builder: (_) => auth.currentUser != null ? const Settings() : const Login(),
+                      builder: (_) => auth.currentUser != null
+                          ? const Settings()
+                          : const Login(),
                     ),
-                  ).then((value) {
+                  )
+                      .then((value) {
                     if (value is bool && value) {
                       setState(() {});
                     }
@@ -111,13 +137,12 @@ class _MyHomePageState extends State<Home> {
                 height: isLandscape ? double.infinity : null,
                 width: isLandscape ? null : double.infinity,
                 child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: isLandscape
-                        ? Column(children: navBar)
-                        : Row(children: navBar),
-                  )
-                ),
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: isLandscape
+                      ? Column(children: navBar)
+                      : Row(children: navBar),
+                )),
               ),
             );
 
@@ -130,52 +155,47 @@ class _MyHomePageState extends State<Home> {
                       const SizedBox(
                         height: 8,
                       ),
-
                     NewsSection(
-                      title: "Market News",
-                      description: "What's going on in the world",
-                      newsFuture: newsController.getMarketNews()
-                    ),
-
+                        title: "Market News",
+                        description: "What's going on in the world",
+                        newsFuture: newsController.getMarketNews()),
                     if (userDoc != null)
                       CompanySection(
-                        companies: Company.searchCompaniesByTickers(userDoc!.getSortedTickers()),
+                        companies: Company.searchCompaniesByTickers(
+                            userDoc!.getSortedTickers()),
                         title: "Your Favorite Companies",
                         description: "Companies you have bookmarked",
-                        onFavoriteChanged: (){setState(() {});},
+                        onFavoriteChanged: () {
+                          setState(() {});
+                        },
                       ),
-
                     NewsSection(
                         title: "Forex News",
-                        description: "The foreign exchange market is a global decentralized or over-the-counter market for the trading of currencies",
-                        newsFuture: newsController.getMarketNews(MarketNewsCategory.forex)
-                    ),
-
+                        description:
+                            "The foreign exchange market is a global decentralized or over-the-counter market for the trading of currencies",
+                        newsFuture: newsController
+                            .getMarketNews(MarketNewsCategory.forex)),
                     CompanySection(
                       companies: Company.fetchRandomCompanies(5),
                       title: "Trending This Week",
                     ),
-
                     if (userDoc != null)
                       CompanySection(
                         companies: userDoc!.getRecommendations(),
                         title: "Recommended Companies For Andrew Friedman",
                       ),
-
                     CompanySection(
                       companies: Company.fetchRandomCompanies(5),
                       title: "All Time Popular",
                     ),
-
                     NewsSection(
                         title: "Crypto News",
-                        newsFuture: newsController.getMarketNews(MarketNewsCategory.crypto)
-                    ),
-
+                        newsFuture: newsController
+                            .getMarketNews(MarketNewsCategory.crypto)),
                     NewsSection(
                         title: "Merger News",
-                        newsFuture: newsController.getMarketNews(MarketNewsCategory.merger)
-                    ),
+                        newsFuture: newsController
+                            .getMarketNews(MarketNewsCategory.merger)),
                   ],
                 ),
               ),

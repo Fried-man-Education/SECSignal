@@ -15,17 +15,17 @@ class PlatformListView extends StatelessWidget {
     if (PlatformProvider.of(context)!.platform == TargetPlatform.macOS) {
       return CupertinoScrollbar(
           child: ListView(
-            children: children,
-          )
-      );
+        children: children,
+      ));
     }
 
-    if (PlatformProvider.of(context)!.platform == TargetPlatform.windows || PlatformProvider.of(context)!.platform == TargetPlatform.linux || PlatformProvider.of(context)!.platform == TargetPlatform.fuchsia) {
+    if (PlatformProvider.of(context)!.platform == TargetPlatform.windows ||
+        PlatformProvider.of(context)!.platform == TargetPlatform.linux ||
+        PlatformProvider.of(context)!.platform == TargetPlatform.fuchsia) {
       return Scrollbar(
           child: ListView(
-            children: children,
-          )
-      );
+        children: children,
+      ));
     }
 
     return SingleChildScrollView(

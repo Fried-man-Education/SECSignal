@@ -29,10 +29,10 @@ class PreviewCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                     child: Container(
-                        height: 250,
-                        width: 250,
-                        color: Theme.of(context).primaryColor,
-                        child: header,
+                      height: 250,
+                      width: 250,
+                      color: Theme.of(context).primaryColor,
+                      child: header,
                     ),
                   ),
                 ),
@@ -44,14 +44,12 @@ class PreviewCard extends StatelessWidget {
                     children: [
                       SizedBox(
                         height: 50,
-                        child: AutoSizeText(
-                            title,
+                        child: AutoSizeText(title,
                             style: const TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
                             ),
-                            textAlign: TextAlign.center
-                        ),
+                            textAlign: TextAlign.center),
                       ),
                       Flexible(
                         child: footer,

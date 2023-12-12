@@ -1,13 +1,13 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart' as yahoo;
-import 'package:fl_chart/fl_chart.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart'
+    as yahoo;
 
 class StockGraphCard extends StatefulWidget {
   final String ticker;
@@ -24,7 +24,8 @@ class _StockGraphCardState extends State<StockGraphCard> {
   @override
   void initState() {
     super.initState();
-    _stockDataFuture = yahoo.YahooFinanceDailyReader().getDailyData(widget.ticker);
+    _stockDataFuture =
+        yahoo.YahooFinanceDailyReader().getDailyData(widget.ticker);
   }
 
   @override
@@ -47,12 +48,15 @@ class _StockGraphCardState extends State<StockGraphCard> {
           } else {
             List<FlSpot> spots = _getSpots(snapshot.data!);
 
-            double maxY = List<double>.from(snapshot.data!["indicators"]["quote"].first["open"]).reduce(max) * 1.15;  // 110% of the highest value
+            double maxY = List<double>.from(
+                        snapshot.data!["indicators"]["quote"].first["open"])
+                    .reduce(max) *
+                1.15; // 110% of the highest value
             if (maxY > 1) {
               maxY = maxY.roundToDouble();
             }
 
-            double interval = (maxY - 0) * 0.15;  // 15% of the range
+            double interval = (maxY - 0) * 0.15; // 15% of the range
             if (interval > 1) {
               interval = interval.roundToDouble();
             }
@@ -67,8 +71,11 @@ class _StockGraphCardState extends State<StockGraphCard> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Stock Chart",
-                        style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
-                            ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                        style: PlatformProvider.of(context)!.platform ==
+                                TargetPlatform.iOS
+                            ? CupertinoTheme.of(context)
+                                .textTheme
+                                .navLargeTitleTextStyle
                             : Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
@@ -77,7 +84,10 @@ class _StockGraphCardState extends State<StockGraphCard> {
                       child: Text(
                         "Up to last five years",
                         style: Platform.isIOS
-                            ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey)
+                            ? CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .copyWith(color: Colors.grey)
                             : Theme.of(context).textTheme.headlineMedium!,
                       ),
                     ),
@@ -105,25 +115,28 @@ class _StockGraphCardState extends State<StockGraphCard> {
                                 show: true,
                                 bottomTitles: AxisTitles(
                                     sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 30,
-                                      interval: const Duration(days: 365).inMilliseconds / 1000,
-                                      getTitlesWidget: _bottomTitleWidgets,
-                                    )
-                                ),
+                                  showTitles: true,
+                                  reservedSize: 30,
+                                  interval:
+                                      const Duration(days: 365).inMilliseconds /
+                                          1000,
+                                  getTitlesWidget: _bottomTitleWidgets,
+                                )),
                                 rightTitles: AxisTitles(
                                     sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 44,
-                                      interval: interval,
-                                    )
-                                ),
-                                leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                  showTitles: true,
+                                  reservedSize: 44,
+                                  interval: interval,
+                                )),
+                                leftTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false)),
+                                topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false)),
                               ),
                               borderData: FlBorderData(
                                 show: true,
-                                border: Border.all(color: const Color(0xff37434d), width: 1),
+                                border: Border.all(
+                                    color: const Color(0xff37434d), width: 1),
                               ),
                               lineBarsData: [
                                 LineChartBarData(
@@ -138,8 +151,11 @@ class _StockGraphCardState extends State<StockGraphCard> {
                               ],
                               lineTouchData: LineTouchData(
                                 touchTooltipData: LineTouchTooltipData(
-                                  tooltipBgColor: Theme.of(context).primaryColor, // Set your desired color here
-                                  getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                                  tooltipBgColor:
+                                      Theme.of(context).primaryColor,
+                                  // Set your desired color here
+                                  getTooltipItems:
+                                      (List<LineBarSpot> touchedBarSpots) {
                                     return touchedBarSpots.map((barSpot) {
                                       return LineTooltipItem(
                                         '${(barSpot.y * 100).roundToDouble() / 100}',
@@ -148,8 +164,7 @@ class _StockGraphCardState extends State<StockGraphCard> {
                                     }).toList();
                                   },
                                 ),
-                              )
-                          ),
+                              )),
                         ),
                       ),
                     ),
@@ -165,10 +180,14 @@ class _StockGraphCardState extends State<StockGraphCard> {
 
   List<FlSpot> _getSpots(Map<String, dynamic> data) {
     List<int> timestamps = List<int>.from(data["timestamp"]);
-    List<double> openPrices = List<double>.from(data["indicators"]["quote"].first["open"]);
+    List<double> openPrices =
+        List<double>.from(data["indicators"]["quote"].first["open"]);
 
     // Determine the cutoff timestamp for one year ago
-    int oneYearAgoTimestamp = DateTime.now().subtract(const Duration(days: 365 * 5)).millisecondsSinceEpoch ~/ 1000;
+    int oneYearAgoTimestamp = DateTime.now()
+            .subtract(const Duration(days: 365 * 5))
+            .millisecondsSinceEpoch ~/
+        1000;
 
     List<FlSpot> spots = [];
     for (int i = 0; i < timestamps.length; i++) {
@@ -183,16 +202,21 @@ class _StockGraphCardState extends State<StockGraphCard> {
   }
 
   Widget _bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 16);
+    const style = TextStyle(
+        color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 16);
     DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt() * 1000);
     String year = DateFormat('yyyy').format(date);
 
     // Calculate the start of the current year
     DateTime startOfCurrentYear = DateTime(DateTime.now().year);
-    int startOfCurrentYearTimestamp = startOfCurrentYear.millisecondsSinceEpoch ~/ 1000;
+    int startOfCurrentYearTimestamp =
+        startOfCurrentYear.millisecondsSinceEpoch ~/ 1000;
 
     // Display the label if it's the start of a year or the current year
-    bool shouldDisplayYear = ((date.millisecondsSinceEpoch ~/ 1000) % (365 * 24 * 3600) == 0) || (date.millisecondsSinceEpoch ~/ 1000) >= startOfCurrentYearTimestamp;
+    bool shouldDisplayYear =
+        ((date.millisecondsSinceEpoch ~/ 1000) % (365 * 24 * 3600) == 0) ||
+            (date.millisecondsSinceEpoch ~/ 1000) >=
+                startOfCurrentYearTimestamp;
 
     return SideTitleWidget(
       axisSide: meta.axisSide,

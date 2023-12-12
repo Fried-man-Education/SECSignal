@@ -28,9 +28,11 @@ class _CompanySearchState extends State<CompanySearch> {
     _debounce?.cancel();
 
     // Set a new timer
-    _debounce = Timer(Duration(milliseconds: query.isNotEmpty ? 500 : 0), () async {
+    _debounce =
+        Timer(Duration(milliseconds: query.isNotEmpty ? 500 : 0), () async {
       var results = await Company.searchCompanies(query);
-      if (mounted) { // Check if the widget is still in the tree
+      if (mounted) {
+        // Check if the widget is still in the tree
         setState(() {
           searchResults = results;
         });
@@ -50,12 +52,15 @@ class _CompanySearchState extends State<CompanySearch> {
             appBar: PlatformAppBar(
               title: Text(
                 "Search Company",
-                style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+                style: isCupertino(context)
+                    ? CupertinoTheme.of(context).textTheme.textStyle
+                    : Theme.of(context).textTheme.bodyMedium!,
               ),
               backgroundColor: Theme.of(context).canvasColor,
               material: (_, __) => MaterialAppBarData(
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
+                  icon: Icon(Icons.arrow_back,
+                      color: Theme.of(context).primaryColor),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -86,7 +91,8 @@ class _CompanySearchState extends State<CompanySearch> {
                           ),
                           prefix: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Icon(CupertinoIcons.search, color: Colors.grey),
+                            child:
+                                Icon(CupertinoIcons.search, color: Colors.grey),
                           ),
                         ),
                         material: (_, __) => MaterialTextFieldData(
@@ -96,10 +102,12 @@ class _CompanySearchState extends State<CompanySearch> {
                               borderSide: BorderSide(color: borderColor),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor),
                             ),
                             isDense: true,
-                            prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                            prefixIcon:
+                                const Icon(Icons.search, color: Colors.grey),
                           ),
                         ),
                         onChanged: onSearchChanged,
@@ -115,7 +123,8 @@ class _CompanySearchState extends State<CompanySearch> {
                             Navigator.of(context).push(
                               platformPageRoute(
                                 context: context,
-                                builder: (_) => CompanyProfile(company: searchResults[index]),
+                                builder: (_) => CompanyProfile(
+                                    company: searchResults[index]),
                               ),
                             );
                           },
@@ -127,7 +136,15 @@ class _CompanySearchState extends State<CompanySearch> {
                                 children: [
                                   Text(
                                     "${searchResults[index].title} (${searchResults[index].ticker})",
-                                    style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+                                    style: PlatformProvider.of(context)!
+                                                .platform ==
+                                            TargetPlatform.iOS
+                                        ? CupertinoTheme.of(context)
+                                            .textTheme
+                                            .navLargeTitleTextStyle
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
                                   ),
                                   Text(
                                     "Central Index Key (CIK): ${searchResults[index].cikStr}",
@@ -143,8 +160,7 @@ class _CompanySearchState extends State<CompanySearch> {
                 ],
               ),
             ),
-          )
-      ),
+          )),
     );
   }
 }

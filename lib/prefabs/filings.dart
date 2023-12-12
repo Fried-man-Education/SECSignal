@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:secsignal/main.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'PreviewCard.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 
 class FilingSection extends StatefulWidget {
   final Future<List<Map<String, dynamic>>> filings;
@@ -46,7 +45,8 @@ class _FilingSectionState extends State<FilingSection> {
             List<Widget> children = [];
 
             // Header and description widgets, displayed in all states except error or empty data
-            if (snapshot.connectionState != ConnectionState.done || (snapshot.hasData && snapshot.data!.isNotEmpty)) {
+            if (snapshot.connectionState != ConnectionState.done ||
+                (snapshot.hasData && snapshot.data!.isNotEmpty)) {
               children.add(
                 Align(
                   alignment: Alignment.centerLeft,
@@ -54,7 +54,11 @@ class _FilingSectionState extends State<FilingSection> {
                     padding: const EdgeInsets.only(left: 20),
                     child: Text(
                       widget.title,
-                      style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+                      style: isCupertino(context)
+                          ? CupertinoTheme.of(context)
+                              .textTheme
+                              .navLargeTitleTextStyle
+                          : Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
                 ),
@@ -67,7 +71,12 @@ class _FilingSectionState extends State<FilingSection> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Text(
                         widget.description,
-                        style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey) : Theme.of(context).textTheme.headlineMedium!,
+                        style: isCupertino(context)
+                            ? CupertinoTheme.of(context)
+                                .textTheme
+                                .textStyle
+                                .copyWith(color: Colors.grey)
+                            : Theme.of(context).textTheme.headlineMedium!,
                       ),
                     ),
                   ),
@@ -77,7 +86,9 @@ class _FilingSectionState extends State<FilingSection> {
 
             // FutureBuilder states
             if (snapshot.connectionState == ConnectionState.waiting) {
-              children.add(SizedBox(height: 500, child: Center(child: PlatformCircularProgressIndicator())));
+              children.add(SizedBox(
+                  height: 500,
+                  child: Center(child: PlatformCircularProgressIndicator())));
             } else if (snapshot.hasError) {
               children.add(Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -97,7 +108,8 @@ class _FilingSectionState extends State<FilingSection> {
                       itemBuilder: (context, index) {
                         Map<String, dynamic> filing = snapshot.data![index];
                         return Padding(
-                          padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                          padding:
+                              EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
                           child: FilingCard(filing: filing),
                         );
                       },
@@ -139,7 +151,9 @@ class FilingCard extends StatelessWidget {
       },
       child: PreviewCard(
         header: buildHeader(context),
-        title: filing['primaryDocDescription'].isNotEmpty ? filing['primaryDocDescription'] :  "FORM ${filing['form']}",
+        title: filing['primaryDocDescription'].isNotEmpty
+            ? filing['primaryDocDescription']
+            : "FORM ${filing['form']}",
         footer: buildFooter(),
       ),
     );
@@ -168,9 +182,7 @@ class FilingCard extends StatelessWidget {
       children: [
         Text(
           formatDate(DateTime.parse(filing["acceptanceDateTime"])),
-          style: const TextStyle(
-              color: Colors.grey
-          ),
+          style: const TextStyle(color: Colors.grey),
         ),
         const Spacer(),
         Text("${filing['accessionNumber'] ?? 'No Accession Number'}"),

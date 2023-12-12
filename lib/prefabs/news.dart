@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../classes/news.dart';
@@ -50,7 +47,12 @@ class _NewsSectionState extends State<NewsSection> {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 widget.title,
-                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+                style:
+                    PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                        ? CupertinoTheme.of(context)
+                            .textTheme
+                            .navLargeTitleTextStyle
+                        : Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
@@ -73,7 +75,12 @@ class _NewsSectionState extends State<NewsSection> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     widget.description,
-                    style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey) : Theme.of(context).textTheme.headlineMedium!,
+                    style: isCupertino(context)
+                        ? CupertinoTheme.of(context)
+                            .textTheme
+                            .textStyle
+                            .copyWith(color: Colors.grey)
+                        : Theme.of(context).textTheme.headlineMedium!,
                   ),
                 ),
               ),
@@ -128,26 +135,27 @@ class NewsCard extends StatelessWidget {
       child: Center(
         child: isLoading
             ? PlatformCircularProgressIndicator(
-          material: (_, __) => MaterialProgressIndicatorData(
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).cardColor),
-          ),
-          cupertino: (_, __) => CupertinoProgressIndicatorData(
-            color: Theme.of(context).cardColor,
-          ),
-        )
+                material: (_, __) => MaterialProgressIndicatorData(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).cardColor),
+                ),
+                cupertino: (_, __) => CupertinoProgressIndicatorData(
+                  color: Theme.of(context).cardColor,
+                ),
+              )
             : PlatformIconButton(
-          materialIcon: Icon(
-            Icons.article_outlined, // News-related icon
-            size: 150,
-            color: Theme.of(context).cardColor,
-          ),
-          cupertinoIcon: Icon(
-            CupertinoIcons.news, // News-related icon for Cupertino
-            size: 150,
-            color: Theme.of(context).cardColor,
-          ),
-          onPressed: null,
-        ),
+                materialIcon: Icon(
+                  Icons.article_outlined, // News-related icon
+                  size: 150,
+                  color: Theme.of(context).cardColor,
+                ),
+                cupertinoIcon: Icon(
+                  CupertinoIcons.news, // News-related icon for Cupertino
+                  size: 150,
+                  color: Theme.of(context).cardColor,
+                ),
+                onPressed: null,
+              ),
       ),
     );
   }
@@ -161,7 +169,10 @@ class NewsCard extends StatelessWidget {
           return PlatformAlertDialog(
             title: Text(
               newsItem.headline,
-              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
+              style: PlatformProvider.of(context)!.platform ==
+                      TargetPlatform.iOS
+                  ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
+                  : Theme.of(context).textTheme.titleLarge,
             ),
             content: SizedBox(
               width: MediaQuery.of(context).size.width / 25,
@@ -169,74 +180,78 @@ class NewsCard extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                        child: Image.network(
-                          newsItem.image,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return buildPlaceholder(context, true);
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return buildPlaceholder(context, false);
-                          },
-                        ),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        newsItem.image,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return buildPlaceholder(context, true);
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return buildPlaceholder(context, false);
+                        },
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        formatDate(DateTime.fromMillisecondsSinceEpoch(newsItem.datetime * 1000)),
-                        style: const TextStyle(
-                            color: Colors.grey
-                        ),
+                        formatDate(DateTime.fromMillisecondsSinceEpoch(
+                            newsItem.datetime * 1000)),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ),
                     Text(
                       newsItem.summary,
-                      style: const TextStyle(
-                          fontStyle: FontStyle.italic
-                      ),
+                      style: const TextStyle(fontStyle: FontStyle.italic),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        spacing: 8.0, // Horizontal space between the containers
-                        runSpacing: 8.0, // Vertical space between the containers
-                        children: newsItem.toMap().entries
-                            .where((entry) =>
-                        entry.value != null &&
-                            entry.value != '' &&
-                            entry.value != 'N/A' &&
-                            entry.key != "url" &&
-                            entry.key != "image" &&
-                            entry.key != "headline" &&
-                            entry.key != "summary" &&
-                            entry.key != "datetime" &&
-                            entry.key != "id"
-                        )
-                            .map((entry) {
-                          dynamic value = entry.value;
-                          return ConstrainedBox(
-                            constraints: BoxConstraints(minWidth: 100), // Set a minimal width for the container
-                            child: Container(
-                              margin: EdgeInsets.all(4.0),
-                              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Text(
-                                '$value',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Theme.of(context).dialogBackgroundColor,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Wrap(
+                          spacing: 8.0,
+                          // Horizontal space between the containers
+                          runSpacing: 8.0,
+                          // Vertical space between the containers
+                          children: newsItem
+                              .toMap()
+                              .entries
+                              .where((entry) =>
+                                  entry.value != null &&
+                                  entry.value != '' &&
+                                  entry.value != 'N/A' &&
+                                  entry.key != "url" &&
+                                  entry.key != "image" &&
+                                  entry.key != "headline" &&
+                                  entry.key != "summary" &&
+                                  entry.key != "datetime" &&
+                                  entry.key != "id")
+                              .map((entry) {
+                            dynamic value = entry.value;
+                            return ConstrainedBox(
+                              constraints: BoxConstraints(minWidth: 100),
+                              // Set a minimal width for the container
+                              child: Container(
+                                margin: EdgeInsets.all(4.0),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text(
+                                  '$value',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).dialogBackgroundColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    )
+                            );
+                          }).toList(),
+                        ))
                   ],
                 ),
               ),
@@ -260,7 +275,8 @@ class NewsCard extends StatelessWidget {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Could not launch ${newsItem.url}')),
+                      SnackBar(
+                          content: Text('Could not launch ${newsItem.url}')),
                     );
                   }
                 },
@@ -277,7 +293,8 @@ class NewsCard extends StatelessWidget {
         header: Image.network(
           newsItem.image,
           fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
             if (loadingProgress == null) return child;
             return buildPlaceholder(context, true);
           },
