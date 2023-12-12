@@ -94,6 +94,7 @@ flutter:
   assets:
     - assets/data/company_tickers.json
     - assets/icon_rounded.png
+    - assets/error.gif
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

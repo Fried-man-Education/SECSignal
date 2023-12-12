@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
@@ -173,7 +176,7 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                 scaffoldBackgroundColor: const Color(0xFF121212),
                 textTheme: cupertinoTextTheme,
               ),
-              builder: (context) => const PlatformApp(
+              builder: (context) => PlatformApp(
                 debugShowCheckedModeBanner: false,
                 localizationsDelegates: <LocalizationsDelegate<dynamic>>[
                   DefaultMaterialLocalizations.delegate,
@@ -181,7 +184,7 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
                   DefaultCupertinoLocalizations.delegate,
                 ],
                 title: 'SECSignal',
-                home: Home(),
+                home: (defaultTargetPlatform == TargetPlatform.iOS && kIsWeb) || (defaultTargetPlatform == TargetPlatform.android && kIsWeb) ? const Illegal() : const Home(),
               ),
             ),
           );
@@ -274,4 +277,32 @@ String formatDate(DateTime date) {
     output += (date.hour > 12) ? "PM " : "AM ";
   }
   return output;
+}
+
+class Illegal extends StatelessWidget {
+  const Illegal({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(child: SizedBox(
+                height: min(MediaQuery.of(context).size.height / 2, MediaQuery.of(context).size.width / 2),
+                width: min(MediaQuery.of(context).size.height / 2, MediaQuery.of(context).size.width / 2),
+                child: Image.asset("error.gif"))
+            ),
+            const Text(
+              "Please view on desktop.",
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20
+              ),
+            ),
+          ],
+        )
+    );
+  }
 }
