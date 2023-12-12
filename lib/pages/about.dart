@@ -147,6 +147,8 @@ class _AboutState extends State<About> {
                                         'firebase_core',
                                         'firebase_auth',
                                         'cloud_firestore',
+                                        'yahoo_finance_data_reader',
+                                        'fl_chart'
                                       ])
                                         Padding(
                                           padding: EdgeInsets.symmetric(horizontal: 40),
@@ -210,6 +212,7 @@ class _AboutState extends State<About> {
                                   "Wikimedia REST API" : "https://en.wikipedia.org/api/rest_v1/",
                                   "Finnhub" : "https://finnhub.io",
                                   "Clearbit Logo API" : "https://clearbit.com/logo",
+                                  "Yahoo Finance API" : "https://finance.yahoo.com/"
                                 }.entries.map((entry) => Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 40),
                                   child: RichText(
