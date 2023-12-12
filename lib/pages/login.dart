@@ -93,6 +93,7 @@ class _LoginState extends State<Login> {
                                       padding: const EdgeInsets.all(8),
                                       child: TextField(
                                         controller: inputText["Email"],
+                                        cursorColor: Theme.of(context).primaryColor,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
                                           focusedBorder: OutlineInputBorder(
@@ -114,6 +115,7 @@ class _LoginState extends State<Login> {
                                       child: TextField(
                                         controller: inputText["Password"],
                                         obscureText: true,
+                                        cursorColor: Theme.of(context).primaryColor,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
                                           focusedBorder: OutlineInputBorder(

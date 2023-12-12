@@ -83,6 +83,7 @@ class _CompanySearchState extends State<CompanySearch> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: PlatformTextField(
+                        cursorColor: Theme.of(context).primaryColor,
                         cupertino: (_, __) => CupertinoTextFieldData(
                           placeholder: "Search by Name, CIK, or Ticker",
                           padding: const EdgeInsets.all(12.0),
