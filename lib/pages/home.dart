@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:secsignal/pages/search.dart';
 import 'package:secsignal/pages/settings.dart';
-import 'package:secsignal/pages/signed%20out/login.dart';
+import 'package:secsignal/pages/login.dart';
 
 import '../classes/company.dart';
 import '../classes/news.dart';

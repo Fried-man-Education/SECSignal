@@ -7,8 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../classes/user.dart';
-import '../../main.dart';
+import '../classes/user.dart';
+import '../main.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -138,6 +138,7 @@ class _LoginState extends State<Login> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: PlatformElevatedButton(
+                                              color: Theme.of(context).primaryColor,
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
@@ -259,6 +260,7 @@ class _LoginState extends State<Login> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: PlatformElevatedButton(
+                                              color: Theme.of(context).primaryColor,
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
