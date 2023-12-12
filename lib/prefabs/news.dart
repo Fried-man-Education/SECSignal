@@ -38,50 +38,58 @@ class _NewsSectionState extends State<NewsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              widget.title,
-              style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-        ),
-        if (widget.description.isNotEmpty)
+    return FutureBuilder<List<News>>(
+      future: _cachedNewsFuture,
+      builder: (context, snapshot) {
+        // Header and SizedBox are outside the data check, so they are always displayed
+        List<Widget> children = [
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                  widget.description,
-                  style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-                      color: Colors.grey
-                  ) : Theme.of(context).textTheme.headlineMedium!
+                widget.title,
+                style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle : Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),
-        SizedBox(
-          height: 500,
-          child: FutureBuilder<List<News>>(
-            future: _cachedNewsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No news available.'));
-              } else {
-                // Use snapshot data to build the news list
-                return buildNewsList(snapshot.data!);
-              }
-            },
-          ),
-        ),
-      ],
+          SizedBox(height: 20),
+        ];
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          children.add(Center(child: PlatformCircularProgressIndicator()));
+        } else if (snapshot.hasError) {
+          children.add(Center(child: Text('Error: ${snapshot.error}')));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          // Only return Container when there is no data
+          return Container();
+        } else {
+          // Append the description and news list to the children when data is available
+          if (widget.description.isNotEmpty) {
+            children.add(
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    widget.description,
+                    style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle.copyWith(color: Colors.grey) : Theme.of(context).textTheme.headlineMedium!,
+                  ),
+                ),
+              ),
+            );
+          }
+
+          children.add(
+            SizedBox(
+              height: 500,
+              child: buildNewsList(snapshot.data!),
+            ),
+          );
+        }
+
+        return Column(children: children);
+      },
     );
   }
 
