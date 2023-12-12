@@ -292,7 +292,7 @@ class Illegal extends StatelessWidget {
                     MediaQuery.of(context).size.width / 2),
                 width: min(MediaQuery.of(context).size.height / 2,
                     MediaQuery.of(context).size.width / 2),
-                child: Image.asset("error.gif"))),
+                child: Image.asset("assets/error.gif"))),
         const Text(
           "Please view on desktop.",
           style: TextStyle(color: Colors.grey, fontSize: 20),
