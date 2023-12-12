@@ -243,13 +243,13 @@ class NewsCard extends StatelessWidget {
               ),
             ),
             actions: <Widget>[
-              TextButton(
+              PlatformTextButton(
                 child: Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
-              TextButton(
+              PlatformTextButton(
                 child: const Text('Open Article'),
                 onPressed: () async {
                   final Uri _url = Uri.parse(newsItem.url);
