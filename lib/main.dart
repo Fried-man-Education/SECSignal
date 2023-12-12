@@ -130,11 +130,12 @@ class _SecSignal  extends State<SecSignal> with WidgetsBindingObserver {
           borderColor = isLight ? Colors.black : Colors.white;
 
           return PlatformProvider(
+            initialPlatform: TargetPlatform.iOS,
             settings: PlatformSettingsData(
               iosUsesMaterialWidgets: true,
             ),
             builder: (context) => PlatformTheme(
-              themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+              themeMode: ThemeMode.dark, // isLight ? ThemeMode.light : ThemeMode.dark
               materialLightTheme: ThemeData(
                   primarySwatch: buildMaterialColor(primaryColor),
                   textTheme: textTheme,
