@@ -134,6 +134,7 @@ class _AboutState extends State<About> {
                                 Expanded(
                                   child: Wrap(
                                     direction: Axis.vertical,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
                                     children: [
                                       for (String library in [
                                         'cupertino_icons',
