@@ -79,14 +79,19 @@ class _CompanySectionState extends State<CompanySection> {
         } else {
           content.add(SizedBox(
             height: 500,
-            child: ListView.builder(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Company company = snapshot.data![index];
-                return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
+            child: GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                _controller.jumpTo(_controller.offset - details.delta.dx);
               },
+              child: ListView.builder(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Company company = snapshot.data![index];
+                  return CompanyCard(company: company, onFavoriteChanged: widget.onFavoriteChanged);
+                },
+              ),
             ),
           ));
         }

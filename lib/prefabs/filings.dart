@@ -76,17 +76,22 @@ class _FilingSectionState extends State<FilingSection> {
             } else {
               return SizedBox(
                 height: 500,
-                child: ListView.builder(
-                  controller: _controller,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> filing = snapshot.data![index];
-                    return Padding(
-                      padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
-                      child: FilingCard(filing: filing),
-                    );
+                child: GestureDetector(
+                  onHorizontalDragUpdate: (details) {
+                    _controller.jumpTo(_controller.offset - details.delta.dx);
                   },
+                  child: ListView.builder(
+                    controller: _controller,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> filing = snapshot.data![index];
+                      return Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                        child: FilingCard(filing: filing),
+                      );
+                    },
+                  ),
                 ),
               );
             }
