@@ -54,7 +54,6 @@ class _NewsSectionState extends State<NewsSection> {
               ),
             ),
           ),
-          SizedBox(height: 20),
         ];
 
         if (snapshot.connectionState == ConnectionState.waiting) {
