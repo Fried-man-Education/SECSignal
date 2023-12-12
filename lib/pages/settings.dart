@@ -24,7 +24,10 @@ class _SettingsState extends State<Settings> {
         bottom: false,
         child: PlatformScaffold(
           appBar: PlatformAppBar(
-            title: const Text("Settings"),
+            title: Text(
+              "Settings",
+              style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+            ),
             backgroundColor: Theme.of(context).canvasColor,
             material: (_, __) => MaterialAppBarData(
               leading: IconButton(

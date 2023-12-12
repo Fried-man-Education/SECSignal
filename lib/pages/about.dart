@@ -24,7 +24,10 @@ class _AboutState extends State<About> {
         bottom: false,
         child: PlatformScaffold(
           appBar: PlatformAppBar(
-            title: const Text("About SECSignal"),
+            title: Text(
+              "About SECSignal",
+              style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+            ),
             backgroundColor: Theme.of(context).canvasColor,
             material: (_, __) => MaterialAppBarData(
               leading: IconButton(

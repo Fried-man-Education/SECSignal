@@ -49,7 +49,10 @@ class _CompanyProfile extends State<CompanyProfile> {
       bottom: false,
       child: PlatformScaffold(
         appBar: PlatformAppBar(
-          title: Text(widget.company.getName()),
+          title: Text(
+            widget.company.getName(),
+            style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+          ),
           backgroundColor: Theme.of(context).canvasColor,
           material: (_, __) => MaterialAppBarData(
             leading: IconButton(

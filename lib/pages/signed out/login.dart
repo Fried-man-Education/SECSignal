@@ -33,7 +33,10 @@ class _LoginState extends State<Login> {
           bottom: false,
           child: PlatformScaffold(
               appBar: PlatformAppBar(
-                title: const Text("Login"),
+                title: Text(
+                  "Login",
+                  style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+                ),
                 backgroundColor: Theme
                     .of(context)
                     .canvasColor,

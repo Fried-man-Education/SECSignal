@@ -48,7 +48,10 @@ class _CompanySearchState extends State<CompanySearch> {
           bottom: false,
           child: PlatformScaffold(
             appBar: PlatformAppBar(
-              title: const Text("Search Company"),
+              title: Text(
+                "Search Company",
+                style: isCupertino(context) ? CupertinoTheme.of(context).textTheme.textStyle : Theme.of(context).textTheme.bodyMedium!,
+              ),
               backgroundColor: Theme.of(context).canvasColor,
               material: (_, __) => MaterialAppBarData(
                 leading: IconButton(
