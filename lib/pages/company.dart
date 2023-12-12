@@ -185,7 +185,10 @@ class _CompanyProfile extends State<CompanyProfile> {
                             if (value.isEmpty) return "N/A";
                             // Format phone number
                             String rawNumber =
-                                int.parse(value).toInt().toString();
+                                int.parse(value).toString();
+                            if (rawNumber.length == 10) {
+                              return '(${rawNumber.substring(0, 3)}) ${rawNumber.substring(3, 6)}-${rawNumber.substring(6, 10)}';
+                            }
                             return '+${rawNumber.substring(0, 1)} (${rawNumber.substring(1, 4)}) ${rawNumber.substring(4, 7)}-${rawNumber.substring(7, 11)}';
                           }
                           return value.toString();

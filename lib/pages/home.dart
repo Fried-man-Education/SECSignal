@@ -176,7 +176,7 @@ class _MyHomePageState extends State<Home> {
                         newsFuture: newsController
                             .getMarketNews(MarketNewsCategory.forex)),
                     CompanySection(
-                      companies: Company.fetchRandomCompanies(5),
+                      companies: Company.searchCompaniesByTickers(["SE", "MSCI", "RILY", "BMBL", "RBLX", "VERX", "LYB"]),
                       title: "Trending This Week",
                     ),
                     if (userDoc != null)
@@ -184,14 +184,14 @@ class _MyHomePageState extends State<Home> {
                         companies: userDoc!.getRecommendations(),
                         title: "Recommended Companies For Andrew Friedman",
                       ),
-                    CompanySection(
-                      companies: Company.fetchRandomCompanies(5),
-                      title: "All Time Popular",
-                    ),
                     NewsSection(
                         title: "Crypto News",
                         newsFuture: newsController
                             .getMarketNews(MarketNewsCategory.crypto)),
+                    CompanySection(
+                      companies: Company.searchCompaniesByTickers(["EPAM", "EURN", "DOLE", "EDR", "MSI", "ROOT", "BILL"]),
+                      title: "All Time Popular",
+                    ),
                     NewsSection(
                         title: "Merger News",
                         newsFuture: newsController
