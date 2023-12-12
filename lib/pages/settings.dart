@@ -124,9 +124,7 @@ class _SettingsState extends State<Settings> {
                               children: [
                                 Text(
                                   "Account Actions",
-                                  style: PlatformProvider.of(context)!
-                                              .platform ==
-                                          TargetPlatform.iOS
+                                  style: isCupertino(context)
                                       ? CupertinoTheme.of(context)
                                           .textTheme
                                           .navLargeTitleTextStyle
@@ -163,11 +161,22 @@ class _SettingsState extends State<Settings> {
                                         showPlatformDialog<void>(
                                           context: context,
                                           builder: (_) => PlatformAlertDialog(
-                                            title: const Text(
-                                                "Password Reset Email Sent"),
+                                            title: Text(
+                                              "Password Reset Email Sent",
+                                              style: isCupertino(context)
+                                                  ? CupertinoTheme.of(context)
+                                                  .textTheme
+                                                  .navLargeTitleTextStyle
+                                                  : Theme.of(context).textTheme.titleLarge,
+                                            ),
                                             actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('OK'),
+                                              PlatformTextButton(
+                                                child: Text(
+                                                    'OK',
+                                                  style: isMaterial(context) ? TextStyle(
+                                                      color: Theme.of(context).primaryColor
+                                                  ) : null,
+                                                ),
                                                 onPressed: () =>
                                                     Navigator.pop(context),
                                               ),
@@ -210,10 +219,22 @@ class _SettingsState extends State<Settings> {
                                             context: context,
                                             builder: (_) => PlatformAlertDialog(
                                               title:
-                                                  const Text("Account Deleted"),
+                                                  Text(
+                                                    "Account Deleted",
+                                                    style: isCupertino(context)
+                                                        ? CupertinoTheme.of(context)
+                                                        .textTheme
+                                                        .navLargeTitleTextStyle
+                                                        : Theme.of(context).textTheme.titleLarge,
+                                                  ),
                                               actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('OK'),
+                                                PlatformTextButton(
+                                                  child: Text(
+                                                    'OK',
+                                                    style: isMaterial(context) ? TextStyle(
+                                                        color: Theme.of(context).primaryColor
+                                                    ) : null,
+                                                  ),
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                     Navigator.pop(
@@ -304,14 +325,31 @@ class _SettingsState extends State<Settings> {
                                         showPlatformDialog(
                                           context: context,
                                           builder: (_) => PlatformAlertDialog(
-                                            title: Text("Favorites Cleared"),
+                                            title: Text(
+                                              "Favorites Cleared",
+                                              style: isCupertino(context)
+                                                  ? CupertinoTheme.of(context)
+                                                  .textTheme
+                                                  .navLargeTitleTextStyle
+                                                  : Theme.of(context).textTheme.titleLarge,
+                                            ),
                                             content: Text(
                                               "Your favorites have been successfully cleared.",
+                                              style: isCupertino(context)
+                                                  ? CupertinoTheme.of(context)
+                                                  .textTheme
+                                                  .textStyle
+                                                  : Theme.of(context).textTheme.bodyMedium,
                                               textAlign: TextAlign.center,
                                             ),
                                             actions: <Widget>[
-                                              TextButton(
-                                                child: Text('OK'),
+                                              PlatformTextButton(
+                                                child: Text(
+                                                  'OK',
+                                                  style: isMaterial(context) ? TextStyle(
+                                                      color: Theme.of(context).primaryColor
+                                                  ) : null,
+                                                ),
                                                 onPressed: () =>
                                                     Navigator.of(context).pop(),
                                               ),
