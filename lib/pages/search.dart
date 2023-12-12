@@ -147,7 +147,7 @@ class _CompanySearchState extends State<CompanySearch> {
                                             .titleLarge,
                                   ),
                                   Text(
-                                    "Central Index Key (CIK): ${searchResults[index].cikStr}",
+                                    "Central Index Key (CIK): ${searchResults[index].cikStr.toString().padLeft(10, '0')}",
                                   ),
                                 ],
                               ), // Customize as per your Company class
