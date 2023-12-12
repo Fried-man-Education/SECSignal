@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:secsignal/pages/home.dart';
 
 import 'classes/user.dart';
@@ -229,4 +230,48 @@ String toTitleCase(String text) {
     }
     return '';
   }).join(' ');
+}
+
+String formatDate(DateTime date) {
+  String output = "";
+  Duration diff = DateTime.now().difference(date);
+  if (diff.inHours < 13) {
+    if (diff.inHours < 1) {
+      if (diff.inMinutes < 1) {
+        if (diff.inSeconds < 10) {
+          return "Now";
+        }
+        output += "${diff.inSeconds} seconds ago";
+      } else if (diff.inMinutes == 1) {
+        output += "${diff.inMinutes} minute ago";
+      } else {
+        output += "${diff.inMinutes} minutes ago";
+      }
+    } else if (diff.inHours == 1) {
+      output += "${diff.inHours} hour ago";
+    } else {
+      output += "${diff.inHours} hours ago";
+    }
+  } else {
+    if (diff.inDays == 0 && date.day == DateTime.now().day) {
+      output += "Today";
+    } else if (diff.inDays < 7) {
+      output += DateFormat('EEEE').format(date);
+    } else if (date.year == DateTime.now().year) {
+      output += "${DateFormat.MMMM().format(date)} ${date.day}";
+    } else {
+      output += "${date.month}/${date.day}/${date.year}";
+    }
+    output += " ";
+    if (date.hour == 0) {
+      output += "12";
+    } else {
+      output += (date.hour > 12)
+          ? (date.hour - 12).toString()
+          : date.hour.toString();
+    }
+    output += ":${date.minute.toString().padLeft(2, '0')} ";
+    output += (date.hour > 12) ? "PM " : "AM ";
+  }
+  return output;
 }

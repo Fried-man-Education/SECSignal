@@ -149,7 +149,7 @@ class FilingCard extends StatelessWidget {
     return Column(
       children: [
         Text(
-          DateFormat('MMMM dd, yyyy h:mm a').format(DateTime.parse(filing["acceptanceDateTime"])),
+          formatDate(DateTime.parse(filing["acceptanceDateTime"])),
           style: const TextStyle(
               color: Colors.grey
           ),

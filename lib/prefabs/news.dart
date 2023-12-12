@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../classes/news.dart';
+import '../main.dart';
 import 'PreviewCard.dart';
 
 class NewsSection extends StatefulWidget {
@@ -185,7 +186,7 @@ class NewsCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        DateFormat('MMMM dd, yyyy h:mm a').format(DateTime.fromMillisecondsSinceEpoch(newsItem.datetime * 1000)),
+                        formatDate(DateTime.fromMillisecondsSinceEpoch(newsItem.datetime * 1000)),
                         style: const TextStyle(
                             color: Colors.grey
                         ),
