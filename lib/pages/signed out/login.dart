@@ -105,10 +105,16 @@ class _LoginState extends State<Login> {
                                       padding: const EdgeInsets.all(8),
                                       child: TextField(
                                         controller: inputText["Email"],
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           border: OutlineInputBorder(),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                                          ),
                                           prefixIcon: Icon(Icons.person),
                                           labelText: 'Email',
+                                          labelStyle: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -117,10 +123,16 @@ class _LoginState extends State<Login> {
                                       child: TextField(
                                         controller: inputText["Password"],
                                         obscureText: true,
-                                        decoration: const InputDecoration(
+                                        decoration: InputDecoration(
                                           border: OutlineInputBorder(),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+                                          ),
                                           prefixIcon: Icon(Icons.lock),
                                           labelText: 'Password',
+                                          labelStyle: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                          ),
                                         ),
                                       ),
                                     ),
