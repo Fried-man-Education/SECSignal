@@ -55,6 +55,11 @@ class _CompanyProfile extends State<CompanyProfile> {
               icon:
                   Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
               onPressed: () {
+                if (userDoc == null) {
+                  Navigator.pop(context);
+                  return;
+                }
+
                 Navigator.pop(
                     context,
                     isInitiallyFavorited !=
