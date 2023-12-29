@@ -71,6 +71,11 @@ class _CompanyProfile extends State<CompanyProfile> {
             leading: CupertinoNavigationBarBackButton(
               color: Theme.of(context).primaryColor,
               onPressed: () {
+                if (userDoc == null) {
+                  Navigator.pop(context);
+                  return;
+                }
+
                 Navigator.pop(
                     context,
                     isInitiallyFavorited !=
@@ -451,6 +456,9 @@ class _CompanyProfile extends State<CompanyProfile> {
                         return widget.company.secEdgar!.filings!;
                       }(),
                       title: "All Filings"),
+                  SizedBox(
+                    height: 20,
+                  )
                 ],
               ),
             ),
