@@ -61,7 +61,14 @@ class _NewsSectionState extends State<NewsSection> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           children.add(SizedBox(
               height: 500,
-              child: Center(child: PlatformCircularProgressIndicator())));
+              child: Center(child: PlatformCircularProgressIndicator(
+                material: (_, __) =>
+                    MaterialProgressIndicatorData(
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+              ))));
         } else if (snapshot.hasError) {
           children.add(SizedBox(
               height: 500,

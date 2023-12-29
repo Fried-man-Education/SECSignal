@@ -36,15 +36,51 @@ class _StockGraphCardState extends State<StockGraphCard> {
         future: _stockDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return  SizedBox(
-              height: 700,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PlatformCircularProgressIndicator(),
-                  Text("Loading..."),
-                ],
-              ),
+            return  Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Stock Chart",
+                          style: isCupertino(context)
+                              ? CupertinoTheme.of(context)
+                              .textTheme
+                              .navLargeTitleTextStyle
+                              : Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Up to last five years",
+                          style: isCupertino(context)
+                              ? CupertinoTheme.of(context)
+                              .textTheme
+                              .textStyle
+                              .copyWith(color: Colors.grey)
+                              : Theme.of(context).textTheme.headlineMedium!,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 700,
+                        child: Center(
+                          child: PlatformCircularProgressIndicator(
+                            material: (_, __) =>
+                                MaterialProgressIndicatorData(
+                                  valueColor:
+                                  AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor),
+                                ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
             );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Container();
