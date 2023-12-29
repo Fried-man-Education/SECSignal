@@ -295,6 +295,16 @@ class _CompanyProfile extends State<CompanyProfile> {
                                             padding:
                                                 const EdgeInsets.only(top: 8),
                                             child: PlatformElevatedButton(
+                                              material: (_, __) => MaterialElevatedButtonData(
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(
+                                                    Theme.of(context).primaryColor, // Background color set to the theme's primary color
+                                                  ),
+                                                  foregroundColor: MaterialStateProperty.all<Color>(
+                                                    Theme.of(context).scaffoldBackgroundColor, // Text color set to white
+                                                  ),
+                                                ),
+                                              ),
                                               onPressed: () async {
                                                 final Uri _url = Uri.parse(
                                                     widget.company.profile!
