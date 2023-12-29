@@ -58,6 +58,27 @@ class _NewsSectionState extends State<NewsSection> {
           ),
         ];
 
+        // Append the description and news list to the children when data is available
+        if (widget.description.isNotEmpty) {
+          children.add(
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  widget.description,
+                  style: isCupertino(context)
+                      ? CupertinoTheme.of(context)
+                      .textTheme
+                      .textStyle
+                      .copyWith(color: Colors.grey)
+                      : Theme.of(context).textTheme.headlineMedium!,
+                ),
+              ),
+            ),
+          );
+        }
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           children.add(SizedBox(
               height: 500,
@@ -77,27 +98,6 @@ class _NewsSectionState extends State<NewsSection> {
           // Only return Container when there is no data
           return Container();
         } else {
-          // Append the description and news list to the children when data is available
-          if (widget.description.isNotEmpty) {
-            children.add(
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    widget.description,
-                    style: isCupertino(context)
-                        ? CupertinoTheme.of(context)
-                            .textTheme
-                            .textStyle
-                            .copyWith(color: Colors.grey)
-                        : Theme.of(context).textTheme.headlineMedium!,
-                  ),
-                ),
-              ),
-            );
-          }
-
           children.add(
             SizedBox(
               height: 500,
