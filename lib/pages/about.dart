@@ -95,6 +95,7 @@ class _AboutState extends State<About> {
                     color: const Color(0xFF000B10),
                     child: Center(
                       child: SizedBox(
+                        height: MediaQuery.of(context).size.width / 2.5,
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: Image.asset(
                           'assets/icon_rounded.png',
