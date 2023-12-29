@@ -18,6 +18,22 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
+  final List<String> libraries = [
+    'cupertino_icons',
+    'flutter_platform_widgets',
+    'http',
+    'auto_size_text',
+    'url_launcher',
+    'intl',
+    'font_awesome_flutter',
+    'package_info_plus',
+    'firebase_core',
+    'firebase_auth',
+    'cloud_firestore',
+    'yahoo_finance_data_reader',
+    'fl_chart'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -132,100 +148,98 @@ class _AboutState extends State<About> {
                               children: [
                                 Text(
                                   "Packages",
-                                  style: PlatformProvider.of(context)!
-                                              .platform ==
-                                          TargetPlatform.iOS
-                                      ? CupertinoTheme.of(context)
-                                          .textTheme
-                                          .navLargeTitleTextStyle
+                                  style: PlatformProvider.of(context)!.platform == TargetPlatform.iOS
+                                      ? CupertinoTheme.of(context).textTheme.navLargeTitleTextStyle
                                       : Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
                                 Expanded(
-                                  child: Wrap(
-                                    direction: Axis.vertical,
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                  child: PlatformListView(
                                     children: [
-                                      for (String library in [
-                                        'cupertino_icons',
-                                        'flutter_platform_widgets',
-                                        'http',
-                                        'auto_size_text',
-                                        'url_launcher',
-                                        'intl',
-                                        'font_awesome_flutter',
-                                        'package_info_plus',
-                                        'firebase_core',
-                                        'firebase_auth',
-                                        'cloud_firestore',
-                                        'yahoo_finance_data_reader',
-                                        'fl_chart'
-                                      ])
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 40),
-                                          child: RichText(
-                                            text: TextSpan(
-                                                style: PlatformProvider.of(
-                                                                context)!
-                                                            .platform ==
-                                                        TargetPlatform.iOS
-                                                    ? CupertinoTheme.of(context)
-                                                        .textTheme
-                                                        .textStyle
-                                                    : Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium,
-                                                children: [
-                                                  const TextSpan(
-                                                    text: "- ",
-                                                  ),
-                                                  TextSpan(
-                                                    text: library,
-                                                    recognizer:
-                                                        TapGestureRecognizer()
-                                                          ..onTap = () async {
-                                                            final Uri _url =
-                                                                Uri.parse(
-                                                                    'https://pub.dev/packages/$library');
-                                                            if (await canLaunchUrl(
-                                                                _url)) {
-                                                              await launchUrl(
-                                                                _url,
-                                                                mode: LaunchMode
-                                                                    .platformDefault,
-                                                                webOnlyWindowName:
-                                                                    kIsWeb
-                                                                        ? '_blank'
-                                                                        : null,
-                                                              );
-                                                            } else {
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                    content: Text(
-                                                                        'Could not launch $library')),
-                                                              );
-                                                            }
-                                                          },
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                    ),
-                                                  )
-                                                ]),
-                                          ),
-                                        ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(2, (columnIndex) { // Generate 2 columns
+                                          return Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: List.generate(
+                                                (libraries.length / 2).ceil(), // Number of items in each column
+                                                    (index) {
+                                                  int itemIndex = index + columnIndex * (libraries.length / 2).ceil();
+                                                  if (itemIndex < libraries.length) {
+                                                    String library = libraries[itemIndex];
+                                                    return RichText(
+                                                      overflow: TextOverflow.ellipsis,
+                                                      text: TextSpan(
+                                                          style: PlatformProvider.of(
+                                                              context)!
+                                                              .platform ==
+                                                              TargetPlatform.iOS
+                                                              ? CupertinoTheme.of(context)
+                                                              .textTheme
+                                                              .textStyle
+                                                              : Theme.of(context)
+                                                              .textTheme
+                                                              .bodyMedium,
+                                                          children: [
+                                                            const TextSpan(
+                                                              text: "- ",
+                                                            ),
+                                                            TextSpan(
+                                                              text: library,
+                                                              recognizer:
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () async {
+                                                                  final Uri _url =
+                                                                  Uri.parse(
+                                                                      'https://pub.dev/packages/$library');
+                                                                  if (await canLaunchUrl(
+                                                                      _url)) {
+                                                                    await launchUrl(
+                                                                      _url,
+                                                                      mode: LaunchMode
+                                                                          .platformDefault,
+                                                                      webOnlyWindowName:
+                                                                      kIsWeb
+                                                                          ? '_blank'
+                                                                          : null,
+                                                                    );
+                                                                  } else {
+                                                                    ScaffoldMessenger
+                                                                        .of(context)
+                                                                        .showSnackBar(
+                                                                      SnackBar(
+                                                                          content: Text(
+                                                                              'Could not launch $library')),
+                                                                    );
+                                                                  }
+                                                                },
+                                                              style: TextStyle(
+                                                                color: Theme.of(context)
+                                                                    .primaryColor,
+                                                                decoration: TextDecoration
+                                                                    .underline,
+                                                              ),
+                                                            )
+                                                          ]),
+                                                    );
+                                                  } else {
+                                                    return Container(); // Empty container for non-existent items
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
                                     ],
-                                  ),
+                                  )
                                 ),
                               ],
                             ),
                           ),
                         ),
+
                       ),
                       Expanded(
                         child: Card(
@@ -254,59 +268,55 @@ class _AboutState extends State<About> {
                                       "https://clearbit.com/logo",
                                   "Yahoo Finance API":
                                       "https://finance.yahoo.com/"
-                                }.entries.map((entry) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 40),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          style: PlatformProvider.of(context)!
-                                                      .platform ==
-                                                  TargetPlatform.iOS
-                                              ? CupertinoTheme.of(context)
-                                                  .textTheme
-                                                  .textStyle
-                                              : Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium,
-                                          children: [
-                                            const TextSpan(text: "- "),
-                                            TextSpan(
-                                              text: entry.key,
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () async {
-                                                  final Uri _url =
-                                                      Uri.parse(entry.value);
-                                                  if (await canLaunchUrl(
-                                                      _url)) {
-                                                    await launchUrl(
-                                                      _url,
-                                                      mode: LaunchMode
-                                                          .platformDefault,
-                                                      webOnlyWindowName: kIsWeb
-                                                          ? '_blank'
-                                                          : null,
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                          content: Text(
-                                                              'Could not launch ${entry.key}')),
-                                                    );
-                                                  }
-                                                },
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            ),
-                                          ],
+                                }.entries.map((entry) => RichText(
+                                  text: TextSpan(
+                                    style: PlatformProvider.of(context)!
+                                        .platform ==
+                                        TargetPlatform.iOS
+                                        ? CupertinoTheme.of(context)
+                                        .textTheme
+                                        .textStyle
+                                        : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium,
+                                    children: [
+                                      const TextSpan(text: "- "),
+                                      TextSpan(
+                                        text: entry.key,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final Uri _url =
+                                            Uri.parse(entry.value);
+                                            if (await canLaunchUrl(
+                                                _url)) {
+                                              await launchUrl(
+                                                _url,
+                                                mode: LaunchMode
+                                                    .platformDefault,
+                                                webOnlyWindowName: kIsWeb
+                                                    ? '_blank'
+                                                    : null,
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(
+                                                  context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                    content: Text(
+                                                        'Could not launch ${entry.key}')),
+                                              );
+                                            }
+                                          },
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColor,
+                                          decoration:
+                                          TextDecoration.underline,
                                         ),
                                       ),
-                                    )),
+                                    ],
+                                  ),
+                                )),
                               ],
                             ),
                           ),
