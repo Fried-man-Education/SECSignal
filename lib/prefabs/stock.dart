@@ -85,10 +85,37 @@ class _StockGraphCardState extends State<StockGraphCard> {
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Container();
           } else {
-            List<FlSpot> spots = _getSpots(snapshot.data!);
+            List<dynamic> rawData = snapshot.data!["indicators"]["quote"].first["open"] as List;
+            List<double> openPrices = [];
 
-            double maxY = List<double>.from(
-                        snapshot.data!["indicators"]["quote"].first["open"])
+            for (int i = 0; i < rawData.length; i++) {
+              var currentValue = rawData[i];
+              double? parsedValue = double.tryParse(currentValue.toString());
+
+              if (parsedValue != null) {
+                // If the current value is parsable, add it to the list.
+                openPrices.add(parsedValue);
+              } else {
+                // If the current value is not parsable, try to use the previous or next valid value.
+                double? replacementValue;
+                if (i > 0 && double.tryParse(rawData[i - 1].toString()) != null) {
+                  // Use the previous value if available and valid.
+                  replacementValue = double.parse(rawData[i - 1].toString());
+                } else if (i < rawData.length - 1 && double.tryParse(rawData[i + 1].toString()) != null) {
+                  // If the previous value isn't available or valid, try the next value.
+                  replacementValue = double.parse(rawData[i + 1].toString());
+                }
+
+                // If a replacement was found and it's not 0, add it to the list.
+                if (replacementValue != null && replacementValue != 0) {
+                  openPrices.add(replacementValue);
+                }
+              }
+            }
+
+            List<FlSpot> spots = _getSpots(snapshot.data!, openPrices);
+
+            double maxY = openPrices
                     .reduce(max) *
                 1.15; // 110% of the highest value
             if (maxY > 1) {
@@ -217,36 +244,8 @@ class _StockGraphCardState extends State<StockGraphCard> {
     );
   }
 
-  List<FlSpot> _getSpots(Map<String, dynamic> data) {
+  List<FlSpot> _getSpots(Map<String, dynamic> data, List<double> openPrices) {
     List<int> timestamps = List<int>.from(data["timestamp"]);
-
-    List<dynamic> rawData = data["indicators"]["quote"].first["open"] as List;
-    List<double> openPrices = [];
-
-    for (int i = 0; i < rawData.length; i++) {
-      var currentValue = rawData[i];
-      double? parsedValue = double.tryParse(currentValue.toString());
-
-      if (parsedValue != null) {
-        // If the current value is parsable, add it to the list.
-        openPrices.add(parsedValue);
-      } else {
-        // If the current value is not parsable, try to use the previous or next valid value.
-        double? replacementValue;
-        if (i > 0 && double.tryParse(rawData[i - 1].toString()) != null) {
-          // Use the previous value if available and valid.
-          replacementValue = double.parse(rawData[i - 1].toString());
-        } else if (i < rawData.length - 1 && double.tryParse(rawData[i + 1].toString()) != null) {
-          // If the previous value isn't available or valid, try the next value.
-          replacementValue = double.parse(rawData[i + 1].toString());
-        }
-
-        // If a replacement was found and it's not 0, add it to the list.
-        if (replacementValue != null && replacementValue != 0) {
-          openPrices.add(replacementValue);
-        }
-      }
-    }
 
     // Determine the cutoff timestamp for one year ago
     int oneYearAgoTimestamp = DateTime.now()
@@ -280,7 +279,7 @@ class _StockGraphCardState extends State<StockGraphCard> {
     // Display the label if it's the start of a year or the current year
     bool shouldDisplayYear =
         ((date.millisecondsSinceEpoch ~/ 1000) % (365 * 24 * 3600) == 0) ||
-            (date.millisecondsSinceEpoch ~/ 1000) >=
+            (date.millisecondsSinceEpoch ~/ 1000) <=
                 startOfCurrentYearTimestamp;
 
     return SideTitleWidget(
