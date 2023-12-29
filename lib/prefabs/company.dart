@@ -102,9 +102,12 @@ class _CompanySectionState extends State<CompanySection> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   Company company = snapshot.data![index];
-                  return CompanyCard(
-                      company: company,
-                      onFavoriteChanged: widget.onFavoriteChanged);
+                  return Padding(
+                    padding: EdgeInsets.only(left: index == 0 ? 8.0 : 0.0),
+                    child: CompanyCard(
+                        company: company,
+                        onFavoriteChanged: widget.onFavoriteChanged),
+                  );
                 },
               ),
             ),
