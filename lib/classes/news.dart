@@ -45,12 +45,19 @@ class News {
       image: json['image'],
       related: json['related'],
       source: json['source'],
-      summary: json['summary'],
+      summary: _stripHtml(json['summary']),
       url: json['url'],
       symbol: json['symbol'],
       from: json['from'],
       to: json['to'],
     );
+  }
+
+  // Helper method to remove HTML tags
+  static String _stripHtml(String? htmlText) {
+    if (htmlText == null) return '';
+    final RegExp regExp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: false);
+    return htmlText.replaceAll(regExp, '').trim();
   }
 
   Map<String, dynamic> toMap() {
