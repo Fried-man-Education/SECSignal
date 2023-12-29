@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -326,9 +327,15 @@ class NewsCard extends StatelessWidget {
         title: newsItem.headline,
         footer: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
+          child: AutoSizeText(
             newsItem.summary,
-            style: const TextStyle(fontSize: 18.0, color: Colors.grey),
+            minFontSize: 15,
+            maxFontSize: 18,
+            style: const TextStyle(
+              fontSize: 18.0,
+              color: Colors.grey,
+            ),
+            textAlign: TextAlign.left,
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),
