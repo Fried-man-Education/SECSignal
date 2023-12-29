@@ -129,7 +129,7 @@ class _AboutState extends State<About> {
                             " the vast sea of corporate filings. Platforms like BAMSEC have dominated this space, offering invaluable tools for professionals, but often come with a hefty price tag, rendering them inaccessible to young and individual investors. "
                             "This financial gatekeeping limits the potential for informed investment decisions and hinders educational opportunities for those striving to learn more about the financial landscape. \n\t\t\t\t\"SECSignal\" was conceived as a modern "
                             "solution to bridge this gap. By recognizing the potential of technology and artificial intelligence, this platform aspires to deliver sophisticated insights from SEC filings in a user-friendly and cost-effective manner. "
-                            "By harnessing the power of AI-driven analysis, SECSignal aims to empower its users with concise financial intelligence, making the intricate details of corporate filings more digestible. It is more than just a tool; it is a movement "
+                            "SECSignal aims to empower its users with concise financial intelligence, making the intricate details of corporate filings more digestible. It is more than just a tool; it is a movement "
                             "towards financial literacy and inclusivity. In a world where information is power, SECSignal strives to ensure that power is available to all."),
                       )
                     ],
