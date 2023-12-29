@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -119,7 +120,16 @@ class UserDoc {
           return StatefulBuilder(
             builder: (context, setState) {
               return PlatformAlertDialog(
-                title: const Text("Enter Your New Name"),
+                title: Text(
+                  "Enter Your New Name",
+                  style: isCupertino(context)
+                      ? CupertinoTheme.of(context)
+                      .textTheme
+                      .navLargeTitleTextStyle
+                      : Theme.of(context)
+                      .textTheme
+                      .titleLarge,
+                ),
                 content: TextField(
                   controller: textEditingController,
                   onChanged: (value) {
@@ -130,20 +140,37 @@ class UserDoc {
                       });
                     }
                   },
+                  cursorColor: Theme.of(context)
+                      .primaryColor,
                   decoration: InputDecoration(
                     hintText: "New Name",
                     errorText: showError ? "Please fill in the field" : null,
-                    errorBorder: const OutlineInputBorder(
+                    errorBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.red, width: 1),
                     ),
-                    focusedErrorBorder: const OutlineInputBorder(
+                    focusedErrorBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.red, width: 2),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context)
+                              .primaryColor),
                     ),
                   ),
                 ),
                 actions: <Widget>[
-                  TextButton(
+                  PlatformTextButton(
                     child: const Text('OK'),
+                    material: (_, __) => MaterialTextButtonData(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).primaryColor, // Background color set to the theme's primary color
+                        ),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).scaffoldBackgroundColor, // Text color set to white
+                        ),
+                      ),
+                    ),
                     onPressed: () {
                       if (userInput.isNotEmpty) {
                         Navigator.of(context).pop(userInput);

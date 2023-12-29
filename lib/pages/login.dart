@@ -404,6 +404,11 @@ class _LoginState extends State<Login> {
                                                                                 Colors.red,
                                                                             width: 2),
                                                                       ),
+                                                                      focusedBorder: OutlineInputBorder(
+                                                                        borderSide: BorderSide(
+                                                                            color: Theme.of(context)
+                                                                                .primaryColor),
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                   actions: <Widget>[
