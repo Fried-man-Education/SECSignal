@@ -51,7 +51,7 @@ class _AboutState extends State<About> {
             trailingActions: [
               IconButton(
                   onPressed: () async {
-                    String url = "https://github.com/Fried-man";
+                    String url = "https://github.com/Fried-man-Education/SECSignal";
                     final Uri _url = Uri.parse(url);
                     if (await canLaunchUrl(_url)) {
                       await launchUrl(
