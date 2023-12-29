@@ -59,9 +59,13 @@ class _NewsSectionState extends State<NewsSection> {
         ];
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          children.add(Center(child: PlatformCircularProgressIndicator()));
+          children.add(SizedBox(
+              height: 500,
+              child: Center(child: PlatformCircularProgressIndicator())));
         } else if (snapshot.hasError) {
-          children.add(Center(child: Text('Error: ${snapshot.error}')));
+          children.add(SizedBox(
+              height: 500,
+              child: Center(child: Text('Error: ${snapshot.error}'))));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           // Only return Container when there is no data
           return Container();

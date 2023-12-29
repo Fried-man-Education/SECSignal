@@ -74,14 +74,15 @@ class _CompanySectionState extends State<CompanySection> {
     return FutureBuilder<List<Company>>(
       future: _future,
       builder: (context, snapshot) {
-        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty)
-          return Container();
+        if (snapshot.hasError) return Container();
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           content.add(SizedBox(
               height: 500,
               child: Center(child: PlatformCircularProgressIndicator())));
-        } else {
+        }else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Container();
+        }else {
           content.add(SizedBox(
             height: 500,
             child: GestureDetector(

@@ -36,12 +36,15 @@ class _StockGraphCardState extends State<StockGraphCard> {
         future: _stockDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PlatformCircularProgressIndicator(),
-                Text("Loading..."),
-              ],
+            return  SizedBox(
+              height: 700,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PlatformCircularProgressIndicator(),
+                  Text("Loading..."),
+                ],
+              ),
             );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Container();
