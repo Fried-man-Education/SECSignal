@@ -466,7 +466,7 @@ class _CompanyProfile extends State<CompanyProfile> {
                         return widget.company.secEdgar!.filings!;
                       }(),
                       title: "All Filings"),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   )
                 ],

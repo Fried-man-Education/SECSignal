@@ -197,6 +197,9 @@ class _MyHomePageState extends State<Home> {
                         title: "Merger News",
                         newsFuture: newsController
                             .getMarketNews(MarketNewsCategory.merger)),
+                    const SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),
