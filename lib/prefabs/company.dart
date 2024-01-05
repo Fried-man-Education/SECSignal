@@ -12,13 +12,16 @@ class CompanySection extends StatefulWidget {
   final String title; // Title string
   final String description; // Description string with a default empty value
   final VoidCallback onFavoriteChanged;
+  final bool isFavorite;
 
   CompanySection(
       {super.key,
       required this.companies,
       required this.title,
       this.description = '',
-      this.onFavoriteChanged = _defaultOnFavoriteChanged});
+      this.onFavoriteChanged = _defaultOnFavoriteChanged,
+      this.isFavorite = false
+      });
 
   static void _defaultOnFavoriteChanged() {
     // This is an empty function that does nothing
@@ -72,7 +75,7 @@ class _CompanySectionState extends State<CompanySection> {
     ];
 
     return FutureBuilder<List<Company>>(
-      future: _future,
+      future: widget.isFavorite ? widget.companies : _future,
       builder: (context, snapshot) {
         if (snapshot.hasError) return Container();
 

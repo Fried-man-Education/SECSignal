@@ -168,6 +168,7 @@ class _MyHomePageState extends State<Home> {
                         onFavoriteChanged: () {
                           setState(() {});
                         },
+                        isFavorite: true,
                       ),
                     NewsSection(
                         title: "Forex News",
