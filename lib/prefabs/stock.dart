@@ -254,7 +254,7 @@ class _StockGraphCardState extends State<StockGraphCard> {
         1000;
 
     List<FlSpot> spots = [];
-    for (int i = 0; i < timestamps.length; i++) {
+    for (int i = 0; i < min(timestamps.length, openPrices.length); i++) {
       if (timestamps[i] >= oneYearAgoTimestamp) {
         double x = timestamps[i].toDouble(); // Adjust if needed
         double y = openPrices[i];
